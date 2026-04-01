@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7DS Origin - Database</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar-auth.css?v=20260308">
+  <style>
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 60% 40%, #0d1f4a 0%, #020617 60%);
+    }
+
+    /* Animated star particles */
+    .hero-particles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.8); }
+      50%       { opacity: var(--op, 0.8); transform: scale(1.2); }
+    }
+
+    /* Glowing orbs */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      animation: orbFloat 8s ease-in-out infinite alternate;
+    }
+
+    .orb1 {
+      width: 500px; height: 500px;
+      background: rgba(59,130,246,0.12);
+      top: -100px; right: -100px;
+    }
+
+    .orb2 {
+      width: 400px; height: 400px;
+      background: rgba(240,192,64,0.08);
+      bottom: -80px; left: -80px;
+      animation-delay: -4s;
+    }
+
+    @keyframes orbFloat {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, -30px) scale(1.08); }
+    }
+
+    /* Grid lines overlay */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(96,165,250,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(96,165,250,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* Hero content */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 40px 20px;
+      max-width: 800px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border: 1px solid rgba(240,192,64,0.4);
+      border-radius: 20px;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      background: rgba(240,192,64,0.06);
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      animation: fadeDown 0.9s 0.1s ease both;
+    }
+
+    .hero-title .line1 {
+      display: block;
+      color: white;
+      text-shadow: 0 0 40px rgba(255,255,255,0.15);
+    }
+
+    .hero-title .line2 {
+      display: block;
+      background: linear-gradient(135deg, #f0c040, #ffd966, #c8960c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      filter: drop-shadow(0 0 20px rgba(240,192,64,0.4));
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      margin: 16px 0 40px;
+      animation: fadeDown 1s 0.2s ease both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeDown 1s 0.3s ease both;
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: bounce 2s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    .scroll-indicator svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gold);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: rgba(2,6,23,0.9);
+      border-top: 1px solid rgba(240,192,64,0.15);
+      border-bottom: 1px solid rgba(240,192,64,0.15);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+      text-shadow: 0 0 15px var(--glow-gold);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── QUICK NAV CARDS ── */
+    .quick-nav {
+      padding: 80px 20px;
+      background: linear-gradient(180deg, var(--dark2) 0%, var(--dark) 100%);
+    }
+
+    .quick-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .qcard {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--dark3);
+      padding: 36px 28px;
+      text-decoration: none;
+      color: var(--text);
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .qcard::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(240,192,64,0.04), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .qcard:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 12px 40px rgba(240,192,64,0.15);
+    }
+
+    .qcard:hover::before { opacity: 1; }
+
+    .qcard-icon {
+      font-size: 40px;
+      line-height: 1;
+    }
+
+    .qcard-title {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .qcard-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .qcard-arrow {
+      margin-top: auto;
+      color: var(--gold);
+      font-size: 20px;
+      transition: transform 0.2s;
+    }
+
+    .qcard:hover .qcard-arrow { transform: translateX(6px); }
+
+    /* ── FEATURED CHARACTERS ── */
+    .featured-section {
+      padding: 80px 20px;
+      background: var(--dark2);
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .feat-card {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--dark3);
+      text-decoration: none;
+      color: var(--text);
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      display: block;
+    }
+
+    .feat-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      border-color: var(--gold);
+      box-shadow: 0 8px 30px rgba(240,192,64,0.2);
+    }
+
+    .feat-card img {
+      width: 100%;
+      display: block;
+      transition: filter 0.3s;
+    }
+
+    .feat-card:hover img {
+      filter: brightness(1.1);
+    }
+
+    .feat-card-info {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .feat-card-name {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .feat-card-rarity {
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .feat-card-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(240,192,64,0.9);
+      color: #0b1020;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+
+    /* ── LATEST NEWS / EVENTS PREVIEW ── */
+    .news-section {
+      padding: 80px 20px;
+      background: linear-gradient(180deg, var(--dark) 0%, var(--dark2) 100%);
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .news-card {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s;
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+    }
+
+    .news-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--blue);
+    }
+
+    .news-card-header {
+      height: 6px;
+    }
+
+    .news-card-body {
+      padding: 24px;
+    }
+
+    .news-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .tag-event   { background: rgba(59,130,246,0.2);  color: var(--blue); }
+    .tag-update  { background: rgba(240,192,64,0.2);  color: var(--gold); }
+    .tag-guide   { background: rgba(167,139,250,0.2); color: #a78bfa; }
+
+    .news-card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .news-card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .news-card-date {
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    /* ── TIER PREVIEW ── */
+    .tier-preview {
+      padding: 80px 20px;
+      background: var(--dark2);
+    }
+
+    .tier-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tier-label {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      font-weight: 900;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .tier-s  { color: #ff6b6b; text-shadow: 0 0 12px rgba(255,107,107,0.6); }
+    .tier-a  { color: #ff9f43; text-shadow: 0 0 12px rgba(255,159,67,0.6); }
+    .tier-b  { color: #ffd32a; text-shadow: 0 0 12px rgba(255,211,42,0.6); }
+    .tier-c  { color: #0be881; text-shadow: 0 0 12px rgba(11,232,129,0.6); }
+    .tier-d  { color: #4bcffa; text-shadow: 0 0 12px rgba(75,207,250,0.6); }
+
+    .tier-chars {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tier-char-img {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .tier-char-img:hover {
+      border-color: var(--gold);
+      transform: scale(1.15);
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+
+    <div class="navbar-hamburger" id="navHam" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html" class="active">&#127968; Home</a></li>
+      <li><a href="characters.html">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="events.html">&#127881; Events</a></li>
+      <li><a href="guides.html">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">&#9733; <span data-i18n="hero_badge">Fan Database</span> &#9733;</div>
+
+      <h1 class="hero-title">
+        <span class="line1">The Seven Deadly Sins</span>
+        <span class="line2">ORIGIN</span>
+      </h1>
+
+      <p class="hero-subtitle" data-i18n="hero_subtitle">Characters &bull; Tier List &bull; Events &bull; Guides</p>
+
+      <div class="hero-buttons">
+        <a href="characters.html" class="btn btn-gold"><span class="nav-icon">&#9876;</span> <span data-i18n="hero_browse">Browse Characters</span></a>
+        <a href="tierlist.html" class="btn btn-outline"><span class="nav-icon">&#127942;</span> <span data-i18n="hero_tierlist">Tier List</span></a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+      Scroll
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       STATS BAR
+  ═══════════════════════════════════════════ -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-number" data-count="20">0</span>
+      <span class="stat-label" data-i18n="stat_characters">Characters</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-count="12">0</span>
+      <span class="stat-label" data-i18n="stat_weapons">Weapon Types</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-count="5">0</span>
+      <span class="stat-label" data-i18n="stat_tiers">Tier Ranks</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-count="3">0</span>
+      <span class="stat-label" data-i18n="stat_events">Active Events</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       QUICK NAV CARDS
+  ═══════════════════════════════════════════ -->
+  <section class="quick-nav">
+    <div class="section-title reveal" data-i18n="sec_explore">Explore</div>
+    <div class="section-divider reveal"></div>
+
+    <div class="quick-nav-grid">
+
+      <a href="characters.html" class="qcard reveal">
+        <div class="qcard-icon">&#9876;</div>
+        <div class="qcard-title" data-i18n="qcard_chars_title">Characters</div>
+        <div class="qcard-desc" data-i18n="qcard_chars_desc">Browse all heroes with stats, skills, and weapon builds. Filter by weapon type or search by name.</div>
+        <div class="qcard-arrow">&#8594;</div>
+      </a>
+
+      <a href="tierlist.html" class="qcard reveal">
+        <div class="qcard-icon">&#127942;</div>
+        <div class="qcard-title" data-i18n="qcard_tier_title">Tier List</div>
+        <div class="qcard-desc" data-i18n="qcard_tier_desc">See which characters rank S through D. Drag and drop to build your own custom tier list.</div>
+        <div class="qcard-arrow">&#8594;</div>
+      </a>
+
+      <a href="events.html" class="qcard reveal">
+        <div class="qcard-icon">&#127881;</div>
+        <div class="qcard-title" data-i18n="qcard_events_title">Events</div>
+        <div class="qcard-desc" data-i18n="qcard_events_desc">Stay up to date with current and upcoming in-game events, rewards, and limited-time content.</div>
+        <div class="qcard-arrow">&#8594;</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FEATURED CHARACTERS
+  ═══════════════════════════════════════════ -->
+  <section class="featured-section">
+    <div class="section-title reveal" data-i18n="sec_featured">Featured Characters</div>
+    <div class="section-sub reveal" data-i18n="sec_featured_sub">SSR Tier Heroes</div>
+    <div class="section-divider reveal"></div>
+
+    <div class="featured-grid" id="featuredGrid"></div>
+
+    <div style="text-align:center; margin-top:36px;" class="reveal">
+      <a href="characters.html" class="btn btn-blue" data-i18n="sec_view_all_chars">View All Characters</a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TIER PREVIEW
+  ═══════════════════════════════════════════ -->
+  <section class="tier-preview">
+    <div class="section-title reveal" data-i18n="sec_tier_overview">Tier Overview</div>
+    <div class="section-sub reveal" data-i18n="sec_tier_sub">Current Meta Rankings</div>
+    <div class="section-divider reveal"></div>
+
+    <div id="tierPreview"></div>
+
+    <div style="text-align:center; margin-top:36px;" class="reveal">
+      <a href="tierlist.html" class="btn btn-outline" data-i18n="sec_full_tierlist">Full Tier List</a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       EVENTS PREVIEW
+  ═══════════════════════════════════════════ -->
+  <section class="news-section">
+    <div class="section-title reveal" data-i18n="sec_latest_events">Latest Events</div>
+    <div class="section-sub reveal" data-i18n="sec_latest_events_sub">Current &amp; Upcoming</div>
+    <div class="section-divider reveal"></div>
+
+    <div class="news-grid">
+
+      <a href="events.html" class="news-card reveal">
+        <div class="news-card-header" style="background:linear-gradient(90deg,#3b82f6,#60a5fa);"></div>
+        <div class="news-card-body">
+          <span class="news-tag tag-event">Event</span>
+          <div class="news-card-title">Holy War Raid</div>
+          <div class="news-card-desc">Team up with allies to defeat the Demon King in the limited-time Holy War Raid event. Earn exclusive rewards and SSR shards.</div>
+          <div class="news-card-date">&#128197; Mar 1 &ndash; Mar 15, 2026</div>
+        </div>
+      </a>
+
+      <a href="events.html" class="news-card reveal">
+        <div class="news-card-header" style="background:linear-gradient(90deg,#f0c040,#ffd966);"></div>
+        <div class="news-card-body">
+          <span class="news-tag tag-update">Update</span>
+          <div class="news-card-title">New Character: Tristan</div>
+          <div class="news-card-desc">The son of Meliodas and Elizabeth joins the battle. Tristan wields dual swords and brings powerful hybrid skills to the field.</div>
+          <div class="news-card-date">&#128197; Mar 5, 2026</div>
+        </div>
+      </a>
+
+      <a href="events.html" class="news-card reveal">
+        <div class="news-card-header" style="background:linear-gradient(90deg,#a78bfa,#c4b5fd);"></div>
+        <div class="news-card-body">
+          <span class="news-tag tag-guide">Guide</span>
+          <div class="news-card-title">Daisy Build Guide</div>
+          <div class="news-card-desc">Maximize Daisy's potential with our in-depth shield build guide. Learn skill rotations, weapon choices, and team compositions.</div>
+          <div class="news-card-date">&#128197; Mar 7, 2026</div>
+        </div>
+      </a>
+
+    </div>
+
+    <div style="text-align:center; margin-top:36px;" class="reveal">
+      <a href="events.html" class="btn btn-blue" data-i18n="sec_all_events">All Events</a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+    <p style="margin-top:8px;">
+      <a href="index.html" data-i18n="nav_home">Home</a> &nbsp;&bull;&nbsp;
+      <a href="characters.html" data-i18n="nav_characters">Characters</a> &nbsp;&bull;&nbsp;
+      <a href="weapons.html" data-i18n="nav_weapons">Weapons</a> &nbsp;&bull;&nbsp;
+      <a href="tierlist.html" data-i18n="nav_tierlist">Tier List</a> &nbsp;&bull;&nbsp;
+      <a href="events.html" data-i18n="nav_events">Events</a> &nbsp;&bull;&nbsp;
+      <a href="guides.html" data-i18n="nav_guides">Guides</a>
+    </p>
+  </footer>
+
+  <!-- Local Data & Admin Auth (No Supabase) -->
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/image-config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/navbar.js?v=20260308"></script>
+  <script>
+    /* ── i18n init ── */
+    if (typeof I18n !== 'undefined') { I18n.init(); I18n.applyTranslations(); }
+
+    /* ── Star particles ── */
+    (function () {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 120; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const size = Math.random() * 2.5 + 0.5;
+        s.style.cssText = `
+          width:${size}px; height:${size}px;
+          top:${Math.random()*100}%; left:${Math.random()*100}%;
+          --dur:${(Math.random()*4+2).toFixed(1)}s;
+          --op:${(Math.random()*0.6+0.2).toFixed(2)};
+          animation-delay:${(Math.random()*5).toFixed(1)}s;
+        `;
+        container.appendChild(s);
+      }
+    })();
+
+    /* ── Count-up animation ── */
+    (function () {
+      const els = document.querySelectorAll('[data-count]');
+      const obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          const el = e.target;
+          const target = parseInt(el.dataset.count);
+          let current = 0;
+          const step = Math.ceil(target / 30);
+          const timer = setInterval(function () {
+            current = Math.min(current + step, target);
+            el.textContent = current;
+            if (current >= target) clearInterval(timer);
+          }, 40);
+          obs.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+      els.forEach(function (el) { obs.observe(el); });
+    })();
+
+    /* ── Scroll reveal ── */
+    (function () {
+      const obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    })();
+
+/* ── Featured Characters from Database ── */
+
+async function loadFeaturedCharacters(){
+
+  const grid = document.getElementById("featuredGrid");
+
+  grid.innerHTML =
+  `<div style="color:#aaa;padding:20px">Loading characters...</div>`;
+
+  let characters = [];
+
+  try{
+    characters = await CharDB.loadAll();
+  }catch(e){
+    console.error("Character load error",e);
+  }
+
+  if(!characters || characters.length === 0){
+    grid.innerHTML = `<div>No characters found</div>`;
+    return;
+  }
+
+  let html = "";
+
+  characters.slice(0,20).forEach(c=>{
+
+    const img = c.image || "https://placehold.co/300x400";
+    const slug = encodeURIComponent(c.slug);
+
+    html += `
+    <a href="character.html?slug=${slug}" class="feat-card">
+      <span class="feat-card-badge">${c.rarity}</span>
+      <img src="${img}" loading="lazy">
+
+      <div class="feat-card-info">
+        <div class="feat-card-name">${c.name_en || c.name || 'Unknown'}</div>
+        <div class="feat-card-rarity">★ ${c.rarity}</div>
+      </div>
+    </a>
+    `;
+  });
+
+  grid.innerHTML = html;
+
+}
+
+document.addEventListener("DOMContentLoaded",loadFeaturedCharacters);
+    /* ── Tier preview ── */
+    (function () {
+      const tiers = [
+        { label:'S', cls:'tier-s', chars:['Meliodas','Escanor','Daisy','Tristan'] },
+        { label:'A', cls:'tier-a', chars:['Elizabeth','Merlin','Derieri','King'] },
+        { label:'B', cls:'tier-b', chars:['Diane','Gowther','Ban','Tioreh'] },
+        { label:'C', cls:'tier-c', chars:['Gilthunder','Hendrickson','Jericho'] },
+        { label:'D', cls:'tier-d', chars:['Griamore','Howzer','Dreyfus'] },
+      ];
+      const BASE_IMAGE_URL = "https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/";
+      const imgMap = {
+        Meliodas: BASE_IMAGE_URL + 'Meliodas.png', Escanor: BASE_IMAGE_URL + 'Escanor.png',
+        Daisy: BASE_IMAGE_URL + 'Daisy.png', Tristan: BASE_IMAGE_URL + 'Tristan.png',
+        Elizabeth: BASE_IMAGE_URL + 'Elizabeth.png', Merlin: BASE_IMAGE_URL + 'Merlin.png',
+        Derieri: BASE_IMAGE_URL + 'Derieri.png', King: BASE_IMAGE_URL + 'King.png',
+        Diane: BASE_IMAGE_URL + 'Diane.png', Gowther: BASE_IMAGE_URL + 'Gowther.png',
+        Ban: BASE_IMAGE_URL + 'Ban.png', Tioreh: BASE_IMAGE_URL + 'Tioreh.png',
+        Gilthunder: BASE_IMAGE_URL + 'Gilthunder.png', Hendrickson: BASE_IMAGE_URL + 'Hendrickson.png',
+        Jericho: BASE_IMAGE_URL + 'Jericho.png', Griamore: BASE_IMAGE_URL + 'Griamore.png',
+        Howzer: BASE_IMAGE_URL + 'Howzer.png', Dreyfus: BASE_IMAGE_URL + 'Dreyfus.png',
+      };
+      const container = document.getElementById('tierPreview');
+      tiers.forEach(function (t) {
+        const imgs = t.chars.map(function (n) {
+          return `<img src="${imgMap[n]||''}" alt="${n}" class="tier-char-img" title="${n}">`;
+        }).join('');
+        container.innerHTML += `
+          <div class="tier-row reveal">
+            <span class="tier-label ${t.cls}">${t.label}</span>
+            <div class="tier-chars">${imgs}</div>
+          </div>`;
+      });
+      const obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.tier-row.reveal').forEach(function (el) { obs.observe(el); });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/navbar-auth.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; Home</a></li>
+      <li><a href="characters.html">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="events.html">&#127881; Events</a></li>
+      <li><a href="guides.html">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-icon">&#128272;</div>
+          <h1 data-i18n="login_title">Admin Login</h1>
+          <p data-i18n="login_subtitle">Sign in to manage character data</p>
+        </div>
+
+        <div id="modeIndicator" style="text-align:center;margin-bottom:16px;font-size:12px;color:#3b82f6;font-weight:600;">Local Admin Mode (No Supabase)</div>
+
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+          <div class="form-group">
+            <label for="loginUsername">Username</label>
+            <input type="text" id="loginUsername" placeholder="Enter username" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="loginPassword" data-i18n="login_password">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
+          </div>
+          <div style="font-size:12px;color:#64748b;margin-bottom:12px;padding:8px;background:#f1f5f9;border-radius:6px;">
+            Demo credentials: <strong>admin</strong> / <strong>1234</strong>
+          </div>
+          <div id="loginError" class="login-error" style="display:none;"></div>
+          <button type="submit" class="login-btn" id="loginBtn" data-i18n="login_btn">Sign In</button>
+        </form>
+
+        <div class="login-footer">
+          <a href="characters.html">&#8592; <span data-i18n="login_back">Back to Characters</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Local Admin Authentication (No Supabase) -->
+  <script src="js/admin-auth.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+      var username = document.getElementById('loginUsername').value.trim();
+      var password = document.getElementById('loginPassword').value;
+      var errorEl = document.getElementById('loginError');
+      var btn = document.getElementById('loginBtn');
+
+      errorEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      // Local admin authentication
+      var success = AdminAuth.login(username, password);
+      
+      if (success) {
+        // Redirect to admin panel
+        window.location.href = 'admin.html';
+      } else {
+        errorEl.textContent = 'Invalid username or password';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+        document.getElementById('loginPassword').value = '';
+      }
+      return false;
+    }
+
+    // Check on load
+    document.addEventListener("DOMContentLoaded", () => {
+      // If already logged in, redirect
+      if (AdminAuth.isLoggedIn()) {
+        window.location.href = 'admin.html';
+      }
+    });
+  </script>
+</body>
+</html>

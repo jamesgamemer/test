@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weapons - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/navbar-auth.css">
+  <link rel="stylesheet" href="css/aaa-ui.css">
+</head>
+<body>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="weaponModalOverlay" onclick="WeaponsPage.closeModal()">
+    <div class="weapon-modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="WeaponsPage.closeModal()">&times;</button>
+      <div class="modal-content" id="modalContent">
+        <!-- Dynamic Content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Bar -->
+  <div class="admin-bar" id="adminBar" style="display:none;">
+    <div class="admin-bar-left">
+      <span class="admin-badge">ADMIN</span>
+      <a href="admin.html" class="admin-bar-link">Dashboard</a>
+      <a href="admin.html#weapons" class="admin-bar-link">+ Add Weapon</a>
+    </div>
+    <div class="admin-bar-right">
+      <button class="admin-bar-btn" onclick="AdminAuth.logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; Home</a></li>
+      <li><a href="characters.html">&#9876; Characters</a></li>
+      <li><a href="weapons.html" class="active">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="events.html">&#127881; Events</a></li>
+      <li><a href="guides.html">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="page-content">
+    <div class="page-header">
+      <div class="page-header-title" data-i18n="wpn_title">WEAPONS</div>
+      <div class="page-header-count" id="weaponCount">Loading...</div>
+    </div>
+
+    <div class="container">
+      <!-- Toolbar -->
+      <div class="weapons-toolbar">
+        <div class="weapons-search-row">
+          <input type="text" class="weapons-search" id="weaponSearch" data-i18n-placeholder="wpn_search" placeholder="Search weapons by name or series...">
+          <select class="weapons-sort" id="weaponSort">
+            <option value="name-asc">Name A-Z</option>
+            <option value="name-desc">Name Z-A</option>
+            <option value="atk-desc">ATK High-Low</option>
+            <option value="atk-asc">ATK Low-High</option>
+            <option value="rarity-desc" selected>Rarity High-Low</option>
+            <option value="rarity-asc">Rarity Low-High</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-label">Category</div>
+          <div class="filter-row" id="categoryFilters">
+            <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:10px;">
+            <div class="filter-group">
+              <div class="filter-group-label">Rarity</div>
+              <div class="filter-row" id="rarityFilters">
+                <button class="filter-btn active" data-filter="rarity" data-value="all">All</button>
+                <button class="filter-btn" data-filter="rarity" data-value="5">5★ SSR</button>
+                <button class="filter-btn" data-filter="rarity" data-value="4">4★ SR</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <div class="filter-group-label">Role</div>
+              <div class="filter-row" id="roleFilters">
+                <button class="filter-btn active" data-filter="role" data-value="all">All</button>
+                <button class="filter-btn" data-filter="role" data-value="DPS">DPS</button>
+                <button class="filter-btn" data-filter="role" data-value="Support">Support</button>
+                <button class="filter-btn" data-filter="role" data-value="Healer">Healer</button>
+                <button class="filter-btn" data-filter="role" data-value="Tank">Tank</button>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Weapons List -->
+      <div class="weapons-list" id="weaponsList"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <!-- Scripts -->
+  
+  
+  
+  
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/supabase-weapon-api.js"></script>
+  
+  
+  <script src="js/i18n.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var allWeapons = [];
+    var allCharacters = [];
+    var weaponCharLinks = [];
+    var filters = { search: '', category: 'all', rarity: 'all', role: 'all', sort: 'rarity-desc' };
+
+    var $list = document.getElementById('weaponsList');
+    var $search = document.getElementById('weaponSearch');
+    var $sort = document.getElementById('weaponSort');
+    var $count = document.getElementById('weaponCount');
+    var $catFilters = document.getElementById('categoryFilters');
+    var $modalOverlay = document.getElementById('weaponModalOverlay');
+    var $modalContent = document.getElementById('modalContent');
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      if (typeof I18n !== 'undefined') { I18n.init(); }
+      try {
+        var admin = await AdminAuth.isLoggedIn();
+        if (admin) {
+          var bar = document.getElementById('adminBar');
+          if (bar) bar.style.display = 'flex';
+        }
+      } catch (e) {}
+
+      await loadAllData();
+      buildCategoryFilters();
+      renderWeapons();
+
+      $search.addEventListener('input', function () {
+        filters.search = this.value.toLowerCase();
+        renderWeapons();
+      });
+
+      $sort.addEventListener('change', function () {
+        filters.sort = this.value;
+        renderWeapons();
+      });
+
+      document.querySelectorAll('.filter-row').forEach(function (row) {
+        row.addEventListener('click', function (e) {
+          var btn = e.target.closest('.filter-btn');
+          if (!btn) return;
+          var filterType = btn.dataset.filter;
+          var value = btn.dataset.value;
+          row.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          filters[filterType] = value;
+          renderWeapons();
+        });
+      });
+    });
+
+    async function loadAllData() {
+      /* Always load from local JSON */
+      await loadFromJSON();
+      /* Also load characters from CharDB */
+      try {
+        allCharacters = await CharDB.loadAll() || [];
+      } catch(e) { allCharacters = []; }
+    }
+
+    async function loadFromJSON() {
+      try {
+        var resp = await fetch('data/weapons.json');
+        var data = await resp.json();
+        allWeapons = (data.weapons || data || []).map(function (w) {
+          return {
+            id: w.slug, name_en: w.name || w.name_en || '', slug: w.slug || '',
+            series: w.series || '', category: w.category || '', role: w.role || 'DPS',
+            rarity: w.rarity || 5, equipment_atk: w.equipment_atk || 0,
+            sub_stat_type: w.sub_stat_type || '', sub_stat_value: w.sub_stat_value || '',
+            passive_desc_en: w.passive_description || w.passive_desc_en || '',
+            icon_url: w.icon_url || ''
+          };
+        });
+      } catch (e) { allWeapons = []; }
+    }
+
+    function buildCategoryFilters() {
+      var categories = {};
+      allWeapons.forEach(function (w) { if (w.category) categories[w.category] = (categories[w.category] || 0) + 1; });
+      var sorted = Object.keys(categories).sort();
+      var html = '<button class="filter-btn active" data-filter="category" data-value="all">All</button>';
+      sorted.forEach(function (cat) {
+        html += '<button class="filter-btn" data-filter="category" data-value="' + cat + '">' + cat + '</button>';
+      });
+      $catFilters.innerHTML = html;
+    }
+
+    function getFilteredWeapons() {
+      var result = allWeapons.filter(function (w) {
+        var name = (w.name_en || '').toLowerCase();
+        var series = (w.series || '').toLowerCase();
+        if (filters.search && name.indexOf(filters.search) === -1 && series.indexOf(filters.search) === -1) return false;
+        if (filters.category !== 'all' && w.category !== filters.category) return false;
+        if (filters.rarity !== 'all' && String(w.rarity) !== filters.rarity) return false;
+        if (filters.role !== 'all' && w.role !== filters.role) return false;
+        return true;
+      });
+      result.sort(function (a, b) {
+        switch (filters.sort) {
+          case 'name-asc': return (a.name_en || '').localeCompare(b.name_en || '');
+          case 'name-desc': return (b.name_en || '').localeCompare(a.name_en || '');
+          case 'atk-desc': return (b.equipment_atk || 0) - (a.equipment_atk || 0);
+          case 'atk-asc': return (a.equipment_atk || 0) - (b.equipment_atk || 0);
+          case 'rarity-desc': return (b.rarity !== a.rarity) ? b.rarity - a.rarity : (a.name_en || '').localeCompare(b.name_en || '');
+          case 'rarity-asc': return (a.rarity !== b.rarity) ? a.rarity - b.rarity : (a.name_en || '').localeCompare(b.name_en || '');
+          default: return 0;
+        }
+      });
+      return result;
+    }
+
+    function renderWeapons() {
+      var weapons = getFilteredWeapons();
+      $count.textContent = weapons.length + ' Weapons Available';
+      var html = '';
+      weapons.forEach(function (w) {
+        var rarityClass = w.rarity === 5 ? 'badge-rarity-5' : 'badge-rarity-4';
+        var rarityLabel = w.rarity === 5 ? '5★ SSR' : '4★ SR';
+        var wId = w.id || w.slug;
+
+        html += '<div class="weapon-row" data-weapon-id="' + wId + '" onclick="WeaponsPage.openModal(\'' + wId + '\')">';
+        html += '<div class="weapon-row-header">';
+        html += '<div class="weapon-icon-wrap">';
+        html += '<img src="' + (w.icon_url || 'https://placehold.co/120x120/111827/666?text=?') + '" alt="' + (w.name_en || '') + '">';
+        html += '</div>';
+        html += '<div class="weapon-name-block">';
+        html += '<div class="weapon-name">' + (w.name_en || 'Unknown') + '</div>';
+        html += '<div class="weapon-series">' + (w.series || '') + '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="card-badges">';
+        html += '<span class="weapon-badge badge-category">' + (w.category || '') + '</span>';
+        html += '<span class="weapon-badge ' + rarityClass + '">' + rarityLabel + '</span>';
+        html += '</div>';
+        html += '<div class="card-stat-footer">';
+        html += '<div class="card-stat-item"><span class="card-stat-label">Attack</span><span class="card-stat-value">' + (w.equipment_atk || '—') + '</span></div>';
+        html += '<button class="btn-outline">DETAILS</button>';
+        html += '</div>';
+        html += '</div>';
+      });
+      $list.innerHTML = html;
+    }
+
+    window.WeaponsPage = {
+      openModal: function (id) {
+        var w = allWeapons.find(item => (item.id || item.slug) === id);
+        if (!w) return;
+
+        var rarityLabel = w.rarity === 5 ? '5★ SSR' : '4★ SR';
+        var links = weaponCharLinks.filter(l => l.weapon_id === id);
+
+        var html = `
+          <div class="modal-header">
+            <div class="modal-title">${w.name_en}</div>
+            <div class="weapon-series">${w.series || ''}</div>
+          </div>
+          <div class="modal-body-grid">
+            <div class="modal-weapon-preview">
+              <img src="${w.icon_url || ''}" alt="${w.name_en}">
+            </div>
+            <div class="modal-stats-section">
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="modal-stat-card"><div class="modal-stat-title">Rarity</div><div class="modal-stat-value" style="color:#f6c453">${rarityLabel}</div></div>
+                <div class="modal-stat-card"><div class="modal-stat-title">Attack</div><div class="modal-stat-value">${w.equipment_atk || '—'}</div></div>
+              </div>
+              <div class="modal-stat-card"><div class="modal-stat-title">Sub Stat</div><div class="modal-stat-value">${w.sub_stat_type || 'None'} (${w.sub_stat_value || '0'})</div></div>
+             <div class="modal-stat-card">
+<div class="modal-stat-title">Passive Ability</div>
+<div class="modal-stat-value" style="font-size:14px; line-height:1.6; font-weight:400;">
+${w.passive_desc_en || w.passive_description_en || w.passive_description || 'No description available.'}
+</div>
+</div>
+            </div>
+          </div>
+          <div class="best-characters-section">
+            <div class="section-label">Best Characters</div>
+            <div class="slider-container">
+              <button class="slider-btn prev" onclick="WeaponsPage.slide(-1)">&lsaquo;</button>
+              <div class="character-slider" id="charSlider">
+        `;
+
+        if (links.length > 0) {
+          links.forEach(link => {
+            var char = allCharacters.find(c => c.id === link.character_id);
+            if (char) {
+              var rarityClass = char.rarity === 'SSR' ? 'SSR' : 'SR';
+              html += `
+               <a href="character.html?slug=${char.slug}" class="char-card-mini">
+                  <img src="${char.image || ''}" alt="${char.name_en}">
+                  <div class="char-card-name">${char.name_en}</div>
+                  <div class="char-card-rarity ${rarityClass}">${char.rarity}</div>
+                </a>
+              `;
+            }
+          });
+        } else {
+          html += '<div style="color:#94a3b8; width:100%; text-align:center; padding:20px;">No recommended characters found.</div>';
+        }
+
+        html += `
+              </div>
+              <button class="slider-btn next" onclick="WeaponsPage.slide(1)">&rsaquo;</button>
+            </div>
+          </div>
+        `;
+
+        $modalContent.innerHTML = html;
+        $modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      },
+      closeModal: function () {
+        $modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      },
+      slide: function (dir) {
+        var slider = document.getElementById('charSlider');
+        if (slider) {
+          var scrollAmount = 155 * 3; 
+          slider.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
+        }
+      }
+    };
+
+  })();
+  </script>
+</body>
+</html>

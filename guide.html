@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar-auth.css?v=20260308">
+  <link rel="stylesheet" href="css/guide-cms.css?v=20260310">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; Home</a></li>
+      <li><a href="characters.html">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="events.html">&#127881; Events</a></li>
+      <li><a href="guides.html" class="active">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+    <div class="container">
+
+      <a href="guides.html" class="guide-back-link">&#8592; Back to Guides</a>
+
+      <!-- Guide header -->
+      <div class="guide-detail-header" id="guideHeader">
+        <!-- Skeleton -->
+        <div class="skeleton" style="width:100%;height:200px;margin-bottom:16px;border-radius:16px;"></div>
+        <div class="skeleton" style="width:60%;height:32px;margin-bottom:8px;"></div>
+        <div class="skeleton" style="width:40%;height:16px;"></div>
+      </div>
+
+      <!-- Admin edit button -->
+      <div id="guideAdminActions" style="display:none;margin-bottom:20px;">
+        <a id="editGuideBtn" href="#" class="btn btn-gold">&#9998; Edit Guide</a>
+        <button id="deleteGuideBtn" class="btn btn-outline" style="border-color:#ef4444;color:#ef4444;margin-left:8px;">&#128465; Delete</button>
+      </div>
+
+      <!-- Guide content -->
+      <div class="guide-content-area" id="guideContent">
+        <div style="text-align:center;padding:40px;color:var(--muted);">Loading guide content...</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+    <p style="margin-top:8px;">
+      <a href="index.html" data-i18n="nav_home">Home</a> &nbsp;&bull;&nbsp;
+      <a href="characters.html" data-i18n="nav_characters">Characters</a> &nbsp;&bull;&nbsp;
+      <a href="weapons.html" data-i18n="nav_weapons">Weapons</a> &nbsp;&bull;&nbsp;
+      <a href="tierlist.html" data-i18n="nav_tierlist">Tier List</a> &nbsp;&bull;&nbsp;
+      <a href="events.html" data-i18n="nav_events">Events</a> &nbsp;&bull;&nbsp;
+      <a href="guides.html" data-i18n="nav_guides">Guides</a>
+    </p>
+  </footer>
+
+  
+  
+  
+  
+  
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/supabase-guide-api.js"></script>
+  <script src="js/guide-renderer.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/navbar.js?v=20260308"></script>
+  <script>
+if (typeof I18n !== 'undefined') { 
+  I18n.init(); 
+  I18n.applyTranslations(); 
+}
+
+var params = new URLSearchParams(window.location.search);
+var slug = params.get('slug');
+
+async function loadGuide() {
+
+  var header = document.getElementById('guideHeader');
+  var contentArea = document.getElementById('guideContent');
+
+  if (!header || !contentArea) return;
+
+  if (!slug) {
+    header.innerHTML = '<h1 class="guide-detail-title">Guide not found</h1>';
+    contentArea.innerHTML = '<p style="color:var(--muted);">No guide slug provided.</p>';
+    return;
+  }
+
+  var guide = await GuideAPI.fetchGuideBySlug(slug);
+
+  if (!guide) {
+    header.innerHTML = '<h1 class="guide-detail-title">Guide not found</h1>';
+    contentArea.innerHTML = '<p style="color:var(--muted);">The requested guide does not exist.</p>';
+    return;
+  }
+
+  // Update page title
+  document.title = guide.title + ' - 7DS Origin';
+
+  // Render header
+  var headerHtml = '';
+
+  if (guide.cover_image) {
+    headerHtml += '<img src="' + guide.cover_image + '" class="guide-detail-cover" onerror="this.style.display=\'none\'">';
+  }
+
+  headerHtml += '<div class="guide-detail-meta">';
+  headerHtml += '<span class="guide-detail-category">' + (guide.category || 'general') + '</span>';
+  headerHtml += '<span class="guide-detail-date">Updated: ' + new Date(guide.updated_at).toLocaleDateString() + '</span>';
+  headerHtml += '</div>';
+
+  headerHtml += '<h1 class="guide-detail-title">' + guide.title + '</h1>';
+
+  if (guide.description) {
+    headerHtml += '<p class="guide-detail-desc">' + guide.description + '</p>';
+  }
+
+  header.innerHTML = headerHtml;
+
+  // Admin check
+  var isAdmin = false;
+  try { 
+    isAdmin = await AdminAuth.isLoggedIn(); 
+  } catch(e) {}
+
+  if (isAdmin) {
+
+    document.getElementById('guideAdminActions').style.display = 'block';
+
+    document.getElementById('editGuideBtn').href =
+      'guide-editor.html?id=' + guide.id;
+
+    document.getElementById('deleteGuideBtn').onclick = async function () {
+
+      if (!confirm('Are you sure you want to delete this guide?')) return;
+
+      await GuideAPI.deleteGuide(guide.id);
+
+      window.location.href = 'guides.html';
+    };
+  }
+
+  // Load blocks
+  var blocks = await GuideAPI.fetchBlocks(guide.id);
+
+  if (!blocks || blocks.length === 0) {
+
+    contentArea.innerHTML =
+      '<p style="color:var(--muted);text-align:center;padding:40px;">This guide has no content yet.</p>';
+
+    return;
+  }
+
+  // Render blocks
+  contentArea.innerHTML = GuideRenderer.renderBlocks(blocks);
+}
+
+/* FIX: run after DOM ready */
+document.addEventListener("DOMContentLoaded", function () {
+  loadGuide();
+});
+</script>

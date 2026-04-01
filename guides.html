@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guides - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar-auth.css?v=20260308">
+  <link rel="stylesheet" href="css/guide-cms.css?v=20260310">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; Home</a></li>
+      <li><a href="characters.html">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="events.html">&#127881; Events</a></li>
+      <li><a href="guides.html" class="active">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+    <div class="container">
+
+      <!-- Header -->
+      <div class="guides-header">
+        <h1 class="section-title" data-i18n="nav_guides">Guides</h1>
+        <div class="section-divider"></div>
+        <p class="guides-header-desc">Comprehensive guides to help you master 7DS Origin. From beginner tips to advanced strategies.</p>
+      </div>
+
+      <!-- Admin bar (visible only when logged in) -->
+      <div class="guides-admin-bar" id="guidesAdminBar" style="display:none;">
+        <a href="guide-editor.html" class="btn btn-gold">+ New Guide</a>
+      </div>
+
+      <!-- Category filter -->
+      <div class="guides-filter-bar" id="guidesFilterBar">
+        <button class="guides-filter-btn active" data-filter="all">All</button>
+        <button class="guides-filter-btn" data-filter="newbie">Newbie</button>
+        <button class="guides-filter-btn" data-filter="general">General</button>
+        <button class="guides-filter-btn" data-filter="character">Character</button>
+        <button class="guides-filter-btn" data-filter="farming">Farming</button>
+        <button class="guides-filter-btn" data-filter="advanced">Advanced</button>
+      </div>
+
+      <!-- Guides container -->
+      <div id="guidesContainer">
+        <!-- Skeleton loaders -->
+        <div class="guides-grid" id="guidesSkeleton">
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+    <p style="margin-top:8px;">
+      <a href="index.html" data-i18n="nav_home">Home</a> &nbsp;&bull;&nbsp;
+      <a href="characters.html" data-i18n="nav_characters">Characters</a> &nbsp;&bull;&nbsp;
+      <a href="weapons.html" data-i18n="nav_weapons">Weapons</a> &nbsp;&bull;&nbsp;
+      <a href="tierlist.html" data-i18n="nav_tierlist">Tier List</a> &nbsp;&bull;&nbsp;
+      <a href="events.html" data-i18n="nav_events">Events</a> &nbsp;&bull;&nbsp;
+      <a href="guides.html" data-i18n="nav_guides">Guides</a>
+    </p>
+  </footer>
+
+  
+  
+  
+  
+  
+  
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/supabase-guide-api.js"></script>
+  <script src="js/image-config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/navbar.js?v=20260308"></script>
+  <script>
+    /* ── i18n ── */
+    if (typeof I18n !== 'undefined') { I18n.init(); I18n.applyTranslations(); }
+
+    /* ── Load Guides ── */
+    var currentFilter = 'all';
+
+    async function loadGuides() {
+      var container = document.getElementById('guidesContainer');
+      var skeleton = document.getElementById('guidesSkeleton');
+
+      // Check admin
+      var isAdmin = false;
+      try { isAdmin = await AdminAuth.isLoggedIn(); } catch(e) {}
+      if (isAdmin) {
+        document.getElementById('guidesAdminBar').style.display = 'flex';
+      }
+
+      // Fetch guides
+ var guides = await GuideAPI.fetchAllGuides();
+
+console.log("Guides fetched:", guides);
+
+      // Remove skeleton
+      if (skeleton) skeleton.remove();
+
+      if (!guides || guides.length === 0) {
+        container.innerHTML =
+          '<div class="guides-empty">' +
+            '<div class="guides-empty-icon">&#128218;</div>' +
+            '<div class="guides-empty-text">No guides available yet.</div>' +
+          '</div>';
+        return;
+      }
+
+      renderGuides(guides, isAdmin);
+    }
+
+    function renderGuides(guides, isAdmin) {
+
+  var container = document.getElementById('guidesContainer');
+
+  var published = guides.filter(function(g){
+    return g.status === 'published';
+  });
+
+  var drafts = guides.filter(function(g){
+    return g.status === 'draft';
+  });
+
+  var html = '';
+
+  // ----------------
+  // Published
+  // ----------------
+
+  if (published.length > 0) {
+
+    html += '<div class="guides-category-title">Published Guides</div>';
+    html += '<div class="guides-grid">';
+
+    published.forEach(function(g){
+      html += renderGuideCard(g);
+    });
+
+    html += '</div>';
+  }
+
+  // ----------------
+  // Draft (admin only)
+  // ----------------
+
+  if (isAdmin && drafts.length > 0) {
+
+    html += '<div class="guides-category-title" style="margin-top:40px;">Draft Guides</div>';
+    html += '<div class="guides-grid">';
+
+    drafts.forEach(function(g){
+      html += renderGuideCard(g);
+    });
+
+    html += '</div>';
+  }
+
+  if (published.length === 0 && drafts.length === 0) {
+
+    html =
+      '<div class="guides-empty">' +
+        '<div class="guides-empty-icon">📚</div>' +
+        '<div class="guides-empty-text">No guides available yet.</div>' +
+      '</div>';
+  }
+
+  container.innerHTML = html;
+}
+    function renderGuideCard(g) {
+      const BASE_IMAGE_URL = 'https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/';
+      var cover = g.cover_image || (BASE_IMAGE_URL + 'guides/default.jpg');
+      var slug = encodeURIComponent(g.slug);
+    var statusBadge = '';
+if (g.status === 'draft') {
+  statusBadge = '<span class="guide-draft-badge">DRAFT</span>';
+}
+      return '<a href="guide.html?slug=' + slug + '" class="guide-card">' +
+        '<img src="' + cover + '" alt="" class="guide-card-thumb" onerror="this.src=\'' + (BASE_IMAGE_URL + 'guides/default.jpg') + '\'">' +
+        '<div class="guide-card-body">' +
+          '<div class="guide-card-category">' + (g.category || 'general') + '</div>' +
+          '<div class="guide-card-title">' + g.title + statusBadge + '</div>' +
+          '<div class="guide-card-desc">' + (g.description || '') + '</div>' +
+        '</div>' +
+        '<div class="guide-card-arrow">&#8594;</div>' +
+      '</a>';
+    }
+
+    /* ── Filter buttons ── */
+    document.getElementById('guidesFilterBar').addEventListener('click', function(e) {
+      var btn = e.target.closest('.guides-filter-btn');
+      if (!btn) return;
+      document.querySelectorAll('.guides-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      if (window._allGuides) {
+        renderGuides(window._allGuides);
+      }
+    });
+
+    /* ── Init ── */
+  document.addEventListener("DOMContentLoaded", function () {
+  loadGuides();
+});
+  </script>
+
+</body>
+</html>

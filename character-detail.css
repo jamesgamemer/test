@@ -1,0 +1,654 @@
+/* ============================================================
+   7DS ORIGIN - CHARACTER DETAIL PAGE STYLESHEET
+   Professional RPG Wiki Design (Prydwen.gg / Game8 inspired)
+   ============================================================ */
+
+/* --- Character Header Section --- */
+.char-detail-header {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+  align-items: stretch;
+}
+
+.char-detail-portrait {
+  background: linear-gradient(145deg, var(--panel), var(--dark3));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  width: 280px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.char-detail-portrait::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(96,165,250,0.06), transparent 60%);
+  pointer-events: none;
+}
+
+.char-detail-portrait h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.char-detail-portrait .char-img {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 12px;
+  filter: drop-shadow(0 4px 20px rgba(96,165,250,0.3));
+  transition: transform 0.3s, filter 0.3s;
+}
+
+.char-detail-portrait .char-img:hover {
+  transform: scale(1.03);
+  filter: drop-shadow(0 6px 28px rgba(96,165,250,0.45));
+}
+
+.char-rarity-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.char-rarity-badge.ssr {
+  background: linear-gradient(135deg, rgba(250,204,21,0.2), rgba(250,204,21,0.08));
+  color: var(--ssr);
+  border: 1px solid rgba(250,204,21,0.3);
+  text-shadow: 0 0 8px rgba(250,204,21,0.4);
+}
+
+.char-rarity-badge.sr {
+  background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(167,139,250,0.08));
+  color: var(--sr);
+  border: 1px solid rgba(167,139,250,0.3);
+  text-shadow: 0 0 8px rgba(167,139,250,0.4);
+}
+
+/* --- Description Panel --- */
+.char-detail-info {
+  flex: 1;
+  min-width: 0;
+  background: linear-gradient(145deg, var(--panel), var(--dark3));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.char-detail-info .section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(240,192,64,0.15);
+  letter-spacing: 1px;
+}
+
+.char-detail-info .desc-text {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.char-types {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.char-types .label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.type-pill {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: rgba(96,165,250,0.1);
+  color: var(--blue);
+  border: 1px solid rgba(96,165,250,0.2);
+  transition: all 0.2s;
+}
+
+.type-pill:hover {
+  background: rgba(96,165,250,0.18);
+  border-color: rgba(96,165,250,0.35);
+}
+
+/* --- Weapon Tabs (Redesigned) --- */
+.weapon-tabs-wrapper {
+  margin-bottom: 28px;
+}
+
+.weapon-tabs-wrapper .tabs-label {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.weapon-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--dark3);
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  width: fit-content;
+  margin-bottom: 0;
+}
+
+.weapon-tabs button {
+  background: transparent;
+  border: none;
+  padding: 10px 24px;
+  color: var(--muted);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.weapon-tabs button:hover {
+  color: white;
+  background: rgba(255,255,255,0.05);
+  transform: none;
+}
+
+.weapon-tabs button.active {
+  background: linear-gradient(135deg, var(--blue2), #2563eb);
+  color: white;
+  box-shadow: 0 2px 12px rgba(59,130,246,0.35);
+}
+
+/* --- Section Headers --- */
+.detail-section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-section-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 22px;
+  background: linear-gradient(180deg, var(--gold), var(--gold2));
+  border-radius: 2px;
+}
+
+.detail-section-sub {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  margin-bottom: 18px;
+}
+
+/* --- Skills Grid --- */
+.skills-grid,
+.skills-grid-v2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+/* --- Skill Card --- */
+.skill-card-v2 {
+  background: linear-gradient(145deg, var(--panel), var(--dark3));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-card-v2:hover {
+  border-color: rgba(96,165,250,0.35);
+  box-shadow: 0 4px 20px rgba(96,165,250,0.08);
+  transform: translateY(-2px);
+}
+
+.skill-card-v2 .skill-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.skill-card-v2 .skill-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #e2e8f0;
+  line-height: 1.3;
+}
+
+/* --- Skill Type Badges (Pill Style) --- */
+.skill-type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.skill-type-badge.badge-normal {
+  background: rgba(148,163,184,0.15);
+  color: #94a3b8;
+  border: 1px solid rgba(148,163,184,0.25);
+}
+
+.skill-type-badge.badge-passive {
+  background: rgba(167,139,250,0.15);
+  color: #a78bfa;
+  border: 1px solid rgba(167,139,250,0.25);
+}
+
+.skill-type-badge.badge-special {
+  background: rgba(251,191,36,0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251,191,36,0.25);
+}
+
+.skill-type-badge.badge-skill {
+  background: rgba(52,211,153,0.15);
+  color: #34d399;
+  border: 1px solid rgba(52,211,153,0.25);
+}
+
+.skill-type-badge.badge-tag {
+  background: rgba(96,165,250,0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(96,165,250,0.25);
+}
+
+.skill-type-badge.badge-ultimate {
+  background: linear-gradient(135deg, rgba(244,114,182,0.2), rgba(168,85,247,0.2));
+  color: #f472b6;
+  border: 1px solid rgba(244,114,182,0.3);
+  text-shadow: 0 0 6px rgba(244,114,182,0.3);
+}
+
+.skill-type-badge.badge-adventure {
+  background: rgba(74,222,128,0.15);
+  color: #4ade80;
+  border: 1px solid rgba(74,222,128,0.25);
+}
+
+.skill-card-v2 .skill-desc {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Highlight numbers in descriptions */
+.skill-desc .hl-num {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.skill-desc .hl-dur {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+/* --- Damage Breakdown Boxes --- */
+.dmg-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.dmg-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.15);
+  color: var(--text);
+}
+
+.dmg-box .dmg-label {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.dmg-box .dmg-value {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+/* --- Ultimate Skill Card (Special Emphasis) --- */
+.skill-card-v2.ultimate-card {
+  border-color: rgba(244,114,182,0.25);
+  background: linear-gradient(145deg, rgba(30,41,59,1), rgba(88,28,135,0.12));
+  grid-column: 1 / -1;
+}
+
+.skill-card-v2.ultimate-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f472b6, #a855f7, transparent);
+}
+
+.skill-card-v2.ultimate-card:hover {
+  border-color: rgba(244,114,182,0.45);
+  box-shadow: 0 4px 24px rgba(244,114,182,0.12), 0 0 40px rgba(168,85,247,0.06);
+}
+
+/* --- Potentials Section --- */
+.potentials-section-v2 {
+  margin-bottom: 36px;
+}
+
+.potentials-grid-v2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.potential-card-v2 {
+  background: linear-gradient(145deg, var(--panel), var(--dark3));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+  position: relative;
+}
+
+.potential-card-v2:hover {
+  border-color: rgba(240,192,64,0.3);
+  box-shadow: 0 4px 16px rgba(240,192,64,0.06);
+  transform: translateY(-2px);
+}
+
+.potential-card-v2 .tier-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.potential-card-v2 .tier-label .tier-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(240,192,64,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(240,192,64,0.25);
+}
+
+.potential-card-v2 .tier-desc {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+
+/* Special tiers (5, 7, 10) with stronger visual */
+.potential-card-v2.tier-milestone {
+  border-color: rgba(240,192,64,0.2);
+  background: linear-gradient(145deg, var(--panel), rgba(240,192,64,0.04));
+}
+
+.potential-card-v2.tier-milestone .tier-num {
+  background: rgba(240,192,64,0.25);
+}
+
+/* --- Costumes Section --- */
+.costumes-section-v2 {
+  margin-bottom: 36px;
+}
+
+.costumes-grid-v2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.costume-card-v2 {
+  background: linear-gradient(145deg, var(--panel), var(--dark3));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+}
+
+.costume-card-v2:hover {
+  border-color: rgba(96,165,250,0.3);
+  box-shadow: 0 4px 16px rgba(96,165,250,0.08);
+  transform: translateY(-2px);
+}
+
+.costume-card-v2 .costume-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(96,165,250,0.1);
+  border: 1px solid rgba(96,165,250,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 20px;
+}
+
+.costume-card-v2 p {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.costume-card-v2.has-image {
+  padding: 0;
+  overflow: hidden;
+}
+
+.costume-card-v2.has-image .costume-card-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.costume-card-v2.has-image:hover .costume-card-img {
+  transform: scale(1.05);
+}
+
+.costume-card-v2.has-image p {
+  padding: 10px 14px;
+}
+
+/* --- No Data Message --- */
+.no-data-msg {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  background: var(--panel);
+  border-radius: 14px;
+  border: 1px dashed var(--border);
+}
+
+/* --- Back Link --- */
+.page-back-v2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 28px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid transparent;
+}
+
+.page-back-v2:hover {
+  color: var(--gold);
+  background: rgba(240,192,64,0.06);
+  border-color: rgba(240,192,64,0.15);
+}
+
+.page-back-v2 .arrow {
+  font-size: 16px;
+  transition: transform 0.2s;
+}
+
+.page-back-v2:hover .arrow {
+  transform: translateX(-3px);
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .char-detail-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .char-detail-portrait {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .char-detail-info {
+    width: 100%;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-card-v2.ultimate-card {
+    grid-column: auto;
+  }
+
+  .potentials-grid-v2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .char-detail-portrait {
+    padding: 20px 16px;
+  }
+
+  .char-detail-portrait h1 {
+    font-size: 22px;
+  }
+
+  .char-detail-info {
+    padding: 20px 18px;
+  }
+
+  .weapon-tabs {
+    width: 100%;
+  }
+
+  .weapon-tabs button {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .skill-card-v2 {
+    padding: 16px;
+  }
+
+  .skill-card-v2 .skill-header {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .potentials-grid-v2 {
+    grid-template-columns: 1fr;
+  }
+
+  .costumes-grid-v2 {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+
+  .detail-section-title {
+    font-size: 17px;
+  }
+}

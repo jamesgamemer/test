@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Character - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/character-detail.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/navbar-auth.css">
+  <style>
+    /* ── Recommended Weapons Section ── */
+    .rec-weapons-section {
+      margin-top: 32px;
+      margin-bottom: 36px;
+    }
+    .rec-weapons-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .rec-weapons-title {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rec-weapons-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 22px;
+      background: linear-gradient(180deg, var(--gold), var(--gold2));
+      border-radius: 2px;
+    }
+    .rec-weapons-link {
+      font-size: 12px;
+      color: var(--blue);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .rec-weapons-link:hover { color: var(--gold); }
+
+    /* Weapon Carousel */
+    .weapon-carousel-wrap {
+      position: relative;
+    }
+    .weapon-carousel {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 4px 0 8px;
+      scrollbar-width: none;
+    }
+    .weapon-carousel::-webkit-scrollbar { display: none; }
+
+    .weapon-carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(13,15,30,0.9);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      transition: 0.2s;
+    }
+    .weapon-carousel-arrow:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .weapon-carousel-arrow.left { left: -8px; }
+    .weapon-carousel-arrow.right { right: -8px; }
+
+    /* Weapon Card */
+    .rec-weapon-card {
+      flex-shrink: 0;
+      width: 180px;
+      background: linear-gradient(145deg, var(--panel), var(--dark3));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+      display: block;
+    }
+    .rec-weapon-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 4px 20px rgba(240,192,64,0.12);
+      transform: translateY(-3px);
+    }
+    .rec-weapon-card.rarity-5 {
+      border-color: rgba(250,204,21,0.2);
+    }
+    .rec-weapon-card.rarity-5:hover {
+      border-color: rgba(250,204,21,0.5);
+      box-shadow: 0 4px 20px rgba(250,204,21,0.15);
+    }
+    .rec-weapon-card.rarity-4 {
+      border-color: rgba(167,139,250,0.2);
+    }
+    .rec-weapon-card.rarity-4:hover {
+      border-color: rgba(167,139,250,0.5);
+      box-shadow: 0 4px 20px rgba(167,139,250,0.15);
+    }
+    .rec-weapon-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      margin: 0 auto 8px;
+      display: block;
+      background: var(--dark2);
+      border: 1px solid var(--border);
+    }
+    .rec-weapon-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rec-weapon-series {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rec-weapon-stats {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .rec-weapon-stat {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .rec-weapon-stat .stat-val {
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .rec-weapon-rarity {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 10px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .rec-weapon-rarity.r5 {
+      background: rgba(250,204,21,0.15);
+      color: var(--ssr);
+      border: 1px solid rgba(250,204,21,0.25);
+    }
+    .rec-weapon-rarity.r4 {
+      background: rgba(167,139,250,0.15);
+      color: var(--sr);
+      border: 1px solid rgba(167,139,250,0.25);
+    }
+    .rec-weapon-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+    .rec-weapon-badge.signature {
+      background: rgba(244,114,182,0.15);
+      color: #f472b6;
+      border: 1px solid rgba(244,114,182,0.25);
+    }
+    .rec-weapon-badge.recommended {
+      background: rgba(52,211,153,0.15);
+      color: #34d399;
+      border: 1px solid rgba(52,211,153,0.25);
+    }
+
+    .rec-weapons-empty {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 13px;
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .rec-weapons-empty a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .rec-weapons-empty a:hover { color: var(--gold); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .rec-weapon-card { width: 150px; padding: 10px; }
+      .rec-weapon-icon { width: 44px; height: 44px; }
+      .rec-weapon-name { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Admin Bar -->
+  <div class="admin-bar" id="adminBar" style="display:none;">
+    <div class="admin-bar-left">
+      <span class="admin-badge">ADMIN</span>
+      <a href="admin.html" class="admin-bar-link">Dashboard</a>
+    </div>
+    <div class="admin-bar-right">
+      <button class="admin-bar-btn" onclick="AdminAuth.logout()">Logout</button>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html" data-i18n="nav_home">&#127968; Home</a></li>
+      <li><a href="characters.html" class="active" data-i18n="nav_characters">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html" data-i18n="nav_tierlist">&#127942; Tier List</a></li>
+      <li><a href="events.html" data-i18n="nav_events">&#127881; Events</a></li>
+      <li><a href="guides.html">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="characters.html" class="page-back-v2" id="backLink"><span class="arrow">&#8592;</span> <span data-i18n="cd_back">Back to Characters</span></a>
+      <div id="characterContent">
+        <div class="no-data-msg" data-i18n="cd_loading">Loading character data...</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  
+  
+  
+  
+  
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/supabase-weapon-api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/i18n-characters.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    var charData = null;
+    var currentWeapon = null;
+    var allWeaponsData = [];
+    var weaponCharLinks = [];
+
+    /* ---- Helper: get current language ---- */
+    function lang() {
+      return (typeof I18n !== 'undefined') ? I18n.getLang() : 'en';
+    }
+
+    /* ---- Helper: translate via CharTranslations ---- */
+    function CT() { return (typeof CharTranslations !== 'undefined') ? CharTranslations : null; }
+
+    // ---- Utility Functions ----
+    function esc(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = esc(text);
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    /* Render description that may contain HTML from rich text editor */
+    function renderRichDesc(text) {
+      if (!text) return '';
+      /* If text contains HTML tags, render as-is (from rich text editor) */
+      if (/<[a-z][\s\S]*>/i.test(text)) return text;
+      /* Otherwise use legacy highlightNums */
+      return highlightNums(text);
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc || '';
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+      }
+      hits.forEach(function(h) { clean = clean.replace(h, ''); });
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    /* ---- Translate weapon display name ---- */
+    function weaponDisplay(wk) {
+      var display = wk.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+      if (charData && charData.types) {
+        charData.types.forEach(function(t) {
+          if (t.toLowerCase().replace(/\s+/g, '') === wk.toLowerCase().replace(/[\s_]+/g, '')) display = t;
+        });
+      }
+      var ct = CT();
+      if (ct && lang() === 'th') {
+        return ct.getWeaponName(display, 'th');
+      }
+      return display;
+    }
+
+    /* ---- Load weapons data ---- */
+    async function loadWeaponsData() {
+      /* Load from local JSON */
+      try {
+        var resp = await fetch('data/weapons.json');
+        if (resp.ok) {
+          var data = await resp.json();
+          allWeaponsData = (data.weapons || data || []).map(function(w) {
+            return {
+              id: w.slug,
+              name_en: w.name || w.name_en || '',
+              slug: w.slug || '',
+              series: w.series || '',
+              category: w.category || '',
+              rarity: w.rarity || 5,
+              equipment_atk: w.equipment_atk || 0,
+              sub_stat_type: w.sub_stat_type || '',
+              sub_stat_value: w.sub_stat_value || '',
+              passive_desc_en: w.passive_description || w.passive_desc_en || '',
+              icon_url: w.icon_url || ''
+            };
+          });
+        }
+      } catch (e) {
+        allWeaponsData = [];
+      }
+    }
+
+    /* ---- Get recommended weapons for character ---- */
+    function getRecommendedWeapons(character) {
+      var charId = character.id;
+      var charTypes = (character.types || []).map(function(t) { return t.toLowerCase(); });
+      var result = [];
+
+      /* 1. Check weapon_characters links (local) */
+      if (weaponCharLinks.length > 0 && charId) {
+        var links = weaponCharLinks.filter(function(l) { return l.character_id === charId; });
+        links.forEach(function(link) {
+          var weapon = allWeaponsData.find(function(w) { return w.id === link.weapon_id; });
+          if (weapon) {
+            result.push({
+              weapon: weapon,
+              is_signature: link.is_signature || false,
+              priority: link.priority || 99
+            });
+          }
+        });
+      }
+
+      /* 2. Fallback: match by weapon category */
+      if (result.length === 0 && allWeaponsData.length > 0 && charTypes.length > 0) {
+        var matched = allWeaponsData.filter(function(w) {
+          return charTypes.indexOf((w.category || '').toLowerCase()) !== -1;
+        });
+        /* Sort: 5-star first, then by ATK */
+        matched.sort(function(a, b) {
+          if (b.rarity !== a.rarity) return b.rarity - a.rarity;
+          return (b.equipment_atk || 0) - (a.equipment_atk || 0);
+        });
+        matched.forEach(function(w, i) {
+          result.push({
+            weapon: w,
+            is_signature: false,
+            priority: i + 1
+          });
+        });
+      }
+
+      return result;
+    }
+
+    /* ---- Build Recommended Weapons Section ---- */
+    function buildRecommendedWeapons(character) {
+      var weapons = getRecommendedWeapons(character);
+      var charTypes = (character.types || []);
+
+      var html = '<div class="rec-weapons-section">';
+      html += '<div class="rec-weapons-header">';
+      html += '<div class="rec-weapons-title">Recommended Weapons</div>';
+      if (charTypes.length > 0) {
+        html += '<a href="weapons.html" class="rec-weapons-link">View All Weapons &#8594;</a>';
+      }
+      html += '</div>';
+
+      if (weapons.length === 0) {
+        html += '<div class="rec-weapons-empty">No weapons data available yet. <a href="weapons.html">Browse all weapons</a></div>';
+        html += '</div>';
+        return html;
+      }
+
+      html += '<div class="weapon-carousel-wrap">';
+      html += '<button class="weapon-carousel-arrow left" onclick="scrollWeaponCarousel(this, -1)">&#10094;</button>';
+      html += '<div class="weapon-carousel">';
+
+      weapons.forEach(function(item) {
+        var w = item.weapon;
+        var rarityClass = (w.rarity === 5 || w.rarity === '5') ? 'rarity-5' : 'rarity-4';
+        var rarityBadge = (w.rarity === 5 || w.rarity === '5') ? 'r5' : 'r4';
+        var rarityText = (w.rarity === 5 || w.rarity === '5') ? '5-Star' : '4-Star';
+        var iconUrl = w.icon_url || 'https://placehold.co/56x56/111827/666?text=?';
+
+        html += '<a href="weapons.html" class="rec-weapon-card ' + rarityClass + '">';
+        html += '<img class="rec-weapon-icon" src="' + esc(iconUrl) + '" alt="' + esc(w.name_en) + '" loading="lazy" onerror="this.src=\'https://placehold.co/56x56/111827/666?text=?\'">';
+        html += '<div class="rec-weapon-name" title="' + esc(w.name_en) + '">' + esc(w.name_en) + '</div>';
+        html += '<div class="rec-weapon-series">' + esc(w.series || w.category || '') + '</div>';
+        html += '<div class="rec-weapon-stats">';
+        html += '<span class="rec-weapon-stat">ATK <span class="stat-val">' + (w.equipment_atk || '—') + '</span></span>';
+        if (w.sub_stat_type && w.sub_stat_value) {
+          html += '<span class="rec-weapon-stat">' + esc(w.sub_stat_type) + ' <span class="stat-val">' + esc(w.sub_stat_value) + '</span></span>';
+        }
+        html += '</div>';
+        html += '<span class="rec-weapon-rarity ' + rarityBadge + '">' + rarityText + '</span>';
+
+        if (item.is_signature) {
+          html += '<div><span class="rec-weapon-badge signature">SIGNATURE</span></div>';
+        } else if (weaponCharLinks.length > 0) {
+          html += '<div><span class="rec-weapon-badge recommended">REC #' + item.priority + '</span></div>';
+        }
+
+        html += '</a>';
+      });
+
+      html += '</div>'; /* weapon-carousel */
+      html += '<button class="weapon-carousel-arrow right" onclick="scrollWeaponCarousel(this, 1)">&#10095;</button>';
+      html += '</div>'; /* weapon-carousel-wrap */
+      html += '</div>'; /* rec-weapons-section */
+      return html;
+    }
+
+    /* ---- Scroll Weapon Carousel ---- */
+    function scrollWeaponCarousel(btn, direction) {
+      var wrap = btn.closest('.weapon-carousel-wrap');
+      var carousel = wrap.querySelector('.weapon-carousel');
+      var scrollAmount = 200;
+      carousel.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
+
+    /* ---- Bold text helper: convert **text** to <b>text</b> ---- */
+    function renderBold(text) {
+      if (!text) return '';
+      var t = esc(text);
+      /* Convert **bold** markers */
+      t = t.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+      /* Also highlight numbers like 300/400/500 and percentages */
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    /* ---- Build Costumes Section (Enhanced card layout) ---- */
+    function buildCostumesSection(c, charDisplayName) {
+      var costumesArr = c.costumes || [];
+      /* Filter: only show items that have at least a name */
+      var validCostumes = costumesArr.filter(function(cos) {
+        return (typeof cos === 'string' && cos.trim()) || (typeof cos === 'object' && cos.name);
+      });
+      if (validCostumes.length === 0) return '';
+
+      var ct = CT();
+      var currentLang = lang();
+      var lblCostumes = (ct) ? ct.getUILabel('Costumes', currentLang) : 'Costumes';
+
+      var html = '<div class="costumes-section-v3">';
+      html += '<div class="detail-section-title">' + esc(charDisplayName) + ' ' + esc(lblCostumes) + '</div>';
+      html += '<div class="costumes-grid-v3">';
+
+      validCostumes.forEach(function(cos) {
+        var nameEn = (typeof cos === 'string') ? cos : (cos.name || '');
+        var img = (typeof cos === 'object' && cos.image) ? cos.image : '';
+        var desc = (typeof cos === 'object' && cos.description) ? cos.description : '';
+
+        /* Translate costume name */
+        var displayName = nameEn;
+        if (ct && currentLang === 'th') {
+          displayName = ct.getCostumeName(nameEn, 'th');
+        }
+
+        html += '<div class="costume-card-v3">';
+        if (img) {
+          html += '<div class="costume-card-img-wrap">';
+          html += '<img src="' + esc(img) + '" alt="' + esc(displayName) + '" class="costume-card-portrait" onerror="this.style.display=\'none\'">';
+          html += '</div>';
+        } else {
+          html += '<div class="costume-card-img-wrap costume-card-placeholder"><span>&#128090;</span></div>';
+        }
+        html += '<div class="costume-card-body">';
+        html += '<div class="costume-card-name">' + esc(displayName) + '</div>';
+        if (desc) {
+          html += '<div class="costume-card-desc">' + renderRichDesc(desc) + '</div>';
+        }
+        html += '</div></div>';
+      });
+
+      html += '</div></div>';
+      return html;
+    }
+
+    /* ---- Build Materials Section ---- */
+    function buildMaterialsSection(c, charDisplayName) {
+      var materialsArr = c.materials || [];
+      if (!Array.isArray(materialsArr) || materialsArr.length === 0) return '';
+
+      var validMaterials = materialsArr.filter(function(m) {
+        return m && typeof m === 'object' && m.name;
+      });
+      if (validMaterials.length === 0) return '';
+
+      var html = '<div class="materials-section">';
+      html += '<div class="detail-section-title">' + esc(charDisplayName) + ' Upgrade Materials</div>';
+      html += '<div class="materials-grid">';
+
+      validMaterials.forEach(function(mat) {
+        var img = mat.image || '';
+        html += '<div class="material-card">';
+        if (img) {
+          html += '<img src="' + esc(img) + '" alt="' + esc(mat.name) + '" class="material-icon" onerror="this.src=\'https://placehold.co/32x32/111827/666?text=?\'">'; 
+        } else {
+          html += '<div class="material-icon-placeholder">&#127793;</div>';
+        }
+        html += '<span class="material-name">' + esc(mat.name) + '</span>';
+        html += '</div>';
+      });
+
+      html += '</div></div>';
+      return html;
+    }
+
+    // ---- Render Functions ----
+    function renderPage(c) {
+      charData = c;
+      var charDisplayName = c.name_en || c.name || c.slug || 'Unknown';
+      document.title = charDisplayName + ' - 7DS Origin';
+
+      var ct = CT();
+      var currentLang = lang();
+
+      var hasSkills = false;
+      if (c.skills && typeof c.skills === 'object') {
+        for (var k in c.skills) {
+          if (c.skills[k] && c.skills[k].length > 0) { hasSkills = true; break; }
+        }
+      }
+
+      var weaponKeys = [];
+      if (hasSkills) {
+        var skillKeys = Object.keys(c.skills);
+        (c.types || []).forEach(function(t) {
+          var tNorm = t.toLowerCase().replace(/\s+/g, '');
+          skillKeys.forEach(function(sk) {
+            var skNorm = sk.toLowerCase().replace(/[\s_]+/g, '');
+            if (skNorm === tNorm && weaponKeys.indexOf(sk) === -1) weaponKeys.push(sk);
+          });
+        });
+        skillKeys.forEach(function(sk) {
+          if (weaponKeys.indexOf(sk) === -1 && c.skills[sk] && c.skills[sk].length > 0) weaponKeys.push(sk);
+        });
+      }
+
+      var rarityClass = (c.rarity === 'SSR') ? 'ssr' : 'sr';
+
+      /* Weapon type pills - translated */
+      var typePills = (c.types || []).map(function(t) {
+        var displayName = (ct && currentLang === 'th') ? ct.getWeaponName(t, 'th') : t;
+        return '<span class="type-pill">' + esc(displayName) + '</span>';
+      }).join('');
+
+      /* Description - translated */
+      var descText = c.description;
+      if (ct && currentLang === 'th') {
+        var thDesc = ct.getDescription(charDisplayName, 'th');
+        if (thDesc) descText = thDesc;
+      }
+
+      /* Section labels - translated */
+      var lblDesc = (ct) ? ct.getUILabel('Description', currentLang) : 'Description';
+      var lblWeapons = (ct) ? ct.getUILabel('Weapon Types:', currentLang) : 'Weapon Types:';
+      var lblSkillsSoon = (ct) ? ct.getUILabel('Skills data will be added soon.', currentLang) : 'Skills data will be added soon.';
+
+      var html = '<div class="char-detail-header">';
+      html += '<div class="char-detail-portrait">';
+      html += '<h1>' + esc(charDisplayName) + '</h1>';
+      var imgUrl = c.image || 'https://placehold.co/300x400?text=No+Image';
+      html += '<img src="' + esc(imgUrl) + '" class="char-img" alt="' + esc(charDisplayName) + '" onerror="this.src=\'https://placehold.co/300x400?text=Error\'">';
+      html += '<div><span class="char-rarity-badge ' + rarityClass + '">' + esc(c.rarity) + '</span></div>';
+      html += '</div>';
+      html += '<div class="char-detail-info">';
+      html += '<div class="section-label">' + esc(lblDesc) + '</div>';
+      html += '<p class="desc-text">' + esc(descText) + '</p>';
+      html += '<div class="char-types"><span class="label">' + esc(lblWeapons) + '</span>' + typePills + '</div>';
+      html += '</div></div>';
+
+      /* ── Recommended Weapons Section ── */
+      html += buildRecommendedWeapons(c);
+
+      /* ── Costumes Section (New Enhanced) ── */
+      html += buildCostumesSection(c, charDisplayName);
+
+      /* ── Materials Section (New) ── */
+      html += buildMaterialsSection(c, charDisplayName);
+
+      if (hasSkills && weaponKeys.length > 0) {
+        html += '<div class="weapon-tabs-wrapper"><div class="weapon-tabs">';
+        weaponKeys.forEach(function(wk, i) {
+          var display = weaponDisplay(wk);
+          var active = (i === 0) ? ' class="active"' : '';
+          html += '<button onclick="showWeapon(\'' + esc(wk) + '\',this)"' + active + '>' + esc(display) + '</button>';
+        });
+        html += '</div></div>';
+        html += '<div id="weaponContent"></div>';
+        currentWeapon = weaponKeys[0];
+      } else {
+        html += '<div class="no-data-msg">';
+        html += '<p>&#128679; ' + esc(lblSkillsSoon) + '</p>';
+        html += '</div>';
+      }
+
+      if (!c) {
+        var notFoundMsg = (ct) ? ct.getUILabel('Character not found.', currentLang) : 'Character not found.';
+        document.getElementById('characterContent').innerHTML = '<div class="no-data-msg">' + esc(notFoundMsg) + '</div>';
+        return;
+      }
+
+      document.getElementById('characterContent').innerHTML = html;
+
+      if (hasSkills && weaponKeys.length > 0) {
+        showWeapon(weaponKeys[0], document.querySelector('.weapon-tabs button'));
+      }
+    }
+
+    function showWeapon(type, btn) {
+      currentWeapon = type;
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+
+      var ct = CT();
+      var currentLang = lang();
+
+      var skills = (charData.skills && charData.skills[type]) || [];
+      var pots = (charData.potentials && charData.potentials[type]) || [];
+      var costumesArr = charData.costumes || [];
+
+      /* Skills section */
+      var html = '<div class="skills-grid-v2">';
+      skills.forEach(function(sk, i) {
+        var stype = sk.type || 'Normal';
+        var badge = getBadgeClass(stype);
+        var isUlt = stype.toLowerCase() === 'ultimate';
+        var extracted = extractHits(sk.description || '');
+
+        /* Translate skill type */
+        var displayType = (ct && currentLang === 'th') ? ct.getSkillType(stype, 'th') : stype;
+
+        html += '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+        html += '<div class="skill-header"><div class="skill-name">' + esc(sk.name) + '</div><span class="skill-type-badge ' + badge + '">' + esc(displayType) + '</span></div>';
+        if (extracted.clean) html += '<div class="skill-desc">' + renderRichDesc(extracted.clean) + '</div>';
+        if (extracted.hits.length > 0) {
+          html += '<div class="dmg-breakdown">';
+          extracted.hits.forEach(function(h) {
+            var parts = h.split(':');
+            if (parts.length >= 2) html += '<div class="dmg-box"><span class="dmg-label">' + esc(parts[0].trim()) + '</span><span class="dmg-value">' + esc(parts[1].trim()) + '</span></div>';
+          });
+          html += '</div>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+
+      /* Potentials section */
+      if (pots.length > 0) {
+        var lblPotentials = (ct) ? ct.getUILabel('Potentials', currentLang) : 'Potentials';
+        var lblTier = (ct) ? ct.getUILabel('Tier', currentLang) : 'Tier';
+        html += '<div class="potentials-section-v2"><div class="detail-section-title">' + esc(lblPotentials) + '</div><div class="potentials-grid-v2">';
+        pots.forEach(function(p, i) {
+          var num = (p.tier || '').toString().match(/\d+/) || [i+1];
+          html += '<div class="potential-card-v2"><div class="tier-label">' + esc(lblTier) + ' ' + num + '</div><div class="tier-desc">' + highlightNums(p.description || '') + '</div></div>';
+        });
+        html += '</div></div>';
+      }
+
+      /* Costumes section removed from here — now rendered in renderPage via buildCostumesSection */
+
+      document.getElementById('weaponContent').innerHTML = html;
+    }
+
+    /* ---- Re-render on language change ---- */
+    function onLangChange() {
+      if (charData) {
+        renderPage(charData);
+      }
+    }
+
+    // ---- Initialize ----
+    document.addEventListener("DOMContentLoaded", async () => {
+      // i18n
+      if (typeof I18n !== 'undefined') {
+        I18n.init();
+        I18n.onChange(onLangChange);
+      }
+
+      // Auth check
+      if (await AdminAuth.isLoggedIn()) {
+        document.getElementById('adminBar').style.display = 'flex';
+      }
+
+      // Load weapons data first
+      await loadWeaponsData();
+
+      // Get slug from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const slug = urlParams.get('slug');
+
+      if (slug) {
+        const character = await CharDB.getBySlug(slug);
+        if (character) {
+          renderPage(character);
+        } else {
+          var ct = CT();
+          var notFoundMsg = (ct) ? ct.getUILabel('Character not found.', lang()) : 'Character not found.';
+          document.getElementById('characterContent').innerHTML = '<div class="no-data-msg">' + notFoundMsg + '</div>';
+        }
+      } else {
+        var ct = CT();
+        var noSelMsg = (ct) ? ct.getUILabel('No character selected.', lang()) : 'No character selected.';
+        document.getElementById('characterContent').innerHTML = '<div class="no-data-msg">' + noSelMsg + '</div>';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,4998 @@
+{
+  "Ban": {
+    "name": "Ban",
+    "description": "A member of <The Seven Deadly Sins> bearing the mark of Greed. He gained immortality after drinking from the Fountain of Youth in the Fairy King's Forest. Despite his rough exterior, he is an exceptional chef with a delicate touch.",
+    "rarity": "SSR",
+    "types": [
+      "Cudgel",
+      "Greatsword",
+      "Gauntlets"
+    ],
+    "skills": {},
+    "potentials": {},
+    "costumes": []
+  },
+  "Bug": {
+    "name": "Bug",
+    "description": "Even though he is a Demon, he secretly admires <The Seven Deadly Sins> for defeating both the Demon King and <The Ten Commandments>. Normally he takes the form of a tall, athletic man, but can transform into a small monster when the situation calls for it.",
+    "rarity": "SR",
+    "types": [
+      "Axe",
+      "Dual Swords",
+      "Book"
+    ],
+    "skills": {
+      "Axe": [
+        {
+          "name": "Downsize",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Troublemaker",
+          "type": "Passive",
+          "description": "Increases damage dealt to enemies with Darkness Burst activated by 30%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 129% of Attack. 1st hit: 19% 2nd hit: 21% 3rd hit: 33% 4th hit: 56%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 106% / 166% of Attack based on the charge level. Inflicts damage equal to 60% of Attack when overcharged. Landing the attack at the right moment results in a Critical Hit."
+        },
+        {
+          "name": "Dark Thrash",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 219% of Attack on the enemy and pulls them to the center."
+        },
+        {
+          "name": "Dark Axe Slash",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 105% of Attack."
+        },
+        {
+          "name": "Death Swarm",
+          "type": "Ultimate",
+          "description": "Increases the hero's Darkness Attack by 30% for 20 sec, then inflicts damage equal to 307% of Attack."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "name": "Downsize",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Troublemaker",
+          "type": "Passive",
+          "description": "Increases the hero's Evasion Rate by 20% for 10 sec after successfully evading."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 113% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 49%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Increases damage dealt with the next Normal Skill by 50% and resets its cooldown."
+        },
+        {
+          "name": "Darkness Burst",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 137% of Attack, with a 30% chance to inflict additional damage equal to 41% of Attack."
+        },
+        {
+          "name": "Dark Dual Sword Dance",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 85% of Attack."
+        },
+        {
+          "name": "Nightmare",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 181% of Attack on enemies in a straight line, Stunning them for 3 sec."
+        }
+      ],
+      "Book": [
+        {
+          "name": "Downsize",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Troublemaker",
+          "type": "Passive",
+          "description": "Increases all allied heroes' Darkness damage dealt to Cursed enemies by 20%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 113% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 49%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Enhances Normal Attacks, slightly increasing damage for 10 sec, and increases enemies' Curse duration by 2 sec."
+        },
+        {
+          "name": "The Rascal",
+          "type": "Skill",
+          "description": "Creates a Decoy at the hero's location to Taunt enemies in range for 5 sec and enters Stealth for 10 sec. When the Decoy disappears, it explodes, Stunning Taunted enemies for 3 sec."
+        },
+        {
+          "name": "Dark Flare",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 85% of Attack."
+        },
+        {
+          "name": "Solo Stage",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 290% of Attack, then inflicts Curse for 15 sec. ※ Curse: Inflicts Darkness damage equal to 15% of Attack every 3 sec and decreases Darkness Defense by 15%."
+        }
+      ]
+    },
+    "potentials": {
+      "Axe": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 27% 2nd hit: 29% 3rd hit: 46% 4th hit: 78%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Normal Skill. Additionally inflicts damage equal to 20% of Attack each time the attack hits targets in the central area."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases damage dealt by 10% each time the Ultimate Move hits the same enemy."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Gains Reaction Immunity while charging the Special Attack. Landing the attack at the right moment increases damage dealt by 75%."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 30% 2nd hit: 32% 3rd hit: 52% 4th hit: 86%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Resets the Special Attack cooldown when landing the final strike of the Normal Attack on an enemy with Darkness Burst activated."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the hero's Crit Chance by 30% for 10 sec when successfully landing a Back Attack."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the Special Attack's Normal Skill enhancement effect by 50%."
+        }
+      ],
+      "Book": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 27% 3rd hit: 40% 4th hit: 68%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Tag Skill by 60%."
+        },
+        {
+          "tier": 5,
+          "description": "Landing the Ultimate Move decreases Darkness Resistance by 15% for 20 sec."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the duration of Normal Skill's Stun by 3 sec."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the hero's Movement Speed by 50% while the Normal Skill's Stealth is active, and after Stealth ends, increases the hero's Crit Chance by 100% for 5 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the Special Attack's Normal Attack enhancement duration by 10 sec. Enemies hit by the enhanced Normal Attack are Cursed for 20 sec, and their damage taken from it increases by 50%."
+        }
+      ]
+    },
+    "costumes": [
+      "Shy Demon",
+      "Demon's Outing",
+      "Shadow Walk",
+      "Demon's Stealth",
+      "Keen Instinct"
+    ]
+  },
+  "Daisy": {
+    "name": "Daisy",
+    "description": "A Fairy transposed from the distant past. She is said to have created a mysterious artifact while conducting research with explorers of various races. By what seems like fate, or mere chance, she crosses paths with Tristan and the gang and becomes caught up in a turmoil that shakes all of Britannia",
+    "rarity": "SSR",
+    "types": [
+      "Shield",
+      "Book",
+      "Wand"
+    ],
+    "skills": {
+      "Book": [
+        {
+          "name": "Artisan's Touch",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Offbeat Girl",
+          "type": "Passive",
+          "description": "Grants Static Shock for 20 sec when an allied hero lands the Tag Skill. (Max: 3 times) ※ Static Shock: Increases Lightning damage by 5% for every 1 effect(s). Static Shock is removed at max stacks and grants High Voltage to all allied heroes for 20 sec. ※ High Voltage: Increases Lightning damage by 25% and Crit Chance by 15%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 111% of Attack. Inflicts Electromagnet on the enemy for 10 sec if the final strike lands. 1st hit: 16% 2nd hit: 18% 3rd hit: 28% 4th hit: 49% ※ Electromagnet: Decreases Crit Resistance by 10%."
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Increases Crit Damage of allies in range by 15% for 20 sec. Using the skill on a Shocking Streetlamp in range slightly increases its Attack Speed for 10 sec."
+        },
+        {
+          "name": "Summon Shocking Streetlamp",
+          "type": "Skill",
+          "description": "Summons a Shocking Streetlamp for 15 sec, inflicting damage equal to 13% of Attack with each hit. Increases damage dealt to enemies affected by Electromagnet by 15%. Every 5 time(s) the Shocking Streetlamp attacks, it grants Electric Charge to allies in range for 20 sec. (Max: 5 times) ※ Electric Charge: Increases Crit Damage by 5% and Crit Chance by 2%."
+        },
+        {
+          "name": "Here Comes Daisy",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 80% of Attack."
+        },
+        {
+          "name": "Fruit Barrage!",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 261% of Attack and decreases Crit Defense by 30%."
+        }
+      ],
+      "Wand": [
+        {
+          "name": "Artisan's Touch",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Offbeat Girl",
+          "type": "Passive",
+          "description": "Inflicts Wind Seed for 20 sec when the hero's attack results in a Critical Hit. ※ Wind Seed: Additionally inflicts damage equal to 80% of Attack and decreases Wind Defense by 5% (Max: 20%) for 20 sec when struck by a Critical Hit, then the effect is removed."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 100% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 30% 4th hit: 52%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 17% of Attack every 1 sec while the stance is maintained, and the final strike inflicts damage equal to 48% of Attack. If the stance is maintained for 3 sec or more, the enemy hit by the final strike is Stunned for 4 sec and all allied heroes' Crit Chance is increased by 20% for 20 sec."
+        },
+        {
+          "name": "Seed Bomb",
+          "type": "Skill",
+          "description": "Launches 4 Seed Bomb(s), each inflicting damage equal to 40% of Attack. Decreases Crit Resistance of enemies hit by 3% for 20 sec. (Max: 24%) Results in a Critical Hit against Stunned enemies."
+        },
+        {
+          "name": "Here Comes Daisy",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 89% of Attack."
+        },
+        {
+          "name": "Oddball's Incense Burner",
+          "type": "Ultimate",
+          "description": "Decreases Wind Resistance and Block Rate of enemies in range by 20% and 50% respectively, and inflicts Wind Seed every 1 sec for 10 sec. ※ Wind Seed: Additionally inflicts damage equal to 80% of Attack and decreases Wind Defense by 5% (Max: 20%) for 20 sec when struck by a Critical Hit, then the effect is removed."
+        }
+      ],
+      "Shield": [
+        {
+          "name": "Artisan's Touch",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Offbeat Girl",
+          "type": "Passive",
+          "description": "Increases the default state's Magic Charging Efficiency by 50%, and the Ultimate Move does not consume Magic."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 142% of Attack. Increases damage dealt by 30% when Riding. 1st hit: 21% 2nd hit: 23% 3rd hit: 37% 4th hit: 61%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "[Default] Decreases damage taken by 70% while the stance is maintained. Additionally, nearby enemies are Staggered and the Magic Gauge is restored by 100 every 1 sec. [Riding] Inflicts damage equal to up to 163% of Attack. Consumes 100 Magic Gauge to increase damage by 10% every 0.4 sec while the stance is maintained. Restores Magic by 300 when the stance is maintained for 2 sec."
+        },
+        {
+          "name": "Go Away / Energy Blast",
+          "type": "Skill",
+          "description": "[Default] Inflicts damage equal to 174% of Attack. Magic Gauge is restored by 300 if an enemy is struck, and their Earth Resistance is decreased by 20% for 20 sec. [Riding] Inflicts damage equal to 256% of Attack. Each hit consumes 100 of the Magic Gauge to increase damage by 10%. Restores the Magic Gauge by 100 when the same target is hit 5 time(s)."
+        },
+        {
+          "name": "Here Comes Daisy",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 113% of Attack."
+        },
+        {
+          "name": "Help Me, Domby",
+          "type": "Ultimate",
+          "description": "The hero summons and rides Domby for 20 sec. The hero gains Reaction Immunity while riding."
+        }
+      ]
+    },
+    "potentials": {
+      "Shield": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 29% 2nd hit: 32% 3rd hit: 52% 4th hit: 85%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Using the Special Attack does not decrease Movement Speed, and its range is greatly increased. The Magic Gauge recovery from Staggering nearby enemies increases by 100%."
+        },
+        {
+          "tier": 6,
+          "description": "Decreases the Magic consumption of the Special Attack and Normal Skill when riding by 50%."
+        },
+        {
+          "tier": 7,
+          "description": "Slightly increases the range of the Normal Skill while riding. Taking damage from a Normal Skill increases the enemy's damage taken by 20%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Normal Skill by 90% and increases the riding duration by 10 sec."
+        },
+        {
+          "tier": 10,
+          "description": "Changes the Normal Skill into a skill that can be used 2 time(s) while riding. The Special Attack's damage dealt increases by 100% when fully charged."
+        }
+      ],
+      "Book": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 26% 3rd hit: 40% 4th hit: 68%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Tag Skill by 60%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Special Attack and increases Crit Damage boost by 100%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the Normal Attack's Electromagnet duration by 10 and increases the Ultimate Move's Crit Defense reduction by 15%."
+        },
+        {
+          "tier": 7,
+          "description": "Changes the Normal Skill into a skill that can be used 4 time(s) and increases the duration of Shocking Streetlamp by 50%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Slightly increases the range of the Ultimate Move and increases the duration by 100%."
+        }
+      ],
+      "Wand": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 42% 4th hit: 73%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Inflicts damage equal to 50% of Attack when using the Normal Skill. Adds 2 Seed Bomb(s) that decrease Movement Speed by 40%, and 2 Seed Bomb(s) that decrease Wind Resistance by 20% for 20 sec."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Slightly increases the range of the Ultimate Move and increases the duration by 10 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Inflicts damage equal to 50% of Attack to enemies in range of the Ultimate Move every 1 sec."
+        },
+        {
+          "tier": 10,
+          "description": "Increases final strike damage by 300% and decreases Shatter Resistance by 15% for 20 sec when the Special Attack stance is maintained for 3 sec."
+        }
+      ]
+    },
+    "costumes": [
+      "Fairy of the Past",
+      "Small Explorer",
+      "Autumn Scent"
+    ]
+  },
+  "Derieri": {
+    "name": "Derieri",
+    "description": "A Demon of <The Ten Commandments>, an elite unit of the Demon King. She is bestowed with the Commandment of 「Purity」 and uses the magical power of \"Combo Star.\" She often speaks in short, clipped phrases, so her companion Monspeet frequently acts as her unofficial interpreter.",
+    "rarity": "SSR",
+    "types": [
+      "Gauntlets",
+      "Axe",
+      "Greatsword"
+    ],
+    "skills": {},
+    "potentials": {},
+    "costumes": []
+  },
+  "Diane": {
+    "name": "Diane",
+    "description": "A member of <The Seven Deadly Sins> bearing the mark of Envy. In the past, she was falsely accused of treason and went into hiding, eventually settling in the Forest of White Dreams. She has a fondness for Meliodas, the leader of <The Seven Deadly Sins>.",
+    "rarity": "SSR",
+    "types": [
+      "Gauntlets",
+      "Axe",
+      "Cudgel"
+    ],
+    "skills": {
+      "Axe": [
+        {
+          "name": "Giant Girl",
+          "type": "Passive",
+          "description": "Increases damage dealt by 40% when attacking an enemy with Earth Burst activated, and inflicts Breaker for 10 sec when attacking them 3 time(s). ※ Breaker: Inflicts Stun for 4 sec the first time the effect is inflicted. Inflicts damage equal to 150% of the caster's Defense. Increases damage taken from the caster by 30%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 88% of Attack. 1st hit: 21% 2nd hit: 25% 3rd hit: 42%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 114% / 167% of Attack based on the charge level. Decreases the cooldown by 50% when attacking an enemy affected by Breaker."
+        },
+        {
+          "name": "Charged Slash",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 215% of Attack. Increases damage dealt to enemies affected by Breaker by 100%."
+        },
+        {
+          "name": "Ground Down",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 113% of Attack, and inflicts Breaker for 10 sec if the enemy is Petrified. ※ Breaker: Inflicts Stun for 4 sec the first time the effect is inflicted. Inflicts damage equal to 150% of the caster's Defense. Increases damage taken from the caster by 30%."
+        },
+        {
+          "name": "Rock Blast",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 283% of Attack and inflicts Breaker for 10 sec. ※ Breaker: Inflicts Stun for 4 sec the first time the effect is inflicted. Inflicts damage equal to 150% of the caster's Defense. Increases damage taken from the caster by 30%."
+        }
+      ],
+      "Cudgel": [
+        {
+          "name": "Giant Girl",
+          "type": "Passive",
+          "description": "Taunts enemies for 5 sec and grants all allied heroes Heart of the Land for 20 sec when activating Earth Burst. ※ Heart of the Land: Grants a barrier equal to 30% of Max HP and restores HP equal to 10% of Defense every 0.5 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 111% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 29% 4th hit: 48%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 124% of Attack. Increases damage dealt to Petrified enemies by 50%."
+        },
+        {
+          "name": "Desert Sands",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 210% of Attack and decreases the Movement Speed of enemies in range by 40%. Enemies hit 5 time(s) are Petrified for 6 sec. ※ Petrify: Incapacitated. Increases Physical and Earth damage taken by 50%, and decreases damage taken from elements other than Physical and Earth by 75%."
+        },
+        {
+          "name": "Crushing Art",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 92% of Attack."
+        },
+        {
+          "name": "Ground Rising",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 282% of Attack. Additionally increases the Burst Gauge by 500 if the enemy's Movement Speed is decreased."
+        }
+      ],
+      "Gauntlets": [
+        {
+          "name": "Giant Girl",
+          "type": "Passive",
+          "description": "Additionally inflicts damage equal to 10% of Defense when attacking the enemy."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 111% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 47%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 120% of Attack. 50% chance to reset the Normal Skill cooldown on the final strike."
+        },
+        {
+          "name": "Martial Drive",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 192% of Attack. Increases the hero's Defense by 30% for 10 sec."
+        },
+        {
+          "name": "Rock Down",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 94% of Attack and Taunts for 3 sec."
+        },
+        {
+          "name": "Metal Drop",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 286% of Attack and gains Heavy Metal for 15 sec. ※ Heavy Metal: Becomes immune to Reactions. Increases the enemy's Burst Gauge by 50 and increases the hero's Shatter Resistance by 3% for 20 sec. (Max: 30%)"
+        }
+      ]
+    },
+    "potentials": {
+      "Cudgel": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 67%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Normal Skill and pulls enemies toward the center. The enemies in the central area additionally take damage equal to 45% of Attack."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Decreases damage dealt with the Special Attack by 70% and increases the number of boulders to 8."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the Heart of the Land's barrier by 233% and Earth damage dealt by 30%."
+        }
+      ],
+      "Gauntlets": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 41% 4th hit: 67%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "100% chance to reset the Normal Skill cooldown and increase damage dealt with the Normal Skill by 50% once when landing the final strike of the Special Attack."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Additionally inflicts damage equal to 270% of Attack when using the Ultimate Move."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases damage dealt by the Special Attack's final strike by 300% and decreases the enemy's Earth Defense by 30% for 20 sec."
+        }
+      ],
+      "Axe": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 29% 2nd hit: 35% 3rd hit: 58%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Inflicts damage equal to 240% of Defense 3 sec after landing the Normal Skill on an enemy. Increases damage dealt by 100% if they are affected by Breaker."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Slightly increases the range of the Special Attack and increases damage dealt by 20%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases Breaker's damage dealt by 100% and the hero's damage dealt by 50%"
+        }
+      ]
+    },
+    "costumes": [
+      "Giant Girl in Love",
+      "Tavern Hostess",
+      "<The Serpent Sin of Envy>",
+      "Cheerful Girl"
+    ]
+  },
+  "Drake": {
+    "name": "Drake",
+    "description": "As the king of the Dracos, he holds a deep love and devotion for his kind. When he learned that his people were fated to perish, he vowed to resurrect the Elder Dragon and lead the Dracos to a new era of prosperity.",
+    "rarity": "SSR",
+    "types": [
+      "Longsword",
+      "Greatsword",
+      "Staff"
+    ],
+    "skills": {
+      "Longsword": [
+        {
+          "name": "Treasure Detection",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Dragon King",
+          "type": "Passive",
+          "description": "Increases the hero's Lightning Burst Efficiency by 30% while Pulse is active."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 100% of Attack. 1st hit: 15% 2nd hit: 16% 3rd hit: 26% 4th hit: 43%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 106% of Attack. Additionally increases the Burst Gauge by 20 whenever the Special Attack lands 3 time(s) while Pulse is active."
+        },
+        {
+          "name": "Pulse",
+          "type": "Skill",
+          "description": "Grants all allied heroes Pulse for 20 sec. ※ Pulse: Inflicts damage equal to 3% of Attack to nearby enemies every 0.3 sec. Additionally increases the Burst Gauge by 30 when hit 5 times."
+        },
+        {
+          "name": "Thunder Slash",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 88% of Attack."
+        },
+        {
+          "name": "Phantom Blade",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 314% of Attack, then decreases All Elemental Burst Resistance by 30% for 20 sec."
+        }
+      ],
+      "Greatsword": [
+        {
+          "name": "Treasure Detection",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Dragon King",
+          "type": "Passive",
+          "description": "25% chance to decrease the cooldown of the Normal Skill by 2 sec when using a Normal Attack on an enemy with Lightning Burst activated."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 164% of Attack. 1st hit: 16% 2nd hit: 19% 3rd hit: 28% 4th hit: 44% 5th hit: 57%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 124% of Attack. Increases the Burst duration by 2 sec each time the attack hits an enemy with Lightning Burst activated."
+        },
+        {
+          "name": "Lightning Stream",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 230% of Attack. The hero gains King's Magic for 10 sec when attacking an enemy with Lightning Burst activated. (Max: 3) ※ King's Magic: Increases Lightning Attack by 10% and Crit Chance by 5% for every 1 effect(s)."
+        },
+        {
+          "name": "Lightning Dragon Strike",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 104% of Attack. Gains King of the Dracos for 15 sec when attacking an enemy with Lightning Burst activated. ※ King of the Dracos: Consumes 5% Stamina every 1 sec to decrease the cooldown of the Normal Skill by 3 sec."
+        },
+        {
+          "name": "Lightning Dragon's Wrath",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 356% of Attack. Increases damage dealt by 30% per every 1 King's Magic effect on the hero."
+        }
+      ],
+      "Staff": [
+        {
+          "name": "Treasure Detection",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Dragon King",
+          "type": "Passive",
+          "description": "Inflicts Electric Current for 20 sec when landing 4 Normal Attack hit(s). (Max: 5 times) ※ Electric Current: Decreases Crit Defense by 8%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 109% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 28% 4th hit: 47%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 104% of Attack, then inflicts 2 Electric Current effect(s) for 20 sec. (Max: 5 times) Inflicts Paralysis if the enemy is Shocked. ※ Electric Current: Decreases Crit Defense by 8%. ※ Paralysis: Incapacitated. Decreases Lightning Defense by 15%. The effect remains if the target is Shocked."
+        },
+        {
+          "name": "Lightning Spear",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 199% of Attack, and inflicts Shock for 10 sec if the enemy has 3 or more Electric Current effects. ※ Shock: Inflicts Lightning damage equal to 15% of Attack every 2 sec. Inflicts Shock on nearby enemies for 10 sec when hit."
+        },
+        {
+          "name": "Lightning Staff Strike",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 94% of Attack and inflicts Shock for 10 sec. ※ Shock: Inflicts Lightning damage equal to 15% of Attack every 2 sec. Inflicts Shock on nearby enemies for 10 sec when hit."
+        },
+        {
+          "name": "Lightning Overdrive",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 296% of Attack. Results in a Critical Hit if the enemy is Paralyzed."
+        }
+      ]
+    },
+    "potentials": {
+      "Longsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 61%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Increases the number of Ultimate Move attacks by 4 and damage dealt with the Ultimate Move by 40%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Special Attack's damage dealt by 110%, and the Burst Gauge by 100%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Slightly increases the range of Pulse and additionally increases the Burst Gauge by 100%."
+        }
+      ],
+      "Greatsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 61%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Increases the number of Ultimate Move attacks by 4 and damage dealt with the Ultimate Move by 40%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Special Attack's damage dealt by 110%, and the Burst Gauge by 100%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Slightly increases the range of Pulse and additionally increases the Burst Gauge by 100%."
+        }
+      ],
+      "Staff": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 61%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Increases the number of Ultimate Move attacks by 4 and damage dealt with the Ultimate Move by 40%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Special Attack's damage dealt by 110%, and the Burst Gauge by 100%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Slightly increases the range of Pulse and additionally increases the Burst Gauge by 100%."
+        }
+      ]
+    },
+    "costumes": [
+      "Dragon Descendent",
+      "Oath of the Throne",
+      "Glory of the Past",
+      "Shadow Lord"
+    ]
+  },
+  "Dreydrin": {
+    "name": "Dreydrin",
+    "description": "An Apprentice Holy Knight of the Kingdom of Liones, he proved his exceptional skill by earning the title at just thirteen years old. He is a gentle soul who has a deep fondness for flowers and plants.",
+    "rarity": "SR",
+    "types": [
+      "Axe",
+      "Shield",
+      "Rapier"
+    ],
+    "skills": {
+      "Axe": [
+        {
+          "name": "Garden of Vitality",
+          "type": "Adventure",
+          "description": "No description available."
+        },
+        {
+          "name": "Strong Determination",
+          "type": "Passive",
+          "description": "Attacking an enemy affected by Petrify, Freeze, Stun, or Paralysis decreases their Defense by 10% for 5 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 142% of Attack. 1st hit: 15% 2nd hit: 17% 3rd hit: 23% 4th hit: 36% 5th hit: 51%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 108% / 154% of Attack according to the charge level. Landing a charged attack Stuns the enemy for 5 sec."
+        },
+        {
+          "name": "Battle Cry",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 163% of Attack. Restores the Tag Gauge by 300 when attacking an enemy affected by Petrify, Freeze, Stun, or Paralysis."
+        },
+        {
+          "name": "Axe Uppercut",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 83% of Attack."
+        },
+        {
+          "name": "Giant's Cry",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 282% of Attack. Increases damage dealt to an enemy affected by Petrify, Freeze, Stun, or Paralysis by 30%."
+        }
+      ],
+      "Shield": [
+        {
+          "name": "Garden of Vitality",
+          "type": "Adventure",
+          "description": "No description available."
+        },
+        {
+          "name": "Strong Determination",
+          "type": "Passive",
+          "description": "When the hero is hit while HP is 30% or lower, grants all allied heroes barriers equal to 50% of Max HP for 20 sec. (Cooldown: 60 sec)"
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 147% of Attack. 1st hit: 14% 2nd hit: 17% 3rd hit: 25% 4th hit: 40% 5th hit: 51%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Gains a barrier equal to 50% of Defense while the stance is maintained. The stance lasts up to 10 sec, and is removed when the barrier is removed. When hit while the stance is maintained, the attacking enemy's Burst Gauge increases by 100, and all allied heroes' Defense increases by 5% for 20 sec. (Max: 25%)"
+        },
+        {
+          "name": "Shield Crush",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 80% of Attack. If the attack lands, attacks once more to inflict damage equal to 104% of Attack. Each hit additionally inflicts damage equal to 30% of the hero's Defense."
+        },
+        {
+          "name": "Sword Landing",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 92% of Attack."
+        },
+        {
+          "name": "Pure Garden",
+          "type": "Ultimate",
+          "description": "Increases the hero's Max HP equal to 100% of Defense for 20 sec."
+        }
+      ],
+      "Rapier": [
+        {
+          "name": "Garden of Vitality",
+          "type": "Adventure",
+          "description": "No description available."
+        },
+        {
+          "name": "Strong Determination",
+          "type": "Passive",
+          "description": "Attacking an enemy with Burst activated decreases Normal Skill cooldown by 2 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 109% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 28% 4th hit: 47%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 105% of Attack. Increases all allied heroes' Magic Charging Efficiency by 15% for 20 sec."
+        },
+        {
+          "name": "Divine Will",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 216% of Attack. Each hit restores the hero's Magic by 50."
+        },
+        {
+          "name": "Spear of Light",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 100% of Attack."
+        },
+        {
+          "name": "Divine Combat",
+          "type": "Ultimate",
+          "description": "Increases Holy and Fire Attack of allies in range by 10% for 15 sec."
+        }
+      ]
+    },
+    "potentials": {
+      "Axe": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 20% 2nd hit: 23% 3rd hit: 33% 4th hit: 51% 5th hit: 71%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases Special Attack damage by 35% / 50% based on the charge level."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Normal Skill."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the duration of the Special Attack's Stun by 3 sec."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Passive's Defense reduction by 100% and increases its duration by 5 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Landing the Tag Skill inflicts Stun on the enemy for 6 sec."
+        }
+      ],
+      "Shield": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 20% 2nd hit: 24% 3rd hit: 35% 4th hit: 56% 5th hit: 71%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases the Defense boost gained when hit while the Special Attack's stance is maintained by 100%."
+        },
+        {
+          "tier": 5,
+          "description": "Increases the damage taken reduction by 70% and slightly increases Movement Speed while the Special Attack's stance is maintained."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Restores HP of nearby allies by 10% of Defense every 1 sec for 10 sec when using the Ultimate Move."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases the Ultimate Move's Max HP boost to 200% of the hero's Defense."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the HP of barriers from the Passive to 100% of Max HP. Restores HP by 50% of Max HP when gaining a barrier."
+        }
+      ],
+      "Rapier": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 40% 4th hit: 66%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Changes the Special Attack into a skill that can be used 2 time(s), and changes the Magic Charging Efficiency boost effect to be applied up to 3 times."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Magic Charging Efficiency of allies in range of the Normal Skill by 20%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases the Ultimate Move's Attack boost by 100%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the Ultimate Move's Attack boost zone duration by 10 sec."
+        }
+      ]
+    },
+    "costumes": [
+      "Friendly Apprentice Holy Knight",
+      "A Nice Day Off",
+      "Descendant of Royalty",
+      "Thorough Preparation",
+      "Solid Defense"
+    ]
+  },
+  "Dreyfus": {
+    "name": "Dreyfus",
+    "description": "A swordsmanship instructor in the Kingdom of Liones. In the past, he served as a Grandmaster of the Holy Knights, but spent ten years possessed by Fraudrin, a Demon. Now, he dedicates himself to training the next generation in the royal capital. He is the father of Griamore and grandfather of Dredrin.",
+    "rarity": "SR",
+    "types": [
+      "Longsword",
+      "Lance",
+      "Rapier"
+    ],
+    "skills": {
+      "Longsword": [
+        {
+          "name": "One-Shot Breaker",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Grandmaster's Honor",
+          "type": "Passive",
+          "description": "Increases damage dealt to enemies with Earth Burst activated by 30%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 98% of Attack. 1st hit: 23% 2nd hit: 28% 3rd hit: 47%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 143% of Attack and inflicts Pride for 20 sec. ※ Pride: Increases damage taken from the hero by 20%."
+        },
+        {
+          "name": "Earth Blade",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 249% of Attack. Decreases the Normal Skill cooldown by 50% when attacking an enemy affected by Pride."
+        },
+        {
+          "name": "Angled Earth Slash",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 116% of Attack."
+        },
+        {
+          "name": "Earth Break",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 367% of Attack. Increases damage dealt to Petrified enemies by 50%."
+        }
+      ],
+      "Lance": [
+        {
+          "name": "One-Shot Breaker",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Grandmaster's Honor",
+          "type": "Passive",
+          "description": "Increases damage dealt by 30% when attacking an enemy with a barrier."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 142% of Attack. 61% chance to gain 1 Surge effect(s) for 10 sec. 1st hit: 21% 2nd hit: 23% 3rd hit: 37% 4th hit: 61% ※ Surge: Increases Crit Damage by 8%. (Max: 40%) At max stacks, changes to Enhanced Surge which increases Crit Damage by 40%."
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 144% of Attack and gains 1 Surge effect(s) for 10 sec. Hitting an enemy with a Burst activated additionally grants 1 Surge effect(s). ※ Surge: Increases Crit Damage by 8%. (Max: 40%) At max stacks, changes to Enhanced Surge which increases Crit Damage by 40%."
+        },
+        {
+          "name": "Pillar of Light",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 264% of Attack. Stuns enemies in range for 5 sec if the hero has Surge."
+        },
+        {
+          "name": "Spear Fall",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 118% of Attack."
+        },
+        {
+          "name": "Light Spear",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 452% of Attack, resulting in a Critical Hit if the hero has Enhanced Surge. Enhanced Surge is then removed from the hero."
+        }
+      ],
+      "Rapier": [
+        {
+          "name": "One-Shot Breaker",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Grandmaster's Honor",
+          "type": "Passive",
+          "description": "Increases all allied heroes' DoT by 15%. Decreases the DoT interval by 50% for 5 sec when the hero attacks a Stunned or Paralyzed enemy."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 111% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 28% 4th hit: 48%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 114% of Attack. Landing the final strike inflicts 1 Weaken effect(s) for 20 sec. ※ Weaken: Increases DoT damage taken by 5%. (Max: 25%)"
+        },
+        {
+          "name": "Piercing Lightning",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 180% of Attack. Restores the Tag Gauge by 150 for every 1 Weaken effect(s) on the enemy."
+        },
+        {
+          "name": "Flash Drop",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 95% of Attack. Inflicts 2 Weaken effect(s) for 20 sec if the enemy is affected by Shock, Bleed, or Chill. ※ Weaken: Increases DoT damage taken by 5%. (Max: 25%)"
+        },
+        {
+          "name": "Light Bomber",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 271% of Attack. When the Weaken effect on the enemy reaches max stacks, it Stuns them for 5 sec."
+        }
+      ]
+    },
+    "potentials": {
+      "Longsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 32% 2nd hit: 39% 3rd hit: 66%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Landing the Normal Skill decreases the enemy's Earth Defense by 20% for 20 sec."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Slightly increases the range of the Ultimate Move and Stuns the enemy for 4 sec when landing the final strike of the Ultimate Move."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the damage boost from the Passive by 80%."
+        }
+      ],
+      "Lance": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 29% 2nd hit: 32% 3rd hit: 52% 4th hit: 85%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Inflicts damage equal to 34% of Attack to enemies in range every 0.5 sec for 5 sec when using the Normal Skill."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Changes the Special Attack into a skill that can be used 2 time(s)."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Additionally inflicts damage equal to 476% of Attack after the final strike of the Ultimate Move."
+        }
+      ],
+      "Rapier": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 40% 4th hit: 68%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Changes the Special Attack into a skill that can be used 2 time(s)."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases damage dealt with the Normal Skill by 35% and the number of hits by 4. Increases the Tag Gauge recovery by 40 for every 1 Weaken effect(s) on the enemy."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Inflicts damage equal to 30% of Attack to enemies in range every 1 sec for 5 sec when using the Ultimate Move."
+        }
+      ]
+    },
+    "costumes": [
+      "Kingdom Sword Art Instructor",
+      "Royal Butler",
+      "Old Soldier's Honor",
+      "Simple Attire",
+      "Honorable Knight"
+    ]
+  },
+  "Elaine": {
+    "name": "Elaine",
+    "description": "Elaine protects the Fairy King's Forest in place of her brother who left 700 years ago. She is rumored to be the saint who guards the Fountain of Youth.",
+    "rarity": "SSR",
+    "types": [
+      "Book",
+      "Wand",
+      "Staff"
+    ],
+    "skills": {
+      "Book": [
+        {
+          "name": "Gentle Breeze",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Saintess's Protection",
+          "type": "Passive",
+          "description": "Activating Earth Burst inflicts Petrify on the enemy for 6 sec. Increases all allied heroes' damage dealt to Petrified enemies by 100% when the hero is set to the team. ※ Petrify: Incapacitated. Increases Physical and Earth damage taken by 50%, and decreases damage taken from elements other than Physical and Earth by 75%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 116% of Attack. 1st hit: 18% 2nd hit: 19% 3rd hit: 30% 4th hit: 49%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Applies Saintess's Mark to nearby allies and enemies for 20 sec. ※ Saintess's Mark: Effects differ based on the target. Allies: Decreases damage taken by 50% while they have a barrier. Enemies: Decreases Earth Burst Resistance by 30%."
+        },
+        {
+          "name": "Guardian's Blossom",
+          "type": "Skill",
+          "description": "Grants all allied heroes barriers equal to 300% of Defense for 20 sec. The damage taken by allies with barriers decreases by 20%."
+        },
+        {
+          "name": "Forest Savior",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 86% of Attack. Additionally increases Burst Gauge by 200 when landing a Critical Hit."
+        },
+        {
+          "name": "Dust Seal",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 268% of Attack and Binds for 3 sec. Inflicts Petrify for 6 sec when attacking an enemy affected by Saintess's Mark. ※ Petrify: Incapacitated. Increases Physical and Earth damage taken by 50%, and decreases damage taken from elements other than Physical and Earth by 75%."
+        }
+      ],
+      "Wand": [
+        {
+          "name": "Gentle Breeze",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Saintess's Protection",
+          "type": "Passive",
+          "description": "Increases Crit Chance by 30% for 5 sec when attacking an enemy with Wind Burst activated."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 127% of Attack. Decreases the Normal Skill cooldown by 1 sec if the final strike lands. 1st hit: 20% 2nd hit: 22% 3rd hit: 35% 4th hit: 50%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 66% of Attack and inflicts Stagger every 0.5 sec while the stance is maintained. Decreases the Normal Skill cooldown by 3 sec when the attack lands."
+        },
+        {
+          "name": "Razorwind",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 235% of Attack. Increases the hero's Crit Damage by 20% for 5 sec when landing a Critical Hit. (Max: 60%)"
+        },
+        {
+          "name": "Forest Tornado",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 112% of Attack. Each Critical Hit restores the Tag Gauge by 35."
+        },
+        {
+          "name": "Wind Blast",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 325% of Attack. Increases Wind Burst duration by 10 sec."
+        }
+      ],
+      "Staff": [
+        {
+          "name": "Gentle Breeze",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Saintess's Protection",
+          "type": "Passive",
+          "description": "Increases the hero's Burst Efficiency by 20%. Restores 2 Magic Point(s) if the hero activates a Burst."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 109% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 27% 4th hit: 48%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Increases All Elemental Burst Efficiency of allies in range by 30% for 10 sec."
+        },
+        {
+          "name": "Divine Forest Swarm",
+          "type": "Skill",
+          "description": "Summons a Divine Swarm to inflict damage equal to 183% of Attack for 8 sec. Each time the attack hits, the enemy's Burst Gauge increases by 42."
+        },
+        {
+          "name": "Holy Shine",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 80% of Attack."
+        },
+        {
+          "name": "Forest's Protection",
+          "type": "Ultimate",
+          "description": "Decreases nearby allies' damage taken by 15% for 20 sec."
+        }
+      ]
+    },
+    "potentials": {
+      "Book": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 26% 3rd hit: 42% 4th hit: 68%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases the duration of the Special Attack's Saintess's Mark by 10 sec."
+        },
+        {
+          "tier": 5,
+          "description": "Increases the Earth damage of allies with Saintess's Mark by 50%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the Normal Skill's barrier by 66%."
+        },
+        {
+          "tier": 7,
+          "description": "Changes the Special Attack into a skill that can be used 2 time(s) and slightly increases its range."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Landing the Ultimate Move also inflicts Petrify on enemies without Saintess's Mark for 6 sec. Inflicts Petrify on enemies with Saintess's Mark for 12 sec."
+        }
+      ],
+      "Wand": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 28% 2nd hit: 31% 3rd hit: 49% 4th hit: 70%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Increases damage dealt with the Normal Skill by 50% for 20 sec when using the Special Attack."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Additionally inflicts damage equal to 260% of Attack when using the Ultimate Move."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the number of projectiles by 2 when using the Normal Skill."
+        }
+      ],
+      "Staff": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 25% 3rd hit: 38% 4th hit: 68%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Landing the Normal Attack additionally increases the Burst Gauge by 5."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Ultimate Move."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the hero's Burst Efficiency by 10%."
+        },
+        {
+          "tier": 7,
+          "description": "Slightly increases the range of the Special Attack."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases the damage taken reduction from the Ultimate Move by 70%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the Magic Charging Efficiency of allies in range of the Normal Skill by 35% and All Elemental Burst Efficiency by 20%."
+        }
+      ]
+    },
+    "costumes": [
+      "Guardian Saint of the Fountain of Youth",
+      "Temp Employee",
+      "Guiding Light",
+      "Cheerful Outing",
+      "Saintess's Dignity"
+    ]
+  },
+  "Elizabeth": {
+    "name": "Elizabeth",
+    "description": "The third princess of the Kingdom of Liones. Determined to save her kingdom from Holy Knights plotting its overthrow, she left the royal capital in search of <The Seven Deadly Sins>. By chance, she met Meliodas and began a journey with him to find the other members of the order.",
+    "rarity": "SSR",
+    "types": [
+      "Book",
+      "Wand",
+      "Staff"
+    ],
+    "skills": {
+      "Book": [],
+      "Wand": [],
+      "Staff": []
+    },
+    "potentials": {
+      "Book": [],
+      "Wand": [],
+      "Staff": []
+    },
+    "costumes": []
+  },
+  "Escanor": {
+    "name": "Escanor",
+    "description": "A member of <The Seven Deadly Sins> bearing the mark of Pride. He wields the magic \"Sunshine\" and is fragile at night, but grows incredibly strong during the day, especially around noon.",
+    "rarity": "SSR",
+    "types": [
+      "Axe",
+      "Greatsword",
+      "Shield"
+    ],
+    "skills": {
+      "Axe": [],
+      "Greatsword": [],
+      "Shield": []
+    },
+    "potentials": {
+      "Axe": [],
+      "Greatsword": [],
+      "Shield": []
+    },
+    "costumes": []
+  },
+  "Gilthunder": {
+    "name": "Gilthunder",
+    "description": "A Holy Knight of the Kingdom of Liones, son of former Holy Knight Grandmaster Zaratras, and wielder of the magic of \"Thunderbolt.\" He regrets his past as a traitor to the kingdom, a fate he endured to protect his beloved. Together with Howzer and Griamore, he is known as one of the Trio of Troublemakers.",
+    "rarity": "SR",
+    "types": [
+      "Longsword",
+      "Shield",
+      "Lance"
+    ],
+    "skills": {
+      "Lance": [
+        {
+          "name": "Thunderbolt",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Thunderbolt",
+          "type": "Passive",
+          "description": "Increases damage dealt to Paralyzed enemies by 25%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 129% of Attack. 1st hit: 19% 2nd hit: 21% 3rd hit: 33% 4th hit: 56%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 125% of Attack. Inflicts Paralysis on the enemy if they are Shocked. ※ Paralysis: Incapacitated. Decreases Lightning Defense by 15%. The effect remains if the target is Shocked."
+        },
+        {
+          "name": "Charge Electricity",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 192% of Attack. Attacking an enemy with Lightning Burst activated decreases the Special Attack cooldown by 50%."
+        },
+        {
+          "name": "Lightning Spear",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 94% of Attack."
+        },
+        {
+          "name": "Lightning Bolt",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 309% of Attack and inflicts Shock for 10 sec. ※ Shock: Inflicts Lightning damage equal to 15% of Attack every 2 sec. Inflicts Shock on nearby enemies for 10 sec when hit."
+        }
+      ],
+      "Shield": [
+        {
+          "name": "Thunderbolt",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Thunderbolt",
+          "type": "Passive",
+          "description": "Decreases the hero's damage taken by 10% while a barrier is active. When the Normal Skill's Lightning Barrier is removed, it decreases the Lightning Defense of nearby enemies by 15% for 20 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 111% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 47%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Taunts nearby enemies while the stance is maintained. Maintains stance for up to 10 sec. When hit 5 time(s) while the stance is maintained, the stance is removed, inflicting damage equal to 109% of Attack."
+        },
+        {
+          "name": "Judgment",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 187% of Attack, then grants all allied heroes barriers equal to 20% of Max HP for 20 sec. Grants all allied heroes Lightning Barriers equal to 35% of HP for 20 sec if the enemy is Bound. ※ Lightning Barrier: Reflects 15% of damage taken."
+        },
+        {
+          "name": "Blue Lightning",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 93% of Attack."
+        },
+        {
+          "name": "Shackles of the Lightning King",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 334% of Attack on the enemy, Binds them for 8 sec, then pulls them toward the hero"
+        }
+      ],
+      "Longsword": [
+        {
+          "name": "Thunderbolt",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Thunderbolt",
+          "type": "Passive",
+          "description": "Additionally increases Burst Gauge by 20 when hitting a Shocked enemy. When the hero activates Lightning Burst, the enemy's Lightning Defense decreases by 15% for 20 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 108% of Attack. 1st hit: 16% 2nd hit: 17% 3rd hit: 28% 4th hit: 47%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 109% of Attack. Increases the enemy's Shock duration by 3 sec."
+        },
+        {
+          "name": "Lightning Sword",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 176% of Attack and inflicts Shock for 10 sec. ※ Shock: Inflicts Lightning damage equal to 15% of Attack every 2 sec. Inflicts Shock on nearby enemies for 10 sec when hit."
+        },
+        {
+          "name": "Lightning Strike",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 86% of Attack."
+        },
+        {
+          "name": "Lightning Flash",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 281% of Attack. Decreases All Elemental Burst Resistance of enemies in range by 20%."
+        }
+      ]
+    },
+    "potentials": {
+      "Lance": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 27% 2nd hit: 30% 3rd hit: 47% 4th hit: 79%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Inflicts damage equal to 15% of Attack to enemies in range every 0.5 sec for 4 sec when using the Ultimate Move."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "The Special Attack results in a Critical Hit when attacking an enemy with Lightning Burst activated."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Inflicts damage equal to 35% of Attack to nearby enemies every 1 sec for 5 sec when using the Normal Skill to attack an enemy with Lightning Burst activated."
+        }
+      ],
+      "Shield": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 40% 4th hit: 66%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Decreases damage taken when using the Special Attack while the stance is maintained by 15%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the Normal Skill's barrier by 50% and Lightning Barrier by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Decreases the hero's damage taken while a barrier is active by 20%, and Lightning Defense reduction increases by 80% when the Lightning Barrier is removed."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the number of Ultimate Move targets by 4."
+        }
+      ],
+      "Longsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 65%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Changes the Normal Skill into a skill that can be used 2 time(s) and increases its damage dealt by 30%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Ultimate Move's All Elemental Burst Resistance reduction by 50%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Changes the Special Attack into a skill that can be used 2 time(s)."
+        }
+      ]
+    },
+    "costumes": [
+      "Young Holy Knight",
+      "Exemplary Holy Knight",
+      "Holy Knight of Lightning",
+      "Exemplary Adventure",
+      "Promising Holy Knight"
+    ]
+  },
+  "Gowther": {
+    "name": "Gowther",
+    "description": "He became <The Goat Sin of Lust> after causing the death of a royal with his maddening lust. Strangely, nobody can detect human emotion from him.",
+    "rarity": "SSR",
+    "types": [
+      "Book",
+      "Wand",
+      "Staff"
+    ],
+    "skills": {},
+    "potentials": {},
+    "costumes": []
+  },
+  "Griamore": {
+    "name": "Griamore",
+    "description": "A Holy Knight of Liones, the son of former Holy Knight Grandmaster Dreyfus, and wielder of the magic known as \"Wall.\" He is prepared to do anything for Princess Veronica. Together with Howzer and Gilthunder, he is known as one of the Trio of Troublemakers.",
+    "rarity": "SR",
+    "types": [
+      "Shield",
+      "Cudgel",
+      "Gauntlets"
+    ],
+    "skills": {
+      "Gauntlets": [
+        {
+          "name": "Speed Star",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Wall Master",
+          "type": "Passive",
+          "description": "Increases Burst Efficiency by 20% when all allied heroes have barriers. Restores 2 Magic Points when the hero activates a Burst. (Cooldown: 60 sec)"
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 103% of Attack. 1st hit: 15% 2nd hit: 17% 3rd hit: 27%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 104% of Attack and Stuns for 5 sec."
+        },
+        {
+          "name": "Shield Rush",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 164% of Attack and increases their Stun duration by 3 sec. Inflicts additional damage equal to 55% of Defense if the hero has a barrier."
+        },
+        {
+          "name": "Shield Fist",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 84% of Attack and grants all allied heroes barriers equal to 10% of Max HP for 15 sec."
+        },
+        {
+          "name": "Emission Shield",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 254% of Attack. Additionally increases Burst Gauge on Stunned enemies by 250"
+        }
+      ],
+      "Cudgel": [
+        {
+          "name": "Speed Star",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Wall Master",
+          "type": "Passive",
+          "description": "Restores the Tag Gauge by 250 when the hero's Special Attack grants a barrier."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 141% of Attack. 1st hit: 21% 2nd hit: 23% 3rd hit: 37%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 149% of Attack. Removes the hero's barrier to increase their Attack by 15% for 10 sec. Gains a barrier equal to 85% of Attack for 5 sec when the attack lands."
+        },
+        {
+          "name": "Wall Push",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 239% of Attack. Decreases the Special Attack cooldown by 75% if the hero has a barrier."
+        },
+        {
+          "name": "Wall Rising",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 113% of Attack."
+        },
+        {
+          "name": "Wall Crash",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 386% of Attack. Removes the hero's barrier to increase their Ultimate Move damage by 50% and Stuns the enemy for 5 sec."
+        }
+      ],
+      "Shield": [
+        {
+          "name": "Speed Star",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Wall Master",
+          "type": "Passive",
+          "description": "Increases Defense by 15% when all allied heroes have barriers."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 113% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 49%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Increases Defense by 25% while the stance is maintained. Restores the hero's Tag Gauge by 100 when hit while the stance is maintained. The stance lasts up to 10 sec, and it is removed when hit 5 time(s)."
+        },
+        {
+          "name": "Drop Attack",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 195% of Attack and additional damage equal to 45% of Defense."
+        },
+        {
+          "name": "Shell Drop",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 88% of Attack."
+        },
+        {
+          "name": "Perfect Shell",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 284% of Attack and decreases the enemy's Shatter Resistance by 5% for 20 sec."
+        }
+      ]
+    },
+    "potentials": {
+      "Gauntlets": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Inflicts damage equal to 40% of Attack. 1st hit: 22% 2nd hit: 23% 3rd hit: 37% 4th hit: 61%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Changes the Special Attack into a skill that can be used 2 time(s)."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Landing the Tag Skill inflicts Stun for 8 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Additionally inflicts damage equal to 120% of Attack when using the Ultimate Move."
+        }
+      ],
+      "Cudgel": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Inflicts damage equal to 40% of Attack. 1st hit: 30% 2nd hit: 33% 3rd hit: 51% 4th hit: 84%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Special Attack."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases damage dealt with the Normal Skill by 45%. Decreases the Special Attack cooldown even if no barrier is active."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Slightly increases the range of the Ultimate Move."
+        }
+      ],
+      "Shield": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 26% 3rd hit: 41% 4th hit: 69%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases Special Attack's Defense boost by 40%."
+        },
+        {
+          "tier": 5,
+          "description": "Using the Normal Skill increases the hero's Defense by 20% for 15 sec."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Gains a barrier equal to 20% of Max HP while the Special Attack's stance is maintained."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Landing the Ultimate Move inflicts additional damage equal to 150% of Defense."
+        }
+      ]
+    },
+    "costumes": [
+      "Princess's Guardian Knight",
+      "Casual Outing",
+      "Holy Knight of the Iron Wall",
+      "Makeshift Barricade",
+      "Impregnable Iron Fortress"
+    ]
+  },
+  "Guila": {
+    "name": "Guila",
+    "description": "The Vice Grandmaster of the Kingdom of Liones. She was appointed to the position at just 22 years old due to her exceptional skills. She is prepared to do anything for Zeal, her only family.",
+    "rarity": "SSR",
+    "types": [
+      "Shield",
+      "Lance",
+      "Rapier"
+    ],
+    "skills": {
+      "Shield": [
+        {
+          "name": "Flare Charge",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Blazing Devil",
+          "type": "Passive",
+          "description": "Increases all allied heroes' Fire Attack by 25% if a barrier the hero applied to self is active."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 113% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 49%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Becomes immune to Reactions and Taunts nearby enemies while the stance is maintained. Reflects 30% of damage taken when hit while the stance is maintained. Maintains stance for up to 10 sec. When hit 5 time(s) while the stance is maintained, the stance is removed, inflicting damage equal to 102% of Attack."
+        },
+        {
+          "name": "Killer Mines",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 174% of Attack. Grants all allied heroes barriers equal to 30% of Max HP for 20 sec when the attack lands."
+        },
+        {
+          "name": "Shield Drop",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 93% of Attack."
+        },
+        {
+          "name": "Brilliant Detonation",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 287% of Attack. Increases Fire damage taken by enemies in range by 20%."
+        }
+      ],
+      "Lance": [
+        {
+          "name": "Blazing Devil",
+          "type": "Passive",
+          "description": "Gains Impulse for 20 sec when successfully attacking an enemy while not in Demon Form. (Max: 10) ※ Impulse: Increases Crit Chance by 3% per 1 effect(s) while in Demon Form. If the hero has the maximum number of Impulse effects, Normal Skill cooldown decreases by 1 sec when attacking an enemy with Fire Burst activated."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 135% of Attack. 1st hit: 20% 2nd hit: 22% 3rd hit: 35% 4th hit: 58% Inflicts damage equal to 148% of Attack while in Demon Form. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 63%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 139% of Attack, then gains 2 Impulse effect(s). Inflicts damage equal to 160% of Attack and decreases the Normal Skill cooldown by 50% when landing a Critical Hit while in Demon Form."
+        },
+        {
+          "name": "Shot Bombs",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 198% of Attack, then gains 2 Impulse effect(s). Inflicts damage equal to 211% of Attack and increases damage dealt to enemies with Fire Burst activated by 30% while in Demon Form."
+        },
+        {
+          "name": "Fire Drop",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 119% of Attack."
+        },
+        {
+          "name": "Demon Form",
+          "type": "Ultimate",
+          "description": "Enters Demon Form for 20 sec."
+        }
+      ],
+      "Rapier": [
+        {
+          "name": "Flare Charge",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Blazing Devil",
+          "type": "Passive",
+          "description": "Gains Impulse for 20 sec when successfully attacking an enemy while not in Demon Form. (Max: 10) ※ Impulse: Increases Crit Chance by 3% per 1 effect(s) while in Demon Form. If the hero has the maximum number of Impulse effects, Normal Skill cooldown decreases by 1 sec when attacking an enemy with Fire Burst activated."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 135% of Attack. 1st hit: 20% 2nd hit: 22% 3rd hit: 35% 4th hit: 58% Inflicts damage equal to 148% of Attack while in Demon Form. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 63%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 139% of Attack, then gains 2 Impulse effect(s). Inflicts damage equal to 160% of Attack and decreases the Normal Skill cooldown by 50% when landing a Critical Hit while in Demon Form."
+        },
+        {
+          "name": "Shot Bombs",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 198% of Attack, then gains 2 Impulse effect(s). Inflicts damage equal to 211% of Attack and increases damage dealt to enemies with Fire Burst activated by 30% while in Demon Form."
+        },
+        {
+          "name": "Fire Drop",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 119% of Attack."
+        },
+        {
+          "name": "Demon Form",
+          "type": "Ultimate",
+          "description": "Enters Demon Form for 20 sec."
+        }
+      ]
+    },
+    "potentials": {
+      "Shield": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 26% 3rd hit: 41% 4th hit: 68%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Ultimate Move."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the Normal Skill's barrier by 50% and increases its duration by 10 sec."
+        },
+        {
+          "tier": 7,
+          "description": "Inflicts damage equal to 35% of Attack on nearby enemies every 1 sec when using the Special Attack while the stance is maintained."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Changes barriers from the Normal Skill to Fire Barriers. ※ Fire Barrier: Inflicts damage equal to 15% of Attack on nearby enemies every 0.5 sec."
+        }
+      ],
+      "Lance": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 64% Increases damage dealt with Normal Attacks by 50% while in Demon Form. 1st hit: 26% 2nd hit: 28% 3rd hit: 44% 4th hit: 75%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%. Increases damage dealt with the Special Attack by 65% while in Demon Form."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Normal Skill while in Demon Form."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the Normal Skill's Fire Defense reduction by 50% and Fire Damage boost by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Special Attack's Magic gain by 80% and the Burst Gauge by 100%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Normal Skill by 90%. Increases damage dealt with the Normal Skill by 110% while in Demon Form."
+        },
+        {
+          "tier": 10,
+          "description": "Increases Burn duration by 1 sec when attacking a Burned enemy while in Demon Form."
+        }
+      ],
+      "Rapier": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 64% Increases damage dealt with Normal Attacks by 50% while in Demon Form. 1st hit: 26% 2nd hit: 28% 3rd hit: 44% 4th hit: 75%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%. Increases damage dealt with the Special Attack by 65% while in Demon Form."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Normal Skill while in Demon Form."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the Normal Skill's Fire Defense reduction by 50% and Fire Damage boost by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Special Attack's Magic gain by 80% and the Burst Gauge by 100%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Normal Skill by 90%. Increases damage dealt with the Normal Skill by 110% while in Demon Form."
+        },
+        {
+          "tier": 10,
+          "description": "Increases Burn duration by 1 sec when attacking a Burned enemy while in Demon Form."
+        }
+      ]
+    },
+    "costumes": [
+      "One and Only Holy Knight",
+      "Family Time",
+      "Holy Knight of Explosions",
+      "Light Footsteps",
+      "Crimson Flame's Trail"
+    ]
+  },
+  "Hendrickson": {
+    "name": "Hendrickson",
+    "description": "A Druid who now runs an apothecary. In the past, he served as a Grandmaster of the Holy Knights but was brainwashed by Fraudrin and acted to bring about the revival of the Demons. Since breaking free from that control, he has devoted himself tirelessly to atoning for his past mistakes.",
+    "rarity": "SR",
+    "types": [
+      "Dual Swords",
+      "Longsword",
+      "Lance"
+    ],
+    "skills": {
+      "Longsword": [
+        {
+          "name": "Phytocommunication",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Veteran Grandmaster",
+          "type": "Passive",
+          "description": "Increases all allied heroes' Defense by 15%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 101% of Attack. 1st hit: 15% 2nd hit: 16% 3rd hit: 26% 4th hit: 44%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 101% of Attack. Increases the hero's Healing Efficiency by 15% for 20 sec."
+        },
+        {
+          "name": "Defensive Spell",
+          "type": "Skill",
+          "description": "Increases all allied heroes' Shatter Resistance by 10% for 25 sec."
+        },
+        {
+          "name": "Thrusting Slash",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 84% of Attack."
+        },
+        {
+          "name": "Magic Unleashed",
+          "type": "Ultimate",
+          "description": "Restores HP of allies in range by 268% of Attack for 10 sec."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "name": "Phytocommunication",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Veteran Grandmaster",
+          "type": "Passive",
+          "description": "Increases all allied heroes' Crit Chance by 10% when any ally attacks an enemy with reduced Movement Speed."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 142% of Attack. 15% chance to decrease the Special Attack cooldown by 1 sec. 1st hit: 21% 2nd hit: 23% 3rd hit: 37% 4th hit: 61%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Teleports behind the enemy and inflicts damage equal to 146% of Attack. Attacking an enemy with reduced Movement Speed Stuns them for 5 sec and increases the hero's Crit Chance by 10% for 10 sec."
+        },
+        {
+          "name": "Rapid Edge",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 240% of Attack. Increases Crit Damage by 30% when hitting an enemy with a Back Attack."
+        },
+        {
+          "name": "Double Slash",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 121% of Attack."
+        },
+        {
+          "name": "Knight's Sword",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 357% of Attack and the hero gains Keen Eye for 5 sec. ※ Keen Eye: Consumes 100 from the Tag Gauge every 0.5 sec to increase Crit Damage by 20%."
+        }
+      ],
+      "Lance": [
+        {
+          "name": "Phytocommunication",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Veteran Grandmaster",
+          "type": "Passive",
+          "description": "Increases all allied heroes' Darkness damage by 5% for 15 sec when attacking an enemy with Darkness Burst activated. (Max: 20%)"
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 75% of Attack. 1st hit: 18% 2nd hit: 21% 3rd hit: 36%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 109% of Attack and grants all allied heroes Berserk for 20 sec. ※ Berserk: Increases Darkness Attack by 20%."
+        },
+        {
+          "name": "Acid Tower",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 185% of Attack. Increases damage by 50% when the hero has the Berserk effect."
+        },
+        {
+          "name": "Dark Stab",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 88% of Attack."
+        },
+        {
+          "name": "Acid Down",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 262% of Attack, then inflicts Curse for 10 sec. Increases the duration by 10 sec if the hero has the Berserk effect. ※ Curse: Inflicts Darkness damage equal to 15% of Attack every 3 sec and decreases Darkness Defense by 15%."
+        }
+      ]
+    },
+    "potentials": {
+      "Longsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 62%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Changes the Special Attack into a skill that can be used 2 time(s), and changes the Healing Efficiency boost effect to be applied up to 3 times."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the Normal Skill's Shatter Resistance boost by 50%."
+        },
+        {
+          "tier": 7,
+          "description": "The Shatter Resistance boost effect from the Normal Skill also applies to nearby allies."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases the Ultimate Move's HP Recovery by 20%."
+        },
+        {
+          "tier": 10,
+          "description": "Slightly increases the range of the Ultimate Move."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 29% 2nd hit: 31% 3rd hit: 51% 4th hit: 86%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Restores Magic by 100 and restores the Tag Gauge by 150 when landing a Critical Hit with the Special Attack."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases Crit Damage by 30% when landing a Back Attack with the Normal Skill. Landing a Critical Hit restores the Tag Gauge by 300."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the duration of the Ultimate Move's Keen Eye by 5 sec and decreases the Tag Gauge consumption by 45."
+        }
+      ],
+      "Lance": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 25% 2nd hit: 29% 3rd hit: 50%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Normal Skill and changes it into a skill that can be used 2 time(s)."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Slightly increases the range of the Ultimate Move and inflicts damage equal to 25% of Attack to enemies in range every 1 sec for 10 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 60%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the duration of the Special Attack's Berserk by 10 sec and enhances the effect, increasing Darkness Attack by 40%."
+        }
+      ]
+    },
+    "costumes": [
+      "Liones Apothecary",
+      "Romantic Gray",
+      "A Suit From Younger Days",
+      "Apothecary's Workwear",
+      "Returned Holy Knight"
+    ]
+  },
+  "Howzer": {
+    "name": "Howzer",
+    "description": "The current Grandmaster of the Holy Knights of the Kingdom of Liones. His techniques use his magic of 「Tempest」. He was born a commoner but climbed the ranks to become the Grandmaster of the Holy Knights. He has a strong sense of duty to protect the kingdom, determined to safeguard its peace and honor the comrades who sacrificed themselves to protect it.",
+    "rarity": "SR",
+    "types": [
+      "Lance",
+      "Gauntlets",
+      "Cudgel"
+    ],
+    "skills": {
+      "Gauntlets": [
+        {
+          "name": "Updraft",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Eye of the Storm",
+          "type": "Passive",
+          "description": "Increases all allied heroes' Wind damage dealt to Bleeding enemies by 30%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 115% of Attack. 50% chance to reset the Special Attack cooldown on the final strike. 1st hit: 17% 2nd hit: 19% 3rd hit: 30% 4th hit: 49%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 84% of Attack. The second strike decreases Crit Resistance by 5% for 20 sec if the enemy is Bleeding. (Max: 3 times)"
+        },
+        {
+          "name": "Combo",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 192% of Attack. 50% chance to reset the Special Attack cooldown."
+        },
+        {
+          "name": "Rising Fist",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 95% of Attack."
+        },
+        {
+          "name": "Whirl Shock",
+          "type": "Ultimate",
+          "description": "Increases the hero's Crit Damage by 30% for 20 sec, then inflicts damage equal to 322% of Attack."
+        }
+      ],
+      "Cudgel": [
+        {
+          "name": "Updraft",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Eye of the Storm",
+          "type": "Passive",
+          "description": "Attacking an enemy with Wind Burst activated decreases their Wind Defense by 20% for 30 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 113% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 30% 4th hit: 48%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 109% of Attack and pulls the enemy toward the hero, then stuns them for 4 sec."
+        },
+        {
+          "name": "Precise Stab",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 5% of Attack on nearby enemies while the stance is maintained, and decreases their Crit Resistance by 1% for 20 sec with each attack. (Max: 20%) The last attack inflicts damage equal to 96% of Attack and restores the Tag Gauge by 200."
+        },
+        {
+          "name": "Chain Uppercut",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 94% of Attack. Restores the Tag gauge by 250 when landing a Critical Hit."
+        },
+        {
+          "name": "Gust",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 276% of Attack. Results in a Critical Hit if the enemy is Stunned."
+        }
+      ],
+      "Lance": [
+        {
+          "name": "Updraft",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Eye of the Storm",
+          "type": "Passive",
+          "description": "Attacking an enemy with Wind Burst activated increases the hero's Wind Attack by 3% for 20 sec. (Max: 10 times)"
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 127% of Attack. 1st hit: 18% 2nd hit: 19% 3rd hit: 34% 4th hit: 56%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 120% of Attack, and the hero gains Gust for 20 sec. Gust: Inflicts additional damage equal to 30% of the damage dealt with the Normal Skill or Ultimate Move."
+        },
+        {
+          "name": "Pulling Gust",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 224% of Attack. Inflicts Bleed for 20 sec if the hero has Gust. Bleed: Inflicts Wind damage equal to 10% of the damage dealt every 1 sec. Decreases Healing Efficiency by 20%. Additionally decreases Healing Efficiency by 6% when landing a Critical Hit. (Max: 10 times)"
+        },
+        {
+          "name": "Wind Drop",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 110% of Attack."
+        },
+        {
+          "name": "Super Cyclone",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 329% of Attack on the enemy and pulls them toward the center. Results in a Critical Hit if the enemy is Bleeding"
+        }
+      ]
+    },
+    "potentials": {
+      "Gauntlets": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with the Special Attack by 40%."
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Tag Skill by 60%."
+        },
+        {
+          "tier": 5,
+          "description": "Using the Ultimate Move creates a whirlwind that deals damage equal to 187% of Attack."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Greatly increases the range of the Special Attack and increases its Crit Resistance reduction by 100%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Inflicts additional damage equal to 65% of Attack per tornado when using the Normal Skill."
+        }
+      ],
+      "Cudgel": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 42% 4th hit: 67%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Additionally inflicts damage equal to 160% of Attack when using the Ultimate Move."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "The Normal Skill's final strike inflicts Stun on the target for 4 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the Passive's Wind Defense reduction by 100%."
+        }
+      ],
+      "Lance": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with the Special Attack by 40%."
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Tag Skill by 60%."
+        },
+        {
+          "tier": 5,
+          "description": "Additionally inflicts damage equal to 170% of Attack when using the Normal Skill."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Additionally inflicts damage equal to 12% of Attack to enemies in the center of the Ultimate Move range."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Additionally inflicts damage equal to 225% of Attack with the final strike of the Ultimate Move, and renders the enemy airborne."
+        }
+      ]
+    },
+    "costumes": [
+      "Trusted Grandmaster",
+      "End-of-Day Mug of Ale",
+      "Holy Knight of Storms",
+      "Secure Adventure",
+      "Grandmaster's Dignity"
+    ]
+  },
+  "Jericho": {
+    "name": "Jericho",
+    "description": "She was once a Holy Knight of Liones and also served as the mentor to Lancelot, the child of Ban and Elaine. For reasons unknown, however, she became a Holy Knight of Camelot under King Arthur's rule and is now in open conflict with all of Liones.",
+    "rarity": "SSR",
+    "types": [
+      "Dual Swords",
+      "Lance",
+      "Rapier"
+    ],
+    "skills": {
+      "Dual Swords": [
+        {
+          "name": "Ice Field",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Glacier",
+          "type": "Passive",
+          "description": "Activating Cold Burst inflicts Freeze on the enemy for 6 sec. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 107% of Attack. 1st hit: 16% 2nd hit: 17% 3rd hit: 28% 4th hit: 46%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 111% of Attack. Inflicts Freeze on the target for 6 sec if the hero has a Frozen Saber effect when landing the final strike. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."
+        },
+        {
+          "name": "Weapon Enchantment",
+          "type": "Skill",
+          "description": "Gains Frozen Saber for 15 sec. ※ Frozen Saber: Increases Crit Chance by 30%. Using a Normal Attack teleports the hero behind the enemy to inflict additional damage equal to 50% of Attack and increase their Burst Gauge by 30."
+        },
+        {
+          "name": "Frozen Slash",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 87% of Attack. Inflicts Freeze on the target for 6 sec if they have Cold Burst activated. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."
+        },
+        {
+          "name": "Ice Needle",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 262% of Attack and decreases Cold Resistance by 20%. If the hero has a Frozen Saber effect, the Ultimate Move's Crit Damage increases by 60%."
+        }
+      ],
+      "Lance": [
+        {
+          "name": "Ice Field",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Glacier",
+          "type": "Passive",
+          "description": "If the hero has a barrier and inflicts damage on an enemy, all allied heroes gain Frozen Breath for 15 sec. (Max: 20 stacks) ※ Frozen Breath: Increases Defense by 3%, Fire Defense by 5%, and Earth Defense by 5%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 114% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 50%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 111% of Attack. Decreases Special Attack and Normal Skill cooldowns by 50% if the hero has a Frozen Breath effect."
+        },
+        {
+          "name": "Ice Rock",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 190% of Attack. Grants all allied heroes barriers equal to 50% of Max HP for 20 sec when the attack lands."
+        },
+        {
+          "name": "Frozen Slicer",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 93% of Attack. Grants all allied heroes barriers equal to 30% of Max HP and 3 Frozen Breath effect(s) for 15 sec when the attack lands. ※ Frozen Breath: Increases Defense by 3%, Fire Defense by 5%, and Earth Defense by 5%."
+        },
+        {
+          "name": "Ice Field",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 275% of Attack and inflicts Freeze. Increases damage dealt by 6% for every 1 Frozen Breath effect(s) on the hero. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."
+        }
+      ],
+      "Rapier": [
+        {
+          "name": "Ice Field",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Glacier",
+          "type": "Passive",
+          "description": "30% chance to inflict Chill for 15 sec when landing an attack. Cold damage increases by 1% for 20 sec when an ally attacks a Chilled enemy. (Max: 50%) ※ Chill: Decreases Movement Speed by 5% and Cold Burst Resistance by 3% (Max: 10 times). Freezes at max stacks."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 114% of Attack. 25% chance to decrease Cold Defense by 20% for 15 sec. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 50%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 116% of Attack. If the enemy is affected by Chill or Freeze, the final strike results in a Critical Hit."
+        },
+        {
+          "name": "Ice Blade Dance",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 182% of Attack and decreases Crit Defense by 40% for 20 sec. If the enemy is affected by Chill or Freeze, the final strike results in a Critical Hit."
+        },
+        {
+          "name": "Cold Strike",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 92% of Attack."
+        },
+        {
+          "name": "Glacial Blitz",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 315% of Attack. If the enemy is affected by Chill or Freeze, the final strike results in a Critical Hit."
+        }
+      ]
+    },
+    "potentials": {
+      "Dual Swords": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 65%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Increases the additional damage of Normal Attacks enhanced by Frozen Saber by 100%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases Frozen Saber duration by 50% and Burst Gauge increase by 100%."
+        },
+        {
+          "tier": 7,
+          "description": "The Ultimate Move creates additional afterimages, each inflicting damage equal to 55% of Attack and increasing the Burst Gauge by 200."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Adds 2 projectile(s) to the Ultimate Move, inflicting damage equal to 320% of Attack."
+        }
+      ],
+      "Lance": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 41% 4th hit: 70%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Special Attack, and increases damage dealt to enemies by 50% when the hero has a Frozen Breath effect."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Slightly increases the range of the Normal Skill. After the final strike, increases all allied heroes' Defense by 30% and decreases Cold Defense of enemies in range by 20% for 20 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Using the Ultimate Move creates ice projectiles which inflict damage equal to 50% of Attack."
+        }
+      ],
+      "Rapier": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 41% 4th hit: 70%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Using the Ultimate Move allows it to be used one more time for 10 sec. Using the Ultimate Move inflicts damage equal to 280% of Attack."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Using the Normal Skill allows it to be used one more time for 10 sec. Using the Normal Skill inflicts damage equal to 195% of Attack."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Using the Special Attack allows it to be used one more time for 10 sec. Using the Special Attack inflicts damage equal to 140% of Attack."
+        }
+      ]
+    },
+    "costumes": [
+      "Runaway Holy Knight",
+      "Leisurely Moment",
+      "Holy Knight With the Star-Shaped Visor",
+      "Secretive Traveler",
+      "Trace of Memories"
+    ]
+  },
+  "King": {
+    "name": "King",
+    "description": "A member of <The Seven Deadly Sins> bearing the mark of Sloth. He is also known as Harlequin, the king of the Fairies. After losing everything dear to him during the 700 years he spent away from the forest, he abandoned the name Harlequin and now lives as King, a member of <The Seven Deadly Sins>.",
+    "rarity": "SSR",
+    "types": [
+      "Book",
+      "Wand",
+      "Staff"
+    ],
+    "skills": {
+      "Book": [
+        {
+          "name": "Flight",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Fairy King",
+          "type": "Passive",
+          "description": "Decreases all allied heroes' damage taken by 20% and increases the hero's Healing Efficiency by 50% when HP is 30% or lower."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 99% of Attack. 20% chance to inflict Mark of the Forest for 10 sec. (Max: 10 times) 1st hit: 15% 2nd hit: 16% 3rd hit: 26% 4th hit: 42% ※ Mark of the Forest: Increases damage taken by 1% and Earth damage taken by 3%."
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Decreases damage taken by 20% and increases Healing Efficiency by 3% every 0.5 sec for 10 sec while the stance is maintained. (Max: 15%) When hit, the stance is removed, then the hero inflicts damage equal to 99% of Attack and restores HP by 30% of Attack. Increases damage dealt by 5% per 1 Mark of the Forest on the enemy."
+        },
+        {
+          "name": "Protector of the Forest",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 166% of Attack, then inflicts Mark of the Forest for 10 sec. (Max: 10 times) ※ Mark of the Forest: Increases damage taken by 8 and Earth damage taken by 9."
+        },
+        {
+          "name": "Upper Arc",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 82% of Attack."
+        },
+        {
+          "name": "Forest's Protection",
+          "type": "Ultimate",
+          "description": "Grants all allied heroes Forest's Protection for 20 sec. ※ Forest's Protection: Grants a barrier equal to 50% of Max HP. Restores HP by 35% of Attack every 2 sec."
+        }
+      ],
+      "Wand": [
+        {
+          "name": "Flight",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Fairy King",
+          "type": "Passive",
+          "description": "Increases all allied Earth heroes' Attack and Defense by 10% per every 1 Magic Point(s)."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 77% of Attack. 1st hit: 18% 2nd hit: 22% 3rd hit: 37%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Restores the Magic Gauge by 100 every 1 sec and increases all allied heroes' Defense by 6% for 20 sec while the stance is maintained. (Max: 5 times)"
+        },
+        {
+          "name": "Fairy Power",
+          "type": "Skill",
+          "description": "Grants all allied heroes Forest Fairy for 20 sec. ※ Forest Fairy: Increases Earth damage by 20%."
+        },
+        {
+          "name": "Earth Impact",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 91% of Attack. Restores the Magic Gauge by 500."
+        },
+        {
+          "name": "Sharp Slash",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 245% of Attack. Each hit restores the Magic Gauge by 50."
+        }
+      ],
+      "Staff": [
+        {
+          "name": "Flight",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Fairy King",
+          "type": "Passive",
+          "description": "20% chance to gain Bloom for 10 sec when landing an attack. Gains Bloom for 10 sec when landing the Normal Skill on an enemy with Burst activated. (Max: 20) ※ Bloom: Increases Attack by 1% per every 1 effect(s). When Bloom is at max stacks, all Bloom effects are removed and the hero gains Full Bloom for 10 sec. ※ Full Bloom: Increases Attack by 35% and Defense Shatter by 10%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 119% of Attack. 1st hit: 18% 2nd hit: 19% 3rd hit: 31% 4th hit: 51%."
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Gains 1 Bloom effect(s) for 10 sec (Max: 20), then inflicts damage equal to 136% of Attack. ※ Bloom: Increases Attack by 1% per every 1 effect(s). When Bloom is at max stacks, all Bloom effects are removed and the hero gains Full Bloom for 10 sec. ※ Full Bloom: Increases Attack by 35% and Defense Shatter by 10%."
+        },
+        {
+          "name": "Holy Swarm",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 190% of Attack, then gains Bloom effects equal to the number of enemies hit by the first strike for 10 sec. (Max: 20) Increases damage dealt by 2% per every 1 Bloom effect on the hero. If the hero has a Full Bloom effect, damage dealt increases by 50%. ※ Bloom: Increases Attack by 1% per 1 effect(s). When Bloom is at max stacks, all Bloom effects are removed and the hero gains Full Bloom for 10 sec. ※ Full Bloom: Increases Attack by 35% and Defense Shatter by 10%."
+        },
+        {
+          "name": "Bee Chase",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 104% of Attack."
+        },
+        {
+          "name": "Shining Blaze",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 306% of Attack, then increases damage dealt by 2% per 1 Bloom effect on the hero. If the hero has a Full Bloom effect, damage dealt increases by 60% and Crit Chance increases by 50%."
+        }
+      ]
+    },
+    "potentials": {
+      "Book": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 20% 2nd hit: 22% 3rd hit: 36% 4th hit: 59%."
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases the Special Attack's HP Recovery by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Becomes immune to Reactions and decreases damage taken by 30% when using the Special Attack while the stance is maintained."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the Normal Skill's number of Mark of the Forest effects applied by 2, and restores the Magic Gauge by 75 per every 1 Mark of the Forest effect(s) on the enemy."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases the HP Recovery of Forest's Protection by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the duration of Forest's Protection by 10 sec, and increases Defense by 20% while it is active."
+        }
+      ],
+      "Wand": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 25% 2nd hit: 30% 3rd hit: 51%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases the Special Attack's Magic Gauge Recovery by 150."
+        },
+        {
+          "tier": 5,
+          "description": "Changes the Forest Fairy effect to Forest Fairy King. ※ Forest Fairy King: Increases Earth damage by 40% and increases Magic Charging Efficiency by 30%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases Magic Charging Efficiency by 5% for every 1 Magic Point(s)."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the enemy's Burst Gauge by 250 and additionally restores Magic by 300 when landing the final strike of the Ultimate Move."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases all allied heroes' Earth Attack by 30% for 30 sec when the Special Attack stance is maintained for 5 sec."
+        }
+      ],
+      "Staff": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 25% 2nd hit: 27% 3rd hit: 43% 4th hit: 71%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Special Attack. Increases the Passive's Bloom chance by 100% when landing the Special Attack."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Additionally gains 2 Bloom effect(s) when using the Normal Skill, and increases the number of Bloom effects applied when attacking an enemy with Burst activated by 1."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Inflicts damage equal to 15% of Attack to enemies in range every 0.5 sec for 5 sec when using the Ultimate Move."
+        }
+      ]
+    },
+    "costumes": [
+      "Inexperienced Fairy King",
+      "Forest's Footsteps",
+      "<The Grizzly Sin of Sloth>",
+      "Shadow of the Deep Forest"
+    ]
+  },
+  "Klotho": {
+    "name": "Klotho",
+    "description": "A mysterious scholar of unknown origin. Though she often speaks and acts in riddles, she possesses knowledge far beyond that of others. For reasons unknown, she lingers around Tristan, offering him cryptic yet insightful advice.",
+    "rarity": "SSR",
+    "types": [
+      "Rapier",
+      "Staff",
+      "Book"
+    ],
+    "skills": {
+      "Rapier": [],
+      "Staff": [],
+      "Book": []
+    },
+    "potentials": {
+      "Rapier": [],
+      "Staff": [],
+      "Book": []
+    },
+    "costumes": []
+  },
+  "Manny": {
+    "name": "Manny",
+    "description": "Priestess Mannie of the Dracos. She looks different from the other Dracos, but it gives her a look of virtuousness.",
+    "rarity": "SSR",
+    "types": [
+      "Longsword",
+      "Dual Swords",
+      "Staff"
+    ],
+    "skills": {
+      "Longsword": [
+        {
+          "name": "Starlight Resonation",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Priestess's Prayer",
+          "type": "Passive",
+          "description": "Attacking an enemy with Cold Burst activated increases Crit Chance by 20% and Crit Damage by 50%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 126% of Attack. 1st hit: 19% 2nd hit: 20% 3rd hit: 33% 4th hit: 54%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 128% of Attack."
+        },
+        {
+          "name": "Frost Release",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 199% of Attack, then gains Frost for 20 sec. ※ Frost: Adds sword blasts to Normal Attacks, additionally inflicting damage equal to 30% of Attack. Landing Normal Attacks 4 times increases Frost Strike damage by 100%. ※ Frost Strike: Enhances the Normal Skill to allow the use of Frost Strike. Using Frost Strike inflicts damage equal to 200% of Attack and removes the Frost effect."
+        },
+        {
+          "name": "Frost Blade",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 104% of Attack."
+        },
+        {
+          "name": "Priestess's Barrier",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 331% of Attack, then Freezes enemies in range for 6 sec. If the hero is in range, Cold Attack increases by 15%. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "name": "Starlight Resonation",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Priestess's Prayer",
+          "type": "Passive",
+          "description": "When an allied hero attacks a Chilled enemy, damage dealt increases by 5% per every 1 Chill effect(s)."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 111% of Attack. Resets the Special Attack cooldown if the final strike lands. 1st hit: 17% 2nd hit: 18% 3rd hit: 28% 4th hit: 48%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 111% of Attack, and decreases Cold Defense by 10% for 20 sec. (Max: 3 times). Inflicts Chill for 15 sec if the enemy has 1 or more Cold Defense Decrease effects. ※ Chill: Decreases Movement Speed by 5% and Cold Burst Resistance by 3% (Max: 10 times). Freezes at max stacks."
+        },
+        {
+          "name": "Frozen Soul Shatter",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 170% of Attack. Inflicts Frostbite for 20 sec if the enemy is Chilled. ※ Frostbite: Inflicts Cold damage equal to 20% of Attack every 2 sec, and decreases Attack by 10%."
+        },
+        {
+          "name": "White Snow",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 92% of Attack."
+        },
+        {
+          "name": "Snowfield of the Void",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 265% of Attack, increases damage dealt to Chilled enemies by 50%, and inflicts Freeze on enemies affected by Frostbite for 2 sec. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."
+        }
+      ],
+      "Staff": [
+        {
+          "name": "Starlight Resonation",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Priestess's Prayer",
+          "type": "Passive",
+          "description": "When an allied hero attacks an enemy affected by Punishment, their Ultimate Move damage increases by 30%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 108% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 28% 4th hit: 46%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Grants allies in range the Draco Priestess effect for 15 sec. ※ Draco Priestess: Increases Crit Damage by 30%."
+        },
+        {
+          "name": "Holy Judgment",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 135% of Attack and inflicts Punishment for 10 sec. Results in a Critical Hit when attacking enemies affected by Punishment. ※ Punishment: Inflicts Holy damage equal to 15% of damage dealt every 0.4 sec."
+        },
+        {
+          "name": "Holy Light",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 87% of Attack."
+        },
+        {
+          "name": "Flash Explosion",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 158% of Attack. Inflicts damage equal to 20% of Attack every 1 sec for 5 sec and inflicts Stigmata for 30 sec to enemies in range. Also resets Normal Skill cooldowns of all allied heroes. ※ Stigmata: Decreases All Element Defense by 20%."
+        }
+      ]
+    },
+    "potentials": {
+      "Longsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with the Special Attack by 40%."
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Tag Skill by 60%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the Ultimate Move's range, and increases its duration by 10 sec. Increases the Cold damage of allies in range by 15%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with Normal Attacks by 110%. 1st hit: 40% 2nd hit: 42% 3rd hit: 69% 4th hit: 113%"
+        },
+        {
+          "tier": 7,
+          "description": "Sword blasts from Frost Strike explode when disappearing, inflicting additional damage equal to 50% of Attack."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases the duration of Frost by 10 sec. Using a Normal Attack while Frost is active inflicts Chill on the enemy, and the hero gains the Crystallize effect for 15 sec. Using Frost Strike on a Chilled enemy inflicts Freeze for 6 sec. ※ Crystallize: Increases Cold Attack by 3% (Max: 60%)."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 39% 4th hit: 67%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Landing the Special Attack additionally inflicts 1 Chill effects and increases Defense reduction by 50%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Attacking an enemy with Cold Burst activated increases all allied heroes' Cold damage by 40% for 20 sec and inflicts Frostbite on the enemy for 20 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Changes the Normal Skill into a skill that can be used 2 time(s) and greatly increases its range. Additionally inflicts damage equal to 18% of Attack to enemies in range every 0.4 sec for 4 sec"
+        }
+      ],
+      "Staff": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 39% 4th hit: 64%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Normal Skill by 30%."
+        },
+        {
+          "tier": 5,
+          "description": "Increases the duration of the Special Attack by 5 sec, and increases the Crit Damage boost of Draco Priestess by 50%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the duration of the Normal Skill's Punishment by 15 sec."
+        },
+        {
+          "tier": 7,
+          "description": "Changes the Normal Skill into a skill that can be used 2 time(s)."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Slightly increases the range of the Ultimate Move and increases the duration by 5 sec."
+        }
+      ]
+    },
+    "costumes": [
+      "Exalted Priestess",
+      "Heart of Prayer",
+      "Arch Priestess's Prestige",
+      "Exploration of the Unknown"
+    ]
+  },
+  "Meliodas": {
+    "name": "Meliodas",
+    "description": "The owner of the mobile tavern, <Boar Hat>, and the leader of <The Seven Deadly Sins>, who were wanted for the crime of attempting to overthrow the kingdom. Currently, he is traveling with Elizabeth, the third princess of Liones, searching for the members of <The Seven Deadly Sins> who are scattered throughout the land.",
+    "rarity": "SSR",
+    "types": [
+      "Longsword",
+      "Axe",
+      "Dual Swords"
+    ],
+    "skills": {
+      "Longsword": [
+        {
+          "name": "Captain's Acumen",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Speed Master",
+          "type": "Passive",
+          "description": "Decreases Darkness Burst duration by 3 sec and additionally inflicts damage equal to 100% of Attack when landing a skill on an enemy with Darkness Burst activated."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 132% of Attack. 1st hit: 20% 2nd hit: 21% 3rd hit: 35% 4th hit: 56%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 132% of Attack and increases the hero's Darkness Attack by 25% for 20 sec. (Max: 2 times) Additionally gains 1 effect(s) when landing the attack on an enemy with Darkness Burst activated."
+        },
+        {
+          "name": "Chain Attack",
+          "type": "Chain",
+          "description": "Inflicts damage equal to 231% of Attack. Restores the Magic Gauge by 100 when attacking an enemy with Darkness Burst activated."
+        },
+        {
+          "name": "Dark Force",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 111% of Attack."
+        },
+        {
+          "name": "Blazing Cross",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 342% of Attack and increases damage dealt to enemies with Darkness Burst activated by 100%, then removes the target's Darkness Burst."
+        }
+      ],
+      "Axe": [
+        {
+          "name": "Captain's Acumen",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Speed Master",
+          "type": "Passive",
+          "description": "Increases damage dealt with the Normal Skill by 20% for 20 sec when using the Normal Skill. Increases damage dealt by 100% at 3 stacks, then resets the effect."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 146% of Attack. 1st hit: 22% 2nd hit: 24% 3rd hit: 38% 4th hit: 62%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 149% / 200% of Attack based on the charge level, then inflicts Demon Energy for 10 sec. ※ Demon Energy: Inflicts damage equal to 200% of Attack when the effect is removed."
+        },
+        {
+          "name": "Circle Slash",
+          "type": "Skill",
+          "description": "Teleports behind an enemy affected by Demon Energy within 30m and inflicts damage equal to 245% of Attack. Attacking an enemy affected by Demon Energy resets the hero's Normal Skill cooldown and removes the enemy's Demon Energy."
+        },
+        {
+          "name": "Power Arc",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 123% of Attack."
+        },
+        {
+          "name": "Demon's Fighting Spirit",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 370% of Attack and inflicts Demon Energy for 10 sec. If the number of targets is 5 or fewer, damage dealt increases by up to 100%, increasing even more as the number of targets shrinks. 1 enemy: 100% 2 enemies: 50% 3 enemies: 33% 4 enemies: 25% 5 enemies: 20% ※ Demon Energy: Inflicts damage equal to 200% of Attack when the effect is removed."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "name": "Captain's Acumen",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Speed Master",
+          "type": "Passive",
+          "description": "Gains Demonic Power for 30 sec when landing attacks on an enemy with Darkness Burst activated 10 time(s). ※ Demonic Power: Inflicts damage equal to 10% of Attack in a(n) 5m area around the hero and restores 5% of Max HP every 2 sec. Struck enemies are inflicted with Hellfire for 5 sec. ※ Hellfire: Increases damage taken from the hero by 5%. (Max: 10 times)"
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal",
+          "description": "Inflicts damage equal to 146% of Attack. 1st hit: 22% 2nd hit: 24% 3rd hit: 38% 4th hit: 62%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 146% of Attack. Decreases Special Attack cooldown by 50% when Demonic Power is active."
+        },
+        {
+          "name": "Burning Slash",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 245% of Attack. Additionally inflicts damage equal to 100% of Attack on enemies within 5m with the final strike if Demonic Power is active."
+        },
+        {
+          "name": "X Slash",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 120% of Attack."
+        },
+        {
+          "name": "X Slash - Flurry",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 404% of Attack. Increases damage dealt by 50% and restores 5% of Max HP with each hit if Demonic Power is active."
+        }
+      ]
+    },
+    "potentials": {
+      "Longsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 28% 2nd hit: 29% 3rd hit: 49% 4th hit: 78%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Inflicts damage equal to 100% of Attack to nearby enemies and additionally restores the Magic Gauge by 500 with the final strike of the Normal Skill."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Using the Special Attack increases the hero's Crit Chance by 20% for 20 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Additionally inflicts damage equal to 350% of Attack when using the Ultimate Move."
+        }
+      ],
+      "Axe": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with the Special Attack by 40%."
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Normal Skill by 30%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Special Attack and increases the hero's Darkness Attack by 30% for 20 sec."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Tag Skill by 130%."
+        },
+        {
+          "tier": 7,
+          "description": "Additionally inflicts damage equal to 250% of Attack when using the Normal Skill."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Slightly increases the range of the Ultimate Move. Landing the attack resets all skill cooldowns, and the damage boost efficiency is multiplied by 2 according to the number of enemies hit."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 31% 2nd hit: 34% 3rd hit: 53% 4th hit: 87%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Special Attack. Increases the cooldown reduction effect by 90% while Demonic Power is active."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Landing the final strike of the Normal Skill triggers an extra explosion, inflicting damage equal to 150% of Attack. Attacking enemies affected by Hellfire decreases the cooldown by 50%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Landing the final strike of the Ultimate Move triggers an extra explosion, inflicting damage equal to 200% of Attack. Increases the hero's Darkness Attack by 30% for 20 sec."
+        }
+      ]
+    },
+    "costumes": [
+      "Ordinary Tavern Owner",
+      "A New Adventure",
+      "<The Dragon Sin of Wrath>"
+    ]
+  },
+  "Merlin": {
+    "name": "Merlin",
+    "description": "A member of <The Seven Deadly Sins> bearing the mark of Gluttony. Though she possesses vast knowledge, her hunger for learning is insatiable. No matter the challenge, she will stop at nothing to uncover the answers she seeks.",
+    "rarity": "SSR",
+    "types": [
+      "Book",
+      "Wand",
+      "Staff"
+    ],
+    "skills": {
+      "Book": [],
+      "Wand": [],
+      "Staff": []
+    },
+    "potentials": {
+      "Book": [],
+      "Wand": [],
+      "Staff": []
+    },
+    "costumes": []
+  },
+  "Slader": {
+    "name": "Slader",
+    "description": "Former captain of the <Roars of Dawn>, a knight order that once served directly under the king. He holds unwavering loyalty to the former king, Bartra, and continues to act in accordance to his will.",
+    "rarity": "SSR",
+    "types": [
+      "Greatsword",
+      "Axe",
+      "Cudgel"
+    ],
+    "skills": {
+      "Axe": [
+        {
+          "name": "Erase Presence",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Roaring Mask",
+          "type": "Passive",
+          "description": "Increases the hero's Defense Shatter by 10% and has a 15% chance to reset the Special Attack cooldown when attacking a Bleeding enemy."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 76% of Attack. 1st hit: 18% 2nd hit: 22% 3rd hit: 36%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 77% / 141% of Attack based on the charge level. Increases damage dealt to Bleeding enemies by 30%. Charged attacks inflict Bleed for 20 sec. ※ Bleed: Inflicts Wind damage equal to 10% of the damage dealt every 1 sec. Decreases Healing Efficiency by 20%. Additionally decreases Healing Efficiency by 6% when landing a Critical Hit. (Max: 10 times)"
+        },
+        {
+          "name": "Axe Charge",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 183% of Attack and grants the hero Enhanced Bleed for 20 sec. ※ Enhanced Bleed: Increases Bleed damage the hero inflicts by 20%."
+        },
+        {
+          "name": "Axe Slash",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 96% of Attack."
+        },
+        {
+          "name": "Bloody Arc",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 288% of Attack. Results in a Critical Hit and inflicts Deep Wound for 15 sec if the enemy is Bleeding. ※ Deep Wound: Increases damage taken by 10%."
+        }
+      ],
+      "Cudgel": [
+        {
+          "name": "Erase Presence",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Roaring Mask",
+          "type": "Passive",
+          "description": "Restores 2 Tag Point(s) when the hero activates a Burst."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 102% of Attack. 1st hit: 15% 2nd hit: 16% 3rd hit: 26% 4th hit: 45%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 93% of Attack. Decreases the enemy's Crit Resistance by 20% for 10 sec."
+        },
+        {
+          "name": "Chain Thrust",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 171% of Attack. Each Critical hit additionally increases the Burst Gauge by 25."
+        },
+        {
+          "name": "Blade Wave",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 86% of Attack. Additionally increases the Burst Gauge by 100 if the enemy is Stunned."
+        },
+        {
+          "name": "Iron Fury",
+          "type": "Ultimate",
+          "description": "Increases all allied heroes' Tag Skill damage by 40% for 10 sec, then inflicts damage equal to 252% of Attack."
+        }
+      ],
+      "Greatsword": [
+        {
+          "name": "Erase Presence",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Roaring Mask",
+          "type": "Passive",
+          "description": "Increases damage dealt to enemies with Fire Burst activated by 15%. Attacking an enemy with Fire Burst activated transforms the Special Attack into an enhanced Special Attack for 5 sec, increasing damage dealt by 30%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 128% of Attack. 1st hit: 19% 2nd hit: 21% 3rd hit: 33% 4th hit: 56%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 77% of Attack."
+        },
+        {
+          "name": "Power Drop",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 215% of Attack. Increases damage dealt to Stunned enemies by 20%."
+        },
+        {
+          "name": "Strike",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 105% of Attack."
+        },
+        {
+          "name": "Power Smite",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 356% of Attack. If the enemy has Fire Burst activated, they are Stunned for 5 sec"
+        }
+      ]
+    },
+    "potentials": {
+      "Axe": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 25% 2nd hit: 31% 3rd hit: 51%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 35% / 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Additionally inflicts damage equal to 55% of Attack when using the Normal Skill."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Landing the Tag Skill inflicts Bleed for 20 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases damage dealt with the final strike of the Ultimate Move by 50%."
+        }
+      ],
+      "Cudgel": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 63%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Changes the Special Attack into a skill that can be used 2 time(s)."
+        },
+        {
+          "tier": 6,
+          "description": "Increases the Burst Gauge applied with the Normal Skill by 100%."
+        },
+        {
+          "tier": 7,
+          "description": "Decreases All Elemental Burst Resistance of enemies in range by 20% for 20 sec when using the Ultimate Move."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Additionally inflicts damage equal to 80% of Attack when using the Normal Skill."
+        }
+      ],
+      "Greatsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with the enhanced Special Attack by 40%."
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Normal Skill by 30%."
+        },
+        {
+          "tier": 5,
+          "description": "Using the Normal Skill to attack an enemy with Fire Burst activated inflicts damage equal to 8% of Attack on nearby enemies every 0.5 sec for 5 sec."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the enhanced Special Attack by 110%."
+        },
+        {
+          "tier": 7,
+          "description": "When an enhanced Special Attack hits, the cooldown of Normal Skills decreases by 50%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Additionally inflicts damage equal to 120% of Attack when using the Ultimate Move."
+        }
+      ]
+    },
+    "costumes": [
+      "Veteran Holy Knight",
+      "Loyal Friend",
+      "Sword of the Old King",
+      "Secret Mission",
+      "Total Readiness"
+    ]
+  },
+  "Tioreh": {
+    "name": "Tioreh",
+    "description": "The seventh child of King, the Fairy King, and Diane, the Giant Queen. Unable to resist her longing and curiosity of the outside world, she left the Fairy King's Forest to travel to the Kingdom of Liones. Though her boldness can sometimes cause misunderstandings, she possesses a warm and kind heart.",
+    "rarity": "SSR",
+    "types": [
+      "Book",
+      "Wand",
+      "Staff"
+    ],
+    "skills": {
+      "Book": [
+        {
+          "name": "Vines of the Sacred Tree",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Blessing of the Spirits: Dragon",
+          "type": "Passive",
+          "description": "When an allied hero attacks an enemy with decreased Fire Defense, Crit Chance increases by 8%."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 115% of Attack. 1st hit: 17% 2nd hit: 19% 3rd hit: 31% 4th hit: 48% Enhanced Normal Attacks inflict damage equal to 164% of Attack. 1st hit: 24% 2nd hit: 26% 3rd hit: 42% 4th hit: 72%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Normal Attacks are enhanced for 10 sec, slightly increasing damage. Landing an enhanced Normal Attack inflicts Combustion on the enemy for 10 sec. ※ Combustion: Decreases Attack by 5%."
+        },
+        {
+          "name": "Fire Ejection",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 213% of Attack. Decreases the enemy's Fire Defense by 15% for 10 sec. Increases damage dealt by 5% every 5 attacks on enemies affected by Combustion. (Max: 75%)"
+        },
+        {
+          "name": "Fire Strike",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 81% of Attack."
+        },
+        {
+          "name": "Dragon Breath",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 273% of Attack. Increases damage dealt to enemies affected by Combustion by 20%."
+        }
+      ],
+      "Wand": [
+        {
+          "name": "Vines of the Sacred Tree",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Blessing of the Spirits: Dragon",
+          "type": "Passive",
+          "description": "Using the Tag Skill restores HP by 15% if the current HP is 30% or lower. (Cooldown: 30 sec)"
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 130% of Attack. 1st hit: 13% 2nd hit: 15% 3rd hit: 22% 4th hit: 33% 5th hit: 47%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "For every 1 sec while the stance is maintained, all allied heroes' Defense increases by 5% for 20 sec. (Max: 3 times)"
+        },
+        {
+          "name": "Healing Fox",
+          "type": "Skill",
+          "description": "Restores HP of allies in range by 10% of Attack every 0.7 sec for 10 sec."
+        },
+        {
+          "name": "Fire Mist",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 84% of Attack."
+        },
+        {
+          "name": "Burning Lion",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 256% of Attack and applies Burn for 20 sec. (Max 5 times) ※ Burn: Inflicts Fire damage equal to 10% of Attack every 1 sec. Decreases Defense by 0.15% every time Burn damage occurs. (Max: 100 times)"
+        }
+      ],
+      "Staff": [
+        {
+          "name": "Vines of the Sacred Tree",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Blessing of the Spirits: Dragon",
+          "type": "Passive",
+          "description": "Increases all allied heroes' Defense by 10% for 20 sec when the hero is set to the team and an allied hero activates an Earth Burst."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 108% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 44%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "For 5 sec every 1 sec, increases Defense of allies in range by 3% for 10 sec. (Max: 5 times)"
+        },
+        {
+          "name": "Summon: Sheep",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 152% of Attack and creates 5 Wool in the surrounding area. The Burst Gauge of enemies who step on Wool increases by 50."
+        },
+        {
+          "name": "Earth Circle",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 91% of Attack."
+        },
+        {
+          "name": "Bear Landing",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 236% of Attack. Attacking an enemy with Earth Burst activated inflicts additional damage equal to 80% of Defense."
+        }
+      ]
+    },
+    "potentials": {
+      "Book": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 27% 3rd hit: 43% 4th hit: 68% Increases damage dealt with enhanced Normal Attacks by 50%. 1st hit: 35% 2nd hit: 39% 3rd hit: 63% 4th hit: 107%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases the duration of the Special Attack's Normal Attack enhancement by 15 sec."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Ultimate Move and increases damage dealt to enemies affected by Combustion by 20%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the duration of Combustion by 5 sec, and increases Normal Attack and enhanced Normal Attack damage dealt to enemies affected by Combustion by 20%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases Movement Speed by 50% and becomes immune to Reactions while using the Normal Skill."
+        }
+      ],
+      "Wand": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 27% 3rd hit: 43% 4th hit: 68% Increases damage dealt with enhanced Normal Attacks by 50%. 1st hit: 35% 2nd hit: 39% 3rd hit: 63% 4th hit: 107%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases the duration of the Special Attack's Normal Attack enhancement by 15 sec."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Ultimate Move and increases damage dealt to enemies affected by Combustion by 20%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the duration of Combustion by 5 sec, and increases Normal Attack and enhanced Normal Attack damage dealt to enemies affected by Combustion by 20%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases Movement Speed by 50% and becomes immune to Reactions while using the Normal Skill."
+        }
+      ],
+      "Staff": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 27% 3rd hit: 43% 4th hit: 68% Increases damage dealt with enhanced Normal Attacks by 50%. 1st hit: 35% 2nd hit: 39% 3rd hit: 63% 4th hit: 107%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases the duration of the Special Attack's Normal Attack enhancement by 15 sec."
+        },
+        {
+          "tier": 5,
+          "description": "Slightly increases the range of the Ultimate Move and increases damage dealt to enemies affected by Combustion by 20%."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Increases the duration of Combustion by 5 sec, and increases Normal Attack and enhanced Normal Attack damage dealt to enemies affected by Combustion by 20%."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Increases Movement Speed by 50% and becomes immune to Reactions while using the Normal Skill."
+        }
+      ]
+    },
+    "costumes": [
+      "Adorable Fairy",
+      "Casual Outing",
+      "Daughter of the Forest and Earth",
+      "Adventure's Beginning"
+    ]
+  },
+  "Tristan": {
+    "name": "Tristan",
+    "description": "The son of Meliodas and Elizabeth, and the prince of the Kingdom of Liones. He admires and looks up to <The Seven Deadly Sins>. Though polite and cautious by nature, he will face any danger if it means protecting those he cares about.",
+    "rarity": "SSR",
+    "types": [
+      "Longsword",
+      "Dual Swords",
+      "Greatsword"
+    ],
+    "skills": {
+      "Longsword": [
+        {
+          "name": "Novice Adventurer",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Sense of Justice",
+          "type": "Passive",
+          "description": "When the hero activates Wind Burst, all allied heroes' Wind Attack increases by 15% for 20 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 105% of Attack. 1st hit: 16% 2nd hit: 17% 3rd hit: 27% 4th hit: 45%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 103% of Attack, then inflicts Bleed for 20 sec. ※ Bleed: Inflicts Wind damage equal to 10% of the damage dealt every 1 sec. Decreases Healing Efficiency by 20%. Additionally decreases Healing Efficiency by 6% when landing a Critical Hit. (Max: 10 times)"
+        },
+        {
+          "name": "Wind Thrust",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 173% of Attack. Additionally increases the Burst Gauge by 200 if the enemy is Bleeding."
+        },
+        {
+          "name": "Wind Strike",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 88% of Attack."
+        },
+        {
+          "name": "Blade Storm",
+          "type": "Ultimate",
+          "description": "Increases all allied Wind heroes' All Elemental Burst Efficiency by 20% for 20 sec, then inflicts damage equal to 295% of Attack."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "name": "Novice Adventurer",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Sense of Justice",
+          "type": "Passive",
+          "description": "When Fire Burst is activated, all allied heroes' Fire Attack increases by 15% for 20 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 105% of Attack. 1st hit: 16% 2nd hit: 17% 3rd hit: 27% 4th hit: 45%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 101% of Attack. Decreases the enemy's Fire Defense by 10% for 20 sec."
+        },
+        {
+          "name": "Vertical Slice",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 185% of Attack. If the enemy's Fire Defense is decreased, additionally increases the Burst Gauge by 200."
+        },
+        {
+          "name": "Burning Blow",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 87% of Attack."
+        },
+        {
+          "name": "Rain of Fire",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 261% of Attack. Increases all allied heroes' All Elemental Burst Efficiency by 15% for 20 sec."
+        }
+      ],
+      "Greatsword": [
+        {
+          "name": "Novice Adventurer",
+          "type": "Adventure",
+          "description": ""
+        },
+        {
+          "name": "Sense of Justice",
+          "type": "Passive",
+          "description": "Each time the Special Attack hits, the hero's Crit Chance increases by 1% (Max: 20%) for 10 sec."
+        },
+        {
+          "name": "Normal Attack",
+          "type": "Normal Attack",
+          "description": "Inflicts damage equal to 144% of Attack. 1st hit: 22% 2nd hit: 23% 3rd hit: 37% 4th hit: 62%"
+        },
+        {
+          "name": "Special Attack",
+          "type": "Special",
+          "description": "Inflicts damage equal to 12% of Attack on nearby enemies while the stance is maintained, and inflicts damage equal to 72% of Attack with the final strike. Whenever the attack lands, there is a(n) 50% chance to apply 1 Ember effect(s) on the hero for 10 sec. (Max: 10 times) ※ Ember: Increases Normal Skill damage by 2% and Ultimate Move damage by 3%."
+        },
+        {
+          "name": "Punisher",
+          "type": "Skill",
+          "description": "Inflicts damage equal to 243% of Attack, then removes Ember from self."
+        },
+        {
+          "name": "Surprise Attack",
+          "type": "Tag",
+          "description": "Inflicts damage equal to 121% of Attack."
+        },
+        {
+          "name": "Severing Cut",
+          "type": "Ultimate",
+          "description": "Inflicts damage equal to 258% / 280% / 324% of Attack based on the charge level, then removes Ember from self."
+        }
+      ]
+    },
+    "potentials": {
+      "Longsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 38% 4th hit: 63%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Landing the Special Attack additionally increases the Burst Gauge by 200."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "Changes the Normal Skill into a skill that can be used 2 time(s). Activating Wind Burst with a Normal Skill decreases the enemy's Crit Resistance by 15% for 20 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "Enhances the Ultimate Move to increase damage dealt with Flurry by 150%."
+        }
+      ],
+      "Dual Swords": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 38% 4th hit: 64%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "Inflicts Fire damage equal to 45% of Attack to enemies around the target if Fire Burst activates with the Normal Skill."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "When a Critical Hit is landed with a Special Attack, its cooldown is reset and its damage dealt is increased by 30% for 10 sec. Cooldown reset can be triggered up to 3 time(s) in a row."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases damage dealt with the Ultimate Move by 50%."
+        },
+        {
+          "tier": 10,
+          "description": "When Fire Burst activates, all allied heroes' Fire Attack increases by 30%, and Fire heroes' Crit Chance increases by 10% for 30 sec."
+        }
+      ],
+      "Greatsword": [
+        {
+          "tier": 1,
+          "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."
+        },
+        {
+          "tier": 2,
+          "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 30% 2nd hit: 32% 3rd hit: 53% 4th hit: 86%"
+        },
+        {
+          "tier": 3,
+          "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."
+        },
+        {
+          "tier": 4,
+          "description": "Increases damage dealt with the Special Attack by 30% and the final strike by 50%."
+        },
+        {
+          "tier": 5,
+          "description": "A fully charged Ultimate Move deals additional damage equal to 85% of Attack without removing Ember."
+        },
+        {
+          "tier": 6,
+          "description": "Increases damage dealt with the Normal Skill by 60%."
+        },
+        {
+          "tier": 7,
+          "description": "The Special Attack's chance to grant Ember is increased to 100%. Landing the attack pulls the enemy toward the hero, and landing the final strike Stuns the enemy for 5 sec."
+        },
+        {
+          "tier": 8,
+          "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."
+        },
+        {
+          "tier": 9,
+          "description": "Increases Ultimate Move damage to 15% / 30% / 50% based on the charge level."
+        },
+        {
+          "tier": 10,
+          "description": "For every 5 Special Attack hit(s), additional damage equal to 35% of Attack is dealt to nearby enemies."
+        }
+      ]
+    },
+    "costumes": [
+      "Little Prince",
+      "Prince's Training Outfit",
+      "Formal Attire",
+      "Royal Dignity",
+      "Prince's Adventure"
+    ]
+  }
+}

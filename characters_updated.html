@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Characters - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar-auth.css?v=20260308">
+  <style>
+    .page-header {
+      background: linear-gradient(180deg, #0d1f4a 0%, var(--dark2) 100%);
+      padding: 80px 20px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(96,165,250,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(96,165,250,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    .page-header-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 900;
+      color: var(--gold);
+      text-shadow: 0 0 30px var(--glow-gold);
+      position: relative;
+      z-index: 1;
+    }
+    .page-header-sub {
+      color: var(--muted);
+      font-size: 15px;
+      letter-spacing: 2px;
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--dark3);
+      color: white;
+      margin-bottom: 20px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      transition: border-color 0.2s;
+    }
+    .search-bar:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .search-bar::placeholder { color: var(--muted); }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 30px;
+    }
+
+    .filters button {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--dark3);
+      color: var(--muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .filters button:hover,
+    .filters button.active-filter {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(240,192,64,0.08);
+    }
+
+    #charactersGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--dark3);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+      box-shadow: 0 8px 24px rgba(240,192,64,0.18);
+    }
+
+    .card img { width: 100%; display: block; }
+
+    .rarity { font-size: 10px; padding: 3px; font-weight: 700; }
+    .name   { font-size: 12px; padding: 6px; font-weight: 600; }
+
+    a { text-decoration: none; color: white; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; Home</a></li>
+      <li><a href="characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="events.html">&#127881; Events</a></li>
+      <li><a href="guides.html">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-header">
+      <div class="page-header-title">&#9876; Characters</div>
+      <div class="page-header-sub">Browse All Heroes &bull; Filter by Weapon</div>
+    </div>
+
+    <div class="container">
+      <input id="searchInput" class="search-bar" placeholder="&#128269; Search a character...">
+
+      <div class="filters">
+        <button onclick="filterWeapon('all',this)" class="active-filter">All</button>
+        <button onclick="filterWeapon('axe',this)">Axe</button>
+        <button onclick="filterWeapon('book',this)">Book</button>
+        <button onclick="filterWeapon('cudgel',this)">Cudgel</button>
+        <button onclick="filterWeapon('dualsword',this)">Dual Swords</button>
+        <button onclick="filterWeapon('gauntlet',this)">Gauntlet</button>
+        <button onclick="filterWeapon('greatsword',this)">Greatsword</button>
+        <button onclick="filterWeapon('lance',this)">Lance</button>
+        <button onclick="filterWeapon('longsword',this)">Longsword</button>
+        <button onclick="filterWeapon('rapier',this)">Rapier</button>
+        <button onclick="filterWeapon('shield',this)">Shield</button>
+        <button onclick="filterWeapon('staff',this)">Staff</button>
+        <button onclick="filterWeapon('wand',this)">Wand</button>
+      </div>
+
+      <div id="charactersGrid"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+    <p style="margin-top:8px;">
+      <a href="index.html" data-i18n="nav_home">Home</a> &nbsp;&bull;&nbsp;
+      <a href="characters.html" data-i18n="nav_characters">Characters</a> &nbsp;&bull;&nbsp;
+      <a href="weapons.html" data-i18n="nav_weapons">Weapons</a> &nbsp;&bull;&nbsp;
+      <a href="tierlist.html" data-i18n="nav_tierlist">Tier List</a> &nbsp;&bull;&nbsp;
+      <a href="events.html" data-i18n="nav_events">Events</a> &nbsp;&bull;&nbsp;
+      <a href="guides.html" data-i18n="nav_guides">Guides</a>
+    </p>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/navbar.js?v=20260308"></script>
+  <script src="js/image-config.js"></script>
+  <script>
+    const BASE_IMAGE_URL = "https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/";
+    var characters = [
+      {name:"Ban",          weapon:"cudgel",    rarity:"SSR", img: BASE_IMAGE_URL + "Ban.png",          link:"characters/Ban.html"},
+      {name:"Bug",          weapon:"axe",       rarity:"SR",  img: BASE_IMAGE_URL + "Bug.png",          link:"characters/Bug.html"},
+      {name:"Daisy",        weapon:"book",      rarity:"SSR", img: BASE_IMAGE_URL + "Daisy.png",        link:"characters/Daisy.html"},
+      {name:"Derieri",      weapon:"axe",       rarity:"SSR", img: BASE_IMAGE_URL + "Derieri.png",      link:"characters/Derieri.html"},
+      {name:"Diane",        weapon:"axe",       rarity:"SSR", img: BASE_IMAGE_URL + "Diane.png",        link:"characters/Diane.html"},
+      {name:"Drake",        weapon:"book",      rarity:"SR",  img: BASE_IMAGE_URL + "Drake.png",        link:"characters/Drake.html"},
+      {name:"Dreydrin",     weapon:"axe",       rarity:"SR",  img: BASE_IMAGE_URL + "Dreydrin.png",     link:"characters/Dreydrin.html"},
+      {name:"Dreyfus",      weapon:"longsword", rarity:"SR",  img: BASE_IMAGE_URL + "Dreyfus.png",      link:"characters/Dreyfus.html"},
+      {name:"Elaine",       weapon:"book",      rarity:"SR",  img: BASE_IMAGE_URL + "Elaine.png",       link:"characters/Elaine.html"},
+      {name:"Elizabeth",    weapon:"book",      rarity:"SSR", img: BASE_IMAGE_URL + "Elizabeth.png",    link:"characters/Elizabeth.html"},
+      {name:"Escanor",      weapon:"axe",       rarity:"SSR", img: BASE_IMAGE_URL + "Escanor.png",      link:"characters/Escanor.html"},
+      {name:"Gilthunder",   weapon:"longsword", rarity:"SR",  img: BASE_IMAGE_URL + "Gilthunder.png",   link:"characters/Gilthunder.html"},
+      {name:"Gowther",      weapon:"book",      rarity:"SSR", img: BASE_IMAGE_URL + "Gowther.png",      link:"characters/Gowther.html"},
+      {name:"Griamore",     weapon:"cudgel",    rarity:"SR",  img: BASE_IMAGE_URL + "Griamore.png",     link:"characters/Griamore.html"},
+      {name:"Guila",        weapon:"lance",     rarity:"SR",  img: BASE_IMAGE_URL + "Guila.png",        link:"characters/Guila.html"},
+      {name:"Hendrickson",  weapon:"dualsword", rarity:"SR",  img: BASE_IMAGE_URL + "Hendrickson.png",  link:"characters/Hendrickson.html"},
+      {name:"Howzer",       weapon:"cudgel",    rarity:"SR",  img: BASE_IMAGE_URL + "Howzer.png",       link:"characters/Howzer.html"},
+      {name:"Jericho",      weapon:"dualsword", rarity:"SR",  img: BASE_IMAGE_URL + "Jericho.png",      link:"characters/Jericho.html"},
+      {name:"King",         weapon:"book",      rarity:"SSR", img: BASE_IMAGE_URL + "King.png",         link:"characters/King.html"},
+      {name:"Klotho",       weapon:"rapier",    rarity:"SR",  img: BASE_IMAGE_URL + "Klotho.png",       link:"characters/Klotho.html"},
+      {name:"Manny",        weapon:"book",      rarity:"SR",  img: BASE_IMAGE_URL + "Manny.png",        link:"characters/Manny.html"},
+      {name:"Meliodas",     weapon:"axe",       rarity:"SSR", img: BASE_IMAGE_URL + "Meliodas.png",     link:"characters/Meliodas.html"},
+      {name:"Merlin",       weapon:"book",      rarity:"SSR", img: BASE_IMAGE_URL + "Merlin.png",       link:"characters/Merlin.html"},
+      {name:"Slader",       weapon:"axe",       rarity:"SR",  img: BASE_IMAGE_URL + "Slader.png",       link:"characters/Slader.html"},
+      {name:"Tioreh",       weapon:"book",      rarity:"SSR", img: BASE_IMAGE_URL + "Tioreh.png",       link:"characters/Tioreh.html"},
+      {name:"Tristan",      weapon:"dualsword", rarity:"SSR", img: BASE_IMAGE_URL + "Tristan.png",      link:"characters/Tristan.html"}
+    ];
+
+    let currentFilter = 'all';
+
+    function renderCharacters() {
+      const grid = document.getElementById('charactersGrid');
+      grid.innerHTML = '';
+      
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      
+      characters.forEach(char => {
+        const matchesFilter = currentFilter === 'all' || char.weapon === currentFilter;
+        const matchesSearch = char.name.toLowerCase().includes(searchTerm);
+        
+        if (matchesFilter && matchesSearch) {
+          const card = document.createElement('a');
+          card.href = char.link;
+          card.className = 'card';
+          card.innerHTML = `
+            <img src="${char.img}" alt="${char.name}">
+            <div class="rarity">${char.rarity}</div>
+            <div class="name">${char.name}</div>
+          `;
+          grid.appendChild(card);
+        }
+      });
+    }
+
+    function filterWeapon(weapon, button) {
+      currentFilter = weapon;
+      document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active-filter'));
+      button.classList.add('active-filter');
+      renderCharacters();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', renderCharacters);
+    renderCharacters();
+  </script>
+</body>
+</html>

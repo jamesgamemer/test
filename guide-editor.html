@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide Editor - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar-auth.css?v=20260308">
+  <link rel="stylesheet" href="css/guide-cms.css?v=20260310">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; Home</a></li>
+      <li><a href="characters.html">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="events.html">&#127881; Events</a></li>
+      <li><a href="guides.html" class="active">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+    <div class="container">
+
+      <a href="guides.html" class="guide-back-link">&#8592; Back to Guides</a>
+
+      <!-- Editor Toolbar -->
+      <div class="editor-toolbar">
+        <div class="editor-toolbar-left">
+          <h2 style="font-family:'Cinzel',serif;font-size:18px;color:var(--gold);margin:0;" id="editorTitle">New Guide</h2>
+        </div>
+        <div class="editor-toolbar-right">
+          <div class="editor-mode-toggle">
+            <button class="editor-mode-btn active" data-mode="edit" id="modeEditBtn">Edit</button>
+            <button class="editor-mode-btn" data-mode="preview" id="modePreviewBtn">Preview</button>
+          </div>
+          <span class="editor-save-status" id="saveStatus"></span>
+          <button class="btn btn-outline" id="saveDraftBtn" style="padding:8px 16px;">Save Draft</button>
+          <button class="btn btn-gold" id="publishBtn" style="padding:8px 16px;">Publish</button>
+        </div>
+      </div>
+
+      <!-- Guide Meta -->
+      <div class="editor-meta" id="editorMetaPanel">
+        <div class="editor-meta-grid">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="metaTitle" placeholder="Guide title...">
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="metaCategory">
+              <option value="newbie">Newbie</option>
+              <option value="general" selected>General</option>
+              <option value="character">Character</option>
+              <option value="farming">Farming</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label>Description</label>
+            <textarea id="metaDescription" rows="2" placeholder="Short description..."></textarea>
+          </div>
+          <div class="form-group full-width">
+            <label>Cover Image</label>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <input type="text" id="metaCoverUrl" placeholder="Image URL or upload..." style="flex:1;">
+              <label class="btn btn-outline" style="padding:8px 16px;cursor:pointer;margin:0;">
+                Upload
+                <input type="file" id="metaCoverUpload" accept="image/*" style="display:none;">
+              </label>
+            </div>
+            <img id="metaCoverPreview" src="" alt="" style="max-width:200px;border-radius:8px;margin-top:8px;display:none;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div id="editModePanel">
+        <div class="editor-blocks-area" id="blocksArea">
+          <!-- Blocks will be rendered here -->
+        </div>
+
+        <div class="editor-add-block-bar">
+          <button class="editor-add-block-btn" id="addBlockBtn">+ Add Block</button>
+        </div>
+      </div>
+
+      <!-- Preview Mode -->
+      <div id="previewModePanel" style="display:none;">
+        <div class="guide-content-area" id="previewContent"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Block Picker Modal -->
+  <div class="block-picker-overlay" id="blockPickerOverlay" style="display:none;">
+    <div class="block-picker-modal">
+      <div class="block-picker-title">Add Block</div>
+      <div class="block-picker-grid">
+        <button class="block-picker-item" data-type="header">
+          <span class="bpi-icon">H</span>Header
+        </button>
+        <button class="block-picker-item" data-type="text">
+          <span class="bpi-icon">&#9998;</span>Text
+        </button>
+        <button class="block-picker-item" data-type="image">
+          <span class="bpi-icon">&#128247;</span>Image
+        </button>
+        <button class="block-picker-item" data-type="video">
+          <span class="bpi-icon">&#9654;</span>Video
+        </button>
+        <button class="block-picker-item" data-type="table">
+          <span class="bpi-icon">&#9638;</span>Table
+        </button>
+        <button class="block-picker-item" data-type="list">
+          <span class="bpi-icon">&#8226;</span>List
+        </button>
+        <button class="block-picker-item" data-type="box">
+          <span class="bpi-icon">&#128221;</span>Box
+        </button>
+        <button class="block-picker-item" data-type="columns">
+          <span class="bpi-icon">&#9636;</span>Columns
+        </button>
+        <button class="block-picker-item" data-type="divider">
+          <span class="bpi-icon">&mdash;</span>Divider
+        </button>
+        <button class="block-picker-item" data-type="spacer">
+          <span class="bpi-icon">&#8597;</span>Spacer
+        </button>
+      </div>
+      <div style="text-align:center;margin-top:16px;">
+        <button class="btn btn-outline" id="blockPickerClose" style="padding:8px 20px;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="guide-toast" id="guideToast"></div>
+
+  
+  
+  
+  
+  
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/supabase-guide-api.js"></script>
+  <script src="js/guide-renderer.js"></script>
+  <script src="js/guide-editor.js?v=20260310"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/navbar.js?v=20260308"></script>
+  <script>
+    if (typeof I18n !== 'undefined') { I18n.init(); I18n.applyTranslations(); }
+  </script>
+
+</body>
+</html>

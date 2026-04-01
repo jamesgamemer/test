@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Characters - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/navbar-auth.css">
+  <style>
+    .page-header {
+      background: linear-gradient(180deg, #0d1f4a 0%, var(--dark2) 100%);
+      padding: 80px 20px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(96,165,250,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(96,165,250,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    .page-header-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 900;
+      color: var(--gold);
+      text-shadow: 0 0 30px var(--glow-gold);
+      position: relative;
+      z-index: 1;
+    }
+    .page-header-sub {
+      color: var(--muted);
+      font-size: 15px;
+      letter-spacing: 2px;
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .page-header-count {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 1px;
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+      opacity: 0.7;
+    }
+    .search-bar {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--dark3);
+      color: white;
+      margin-bottom: 20px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      transition: border-color 0.2s;
+    }
+    .search-bar:focus { outline: none; border-color: var(--gold); }
+    .search-bar::placeholder { color: var(--muted); }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 30px;
+    }
+    .filters button {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--dark3);
+      color: var(--muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .filters button:hover,
+    .filters button.active-filter {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(240,192,64,0.08);
+    }
+
+    /* ── Rarity Filter Row ── */
+    .rarity-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .rarity-filters button {
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-transform: uppercase;
+    }
+    .rarity-btn-all {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .rarity-btn-all:hover, .rarity-btn-all.active-rarity {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(240,192,64,0.08);
+    }
+    .rarity-btn-ssr {
+      background: rgba(250,204,21,0.08);
+      border: 2px solid rgba(250,204,21,0.3);
+      color: var(--ssr);
+    }
+    .rarity-btn-ssr:hover, .rarity-btn-ssr.active-rarity {
+      background: rgba(250,204,21,0.2);
+      border-color: var(--ssr);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(250,204,21,0.3);
+    }
+    .rarity-btn-sr {
+      background: rgba(167,139,250,0.08);
+      border: 2px solid rgba(167,139,250,0.3);
+      color: var(--sr);
+    }
+    .rarity-btn-sr:hover, .rarity-btn-sr.active-rarity {
+      background: rgba(167,139,250,0.2);
+      border-color: var(--sr);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(167,139,250,0.3);
+    }
+    #charactersGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--dark3);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+      box-shadow: 0 8px 24px rgba(240,192,64,0.18);
+    }
+    .card-img-wrap {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    .card-img-wrap img { width: 100%; display: block; }
+    .card-rarity-tag {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      z-index: 2;
+    }
+    .card-rarity-tag.SSR {
+      background: rgba(250,204,21,0.2);
+      color: var(--ssr);
+      border: 1px solid rgba(250,204,21,0.3);
+    }
+    .card-rarity-tag.SR {
+      background: rgba(167,139,250,0.2);
+      color: var(--sr);
+      border: 1px solid rgba(167,139,250,0.3);
+    }
+
+    /* ── Weapon Type Badges (Game8 Style Overlay) ── */
+    .card-weapon-badges {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      z-index: 3;
+    }
+    .weapon-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: rgba(13,15,30,0.85);
+      color: #e2e8f0;
+      border: 1px solid rgba(96,165,250,0.3);
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+    .weapon-type-badge .wt-icon {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .weapon-type-badge:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(13,15,30,0.95);
+    }
+
+    /* ── Card Footer ── */
+    .card-footer {
+      padding: 4px 6px 8px;
+    }
+    .card-footer .rarity { font-size: 10px; padding: 2px; font-weight: 700; }
+    .card-footer .name   { font-size: 12px; padding: 2px 4px 4px; font-weight: 600; }
+
+    /* ── Weapon Types Row (below name) ── */
+    .card-weapon-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 3px;
+      padding: 0 4px 6px;
+    }
+    .card-weapon-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      background: rgba(96,165,250,0.1);
+      color: var(--blue);
+      border: 1px solid rgba(96,165,250,0.15);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .card-weapon-pill:hover {
+      background: rgba(96,165,250,0.2);
+      border-color: rgba(96,165,250,0.35);
+    }
+    .card-weapon-pill .wp-icon {
+      width: 10px;
+      height: 10px;
+      border-radius: 1px;
+    }
+
+    a { text-decoration: none; color: white; }
+    .loading-msg { text-align:center; padding:60px; color:var(--muted); font-size:16px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      #charactersGrid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+      }
+      .weapon-type-badge { font-size: 8px; padding: 1px 4px; }
+      .weapon-type-badge .wt-icon { width: 10px; height: 10px; }
+      .card-weapon-pill { font-size: 7px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Admin Bar -->
+  <div class="admin-bar" id="adminBar" style="display:none;">
+    <div class="admin-bar-left">
+      <span class="admin-badge">ADMIN</span>
+      <a href="admin.html" class="admin-bar-link">Dashboard</a>
+      <a href="admin.html" class="admin-bar-link">+ Add Character</a>
+    </div>
+    <div class="admin-bar-right">
+      <button class="admin-bar-btn" onclick="AdminAuth.logout()">Logout</button>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html" data-i18n="nav_home">&#127968; Home</a></li>
+      <li><a href="characters.html" class="active" data-i18n="nav_characters">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html" data-i18n="nav_tierlist">&#127942; Tier List</a></li>
+      <li><a href="events.html" data-i18n="nav_events">&#127881; Events</a></li>
+      <li><a href="guides.html">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-header">
+      <div class="page-header-title"><span class="nav-icon">&#9876;</span> <span data-i18n="chars_title">Characters</span></div>
+      <div class="page-header-sub" data-i18n="chars_subtitle">Browse All Heroes &bull; Filter by Weapon</div>
+      <div class="page-header-count" id="charCount">Loading...</div>
+    </div>
+
+    <div class="container">
+      <input id="searchInput" class="search-bar" placeholder="&#128269; Search a character..." data-i18n-placeholder="chars_search" oninput="applyFilters()">
+      <div class="rarity-filters" id="rarityFilters">
+        <button class="rarity-btn-all active-rarity" onclick="filterRarity('all',this)">All</button>
+        <button class="rarity-btn-ssr" onclick="filterRarity('SSR',this)">&#11088; SSR</button>
+        <button class="rarity-btn-sr" onclick="filterRarity('SR',this)">&#128156; SR</button>
+      </div>
+      <div class="filters" id="filterButtons"></div>
+      <div id="charactersGrid">
+        <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+        <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+        <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+        <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+        <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+        <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+    <p style="margin-top:8px;">
+      <a href="index.html" data-i18n="nav_home">Home</a> &nbsp;&bull;&nbsp;
+      <a href="characters.html" data-i18n="nav_characters">Characters</a> &nbsp;&bull;&nbsp;
+      <a href="weapons.html">Weapons</a> &nbsp;&bull;&nbsp;
+      <a href="tierlist.html" data-i18n="nav_tierlist">Tier List</a> &nbsp;&bull;&nbsp;
+      <a href="events.html" data-i18n="nav_events">Events</a>
+    </p>
+  </footer>
+
+  <!-- Local Data & Admin Auth (No Supabase) -->
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/supabase-weapon-api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/i18n-characters.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/weapon_icons_v2.js"></script>
+  <script>
+    var currentFilter = 'all';
+    var currentRarity = 'all';
+    var allCharacters = [];
+    var allWeapons = [];
+
+    /* ---- Weapon Category → Icon Map ---- */
+  const WEAPON_ICONS = {
+  "axe": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4C9.37 4 4 9.37 4 16C4 22.63 9.37 28 16 28C22.63 28 28 22.63 28 16C28 9.37 22.63 4 16 4ZM16 26C10.48 26 6 21.52 6 16C6 10.48 10.48 6 16 6C21.52 6 26 10.48 26 16C26 21.52 21.52 26 16 26Z" fill="#FFFFFF" fill-opacity="0.2"/>
+        <path d="M12 24L20 16M20 16L14 10L24 6L26 8L22 18L16 12L12 24Z" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M11 25L9 27" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>`,
+  "book": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4C9.37 4 4 9.37 4 16C4 22.63 9.37 28 16 28C22.63 28 28 22.63 28 16C28 9.37 22.63 4 16 4Z" fill="#FFFFFF" fill-opacity="0.1"/>
+        <path d="M8 10V22C8 23.1 8.9 24 10 24H22C23.1 24 24 23.1 24 22V10C24 8.9 23.1 8 22 8H10C8.9 8 8 8.9 8 10Z" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M16 8V24M11 12H14M11 16H14M18 12H21M18 16H21" stroke="#FFFFFF" stroke-width="1"/>
+        <path d="M14 6L16 4L18 6M14 26L16 28L18 26" stroke="#FFFFFF" stroke-width="0.8"/>
+    </svg>`,
+  "cudgel": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="12" stroke="#FFFFFF" stroke-width="0.5" stroke-dasharray="2 2" stroke-opacity="0.5"/>
+        <path d="M10 22L22 10L24 12L12 24L10 22Z" fill="#FFFFFF" fill-opacity="0.2" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M20 8L26 14" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M18 6L24 12M16 4L22 10" stroke="#FFFFFF" stroke-width="0.8" stroke-opacity="0.6"/>
+        <circle cx="21" cy="11" r="1" fill="#FFFFFF"/>
+    </svg>`,
+  "dual swords": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4L19 10H13L16 4ZM16 28L13 22H19L16 28Z" fill="#FFFFFF" fill-opacity="0.3"/>
+        <path d="M8 24L24 8M24 8L20 8M24 8L24 12" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M24 24L8 8M8 8L12 8M8 8L8 12" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M14 20L12 22M18 20L20 22" stroke="#FFFFFF" stroke-width="1.5"/>
+    </svg>`,
+  "gauntlets": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="12" height="14" rx="2" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M12 10V7C12 6.45 12.45 6 13 6H19C19.55 6 20 6.45 20 7V10" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M10 16H22M13 13V19M19 13V19" stroke="#FFFFFF" stroke-width="0.8" stroke-opacity="0.5"/>
+        <circle cx="16" cy="17" r="3" stroke="#FFFFFF" stroke-width="1"/>
+        <path d="M6 16H8M24 16H26M16 4V6M16 26V28" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round"/>
+    </svg>`,
+  "greatsword": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 4V28" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.3"/>
+        <path d="M13 8L16 5L19 8V22L16 25L13 22V8Z" fill="#FFFFFF" fill-opacity="0.2" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M10 22H22M16 22V27" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M14 10H18M14 14H18M14 18H18" stroke="#FFFFFF" stroke-width="0.8" stroke-opacity="0.6"/>
+    </svg>`,
+  "grimoire": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 2C8.27 2 2 8.27 2 16C2 23.73 8.27 30 16 30C23.73 30 30 23.73 30 16C30 8.27 23.73 2 16 2ZM16 28C9.37 28 4 22.63 4 16C4 9.37 9.37 4 16 4C22.63 4 28 9.37 28 16C28 22.63 22.63 28 16 28Z" fill="#FFFFFF" fill-opacity="0.1"/>
+        <rect x="10" y="8" width="12" height="16" rx="1" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M16 8V24M13 12L16 15L19 12" stroke="#FFFFFF" stroke-width="1"/>
+        <circle cx="16" cy="16" r="4" stroke="#FFFFFF" stroke-width="0.8" stroke-dasharray="1 1"/>
+    </svg>`,
+  "lance": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M26 6L6 26" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M23 5L27 9L21 15L19 13L23 5Z" fill="#FFFFFF" fill-opacity="0.2" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M11 21L7 25" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="24" cy="8" r="4" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.4"/>
+        <path d="M28 4L24 8" stroke="#FFFFFF" stroke-width="0.8"/>
+    </svg>`,
+  "longsword": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 8L8 24" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M21 7L25 11L23 13L19 9L21 7Z" fill="#FFFFFF" fill-opacity="0.2" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M12 20L7 25" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M16 16L20 12M14 18L18 14" stroke="#FFFFFF" stroke-width="0.8" stroke-opacity="0.5"/>
+        <circle cx="16" cy="16" r="10" stroke="#FFFFFF" stroke-width="0.3" stroke-opacity="0.3"/>
+    </svg>`,
+  "rapier": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M26 6L10 22" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M13 19C11 17 7 21 9 23C11 25 15 21 13 19Z" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M9 23L6 26" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M22 10L28 4" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.5"/>
+        <circle cx="24" cy="8" r="3" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.4"/>
+    </svg>`,
+  "shield": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 8V18C10 21.31 12.69 24 16 24C19.31 24 22 21.31 22 18V8L16 5L10 8Z" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M16 12V18M13 15H19" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round"/>
+        <circle cx="16" cy="16" r="10" stroke="#FFFFFF" stroke-width="0.3" stroke-opacity="0.3"/>
+    </svg>`,
+  "staff": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 26L22 12" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="25" cy="9" r="4" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M23 11L27 7M23 7L27 11" stroke="#FFFFFF" stroke-width="1"/>
+        <path d="M20 14L18 16" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+        <path d="M25 4V6M25 12V14M20 9H22M28 9H30" stroke="#FFFFFF" stroke-width="0.8" stroke-opacity="0.6"/>
+    </svg>`,
+    "sword & shield": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 8V18C10 21.31 12.69 24 16 24C19.31 24 22 21.31 22 18V8L16 5L10 8Z" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFFFFF" stroke-width="1.2"/>
+        <path d="M24 8L8 24" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M16 12V18M13 15H19" stroke="#FFFFFF" stroke-width="1"/>
+        <path d="M16 2C8.27 2 2 8.27 2 16C2 23.73 8.27 30 16 30C23.73 30 30 23.73 30 16C30 8.27 23.73 2 16 2ZM16 28C9.37 28 4 22.63 4 16C4 9.37 9.37 4 16 4C22.63 4 28 9.37 28 16C28 22.63 22.63 28 16 28Z" fill="#FFFFFF" fill-opacity="0.05"/>
+    </svg>`,
+  "wand": `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 22L22 10" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M24 8L22 10L24 12L26 10L24 8Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1"/>
+        <path d="M24 4V6M24 14V16M20 10H18M30 10H28" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round"/>
+        <path d="M28 6L26 8M22 12L20 14M22 8L20 6M28 12L30 14" stroke="#FFFFFF" stroke-width="0.5" stroke-opacity="0.5"/>
+    </svg>`
+};
+
+    function getWeaponIcon(type) {
+      return WEAPON_ICONS[(type || '').toLowerCase()] || '&#9876;';
+    }
+
+    /* ---- Helper: get current language ---- */
+    function lang() {
+      return (typeof I18n !== 'undefined') ? I18n.getLang() : 'en';
+    }
+    function CT() { return (typeof CharTranslations !== 'undefined') ? CharTranslations : null; }
+
+    function filterRarity(rarity, btn) {
+      currentRarity = rarity;
+      document.querySelectorAll('.rarity-filters button').forEach(function(b) { b.classList.remove('active-rarity'); });
+      btn.classList.add('active-rarity');
+      applyFilters();
+    }
+
+    function filterWeapon(type, btn) {
+      currentFilter = type;
+      document.querySelectorAll('.filters button').forEach(function(b) { b.classList.remove('active-filter'); });
+      if (btn) btn.classList.add('active-filter');
+      applyFilters();
+    }
+
+    function applyFilters() {
+      var search = document.getElementById('searchInput').value.toLowerCase();
+      var cards = document.querySelectorAll('.card');
+      var visibleCount = 0;
+      cards.forEach(function(card) {
+        var name = (card.getAttribute('data-name') || '').toLowerCase();
+        var types = (card.getAttribute('data-types') || '').toLowerCase();
+        var rarity = (card.getAttribute('data-rarity') || '').toUpperCase();
+        var matchSearch = name.indexOf(search) !== -1;
+        var matchFilter = currentFilter === 'all' || types.indexOf(currentFilter) !== -1;
+        var matchRarity = currentRarity === 'all' || rarity === currentRarity;
+        var show = matchSearch && matchFilter && matchRarity;
+        card.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
+      });
+      updateCount(visibleCount);
+    }
+
+    function updateCount(visible) {
+      var el = document.getElementById('charCount');
+      if (el) {
+        el.textContent = 'Showing ' + visible + ' of ' + allCharacters.length + ' Characters';
+      }
+    }
+
+    function buildFilters(chars) {
+      var typesMap = {};
+      chars.forEach(function(c) {
+        (c.types || []).forEach(function(t) { typesMap[t] = true; });
+      });
+      var types = Object.keys(typesMap).sort();
+      var container = document.getElementById('filterButtons');
+      var ct = CT();
+      var currentLang = lang();
+
+      /* "All" button - translated */
+      var allLabel = (ct) ? ct.getUILabel('All', currentLang) : 'All';
+      var html = '<button onclick="filterWeapon(\'all\',this)" class="active-filter">' + allLabel + '</button>';
+
+      types.forEach(function(t) {
+        var key = t.toLowerCase().replace(/\s+/g, '');
+        /* Translate weapon name */
+        var displayName = t;
+        if (ct && currentLang === 'th') {
+          displayName = ct.getWeaponName(t, 'th');
+        }
+        var icon = getWeaponIcon(t);
+        html += '<button onclick="filterWeapon(\'' + key + '\',this)">' + icon + ' ' + displayName + '</button>';
+      });
+      container.innerHTML = html;
+    }
+
+    /* ---- Get weapon icon URL from weapons data ---- */
+    function getWeaponIconUrl(weaponType) {
+      if (!allWeapons || allWeapons.length === 0) return null;
+      var typeNorm = (weaponType || '').toLowerCase();
+      var match = allWeapons.find(function(w) {
+        return (w.category || w.name_en || '').toLowerCase() === typeNorm;
+      });
+      return match ? (match.icon_url || null) : null;
+    }
+
+    function buildGrid(chars) {
+      var grid = document.getElementById('charactersGrid');
+      
+      if (!chars || chars.length === 0) {
+        grid.innerHTML = '<p class="loading-msg" style="grid-column:1/-1;">No characters found. Please check back later!</p>';
+        updateCount(0);
+        return;
+      }
+      
+      var seen = {};
+      var html = '';
+      var count = 0;
+      chars.forEach(function(c) {
+        var charName = c.name_en || c.name || c.slug || 'Unknown';
+        if (seen[charName]) return;
+        seen[charName] = true;
+        count++;
+        var typesArr = c.types || [];
+        var typesStr = typesArr.map(function(t) { return t.toLowerCase().replace(/\s+/g, ''); }).join(',');
+        var linkParam = 'slug=' + encodeURIComponent(c.slug);
+        var imgUrl = c.image || 'https://placehold.co/300x400?text=No+Image';
+
+        html += '<a href="character.html?' + linkParam + '" class="card" data-name="' + charName + '" data-types="' + typesStr + '" data-rarity="' + (c.rarity || 'SR') + '">';
+
+        /* Image wrapper with overlays */
+        html += '<div class="card-img-wrap">';
+        html += '<div class="card-rarity-tag ' + (c.rarity || 'SR') + '">' + (c.rarity || 'SR') + '</div>';
+        html += '<img src="' + imgUrl + '" alt="' + charName + '" loading="lazy" onerror="this.src=\'https://placehold.co/300x400?text=Error\'">';
+
+        /* Weapon type badges overlay (Game8 style - bottom right of image) */
+        if (typesArr.length > 0) {
+          html += '<div class="card-weapon-badges">';
+          typesArr.forEach(function(t) {
+            var icon = getWeaponIcon(t);
+            html += '<span class="weapon-type-badge">' + icon + ' ' + t + '</span>';
+          });
+          html += '</div>';
+        }
+
+        html += '</div>'; /* end card-img-wrap */
+
+        /* Card footer */
+        html += '<div class="card-footer">';
+        html += '<div class="name">' + charName + '</div>';
+
+        /* Weapon pills row below name */
+        if (typesArr.length > 0) {
+          html += '<div class="card-weapon-row">';
+          typesArr.forEach(function(t) {
+            var icon = getWeaponIcon(t);
+            html += '<span class="card-weapon-pill" onclick="event.preventDefault();event.stopPropagation();filterWeapon(\'' + t.toLowerCase().replace(/\s+/g, '') + '\',document.querySelector(\'.filters button[onclick*=\\x22' + t.toLowerCase().replace(/\s+/g, '') + '\\x22]\'))">' + icon + ' ' + t + '</span>';
+          });
+          html += '</div>';
+        }
+
+        html += '</div>'; /* end card-footer */
+        html += '</a>';
+      });
+      grid.innerHTML = html;
+      updateCount(count);
+    }
+
+    /* ---- Load weapons data for cross-referencing ---- */
+    async function loadWeaponsData() {
+      /* Load from local JSON */
+      try {
+        var resp = await fetch('data/weapons.json');
+        if (resp.ok) {
+          var data = await resp.json();
+          allWeapons = (data.weapons || data || []);
+        }
+      } catch (e) {
+        allWeapons = [];
+      }
+    }
+
+    /* ---- Rebuild filters on language change ---- */
+    function onLangChange() {
+      if (allCharacters.length > 0) {
+        buildFilters(allCharacters);
+        /* Re-apply current filter state */
+        var btns = document.querySelectorAll('.filters button');
+        btns.forEach(function(btn) {
+          if (currentFilter === 'all' && btn.textContent.trim() === (CT() ? CT().getUILabel('All', lang()) : 'All')) {
+            btn.classList.add('active-filter');
+          }
+        });
+      }
+    }
+
+    // ---- Initialize ----
+    document.addEventListener("DOMContentLoaded", async () => {
+      // i18n
+      if (typeof I18n !== 'undefined') {
+        I18n.init();
+        I18n.onChange(onLangChange);
+      }
+
+      // Auth check
+      const admin = AdminAuth.isLoggedIn();
+      if (admin) {
+        document.getElementById('adminBar').style.display = 'flex';
+      }
+
+      // Load weapons data (for cross-referencing icons)
+      await loadWeaponsData();
+
+      // Load characters
+      allCharacters = await CharDB.loadAll();
+      buildFilters(allCharacters);
+      buildGrid(allCharacters);
+    });
+  </script>
+</body>
+</html>

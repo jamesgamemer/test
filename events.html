@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/navbar-auth.css">
+  <style>
+    .page-header {
+      background: linear-gradient(180deg, #0d1f4a 0%, var(--dark2) 100%);
+      padding: 80px 20px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(96,165,250,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(96,165,250,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    .page-header-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 900;
+      color: var(--gold);
+      text-shadow: 0 0 30px var(--glow-gold);
+      position: relative; z-index: 1;
+    }
+    .page-header-sub {
+      color: var(--muted);
+      font-size: 15px;
+      letter-spacing: 2px;
+      margin-top: 12px;
+      position: relative; z-index: 1;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .filter-tab {
+      padding: 9px 22px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--dark3);
+      color: var(--muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .filter-tab:hover, .filter-tab.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(240,192,64,0.08);
+    }
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .event-card {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      position: relative;
+      cursor: pointer;
+    }
+    .event-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+      box-shadow: 0 10px 30px rgba(240,192,64,0.15);
+    }
+    .event-card-banner {
+      height: 8px;
+    }
+    .event-card-banner.has-image {
+      height: 160px;
+      background-size: cover;
+      background-position: center;
+    }
+    .event-card-body { padding: 24px; }
+    .event-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .status-active   { background: rgba(11,232,129,0.15); color: #0be881; }
+    .status-upcoming { background: rgba(59,130,246,0.15);  color: var(--blue); }
+    .status-ended    { background: rgba(148,163,184,0.15); color: var(--muted); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .status-active .status-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(1.4); }
+    }
+    .event-title {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .event-tag-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .tag-event { background: rgba(59,130,246,0.2); color: #60a5fa; }
+    .tag-update { background: rgba(240,192,64,0.2); color: #f0c040; }
+    .tag-guide { background: rgba(52,211,153,0.2); color: #34d399; }
+    .tag-maintenance { background: rgba(244,114,182,0.2); color: #f472b6; }
+    .event-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .event-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .event-rewards { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .reward-tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: rgba(240,192,64,0.12);
+      color: var(--gold);
+      border: 1px solid rgba(240,192,64,0.25);
+      font-weight: 600;
+    }
+    .countdown { display: flex; gap: 12px; margin-top: 14px; }
+    .cd-block {
+      text-align: center;
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 8px 12px;
+      min-width: 52px;
+    }
+    .cd-num {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+    }
+    .cd-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Admin edit buttons on cards */
+    .event-admin-actions {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 6px;
+      z-index: 2;
+    }
+    .event-admin-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--dark2);
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .event-admin-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(240,192,64,0.1);
+    }
+    .event-admin-btn.delete-btn:hover {
+      border-color: #ef4444;
+      color: #ef4444;
+      background: rgba(239,68,68,0.1);
+    }
+
+    /* Event Form Modal */
+    .event-form-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow-y: auto;
+    }
+    .event-form-modal {
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .efm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .efm-header h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      color: var(--gold);
+      margin: 0;
+    }
+    .efm-close {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .efm-close:hover { color: #ef4444; border-color: #ef4444; }
+    .efm-body { padding: 24px; max-height: calc(100vh - 240px); overflow-y: auto; }
+    .efm-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .efm-group { margin-bottom: 16px; }
+    .efm-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .efm-group input, .efm-group textarea, .efm-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--dark3);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .efm-group input:focus, .efm-group textarea:focus, .efm-group select:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .efm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .reward-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .reward-item input { flex: 1; }
+    .reward-remove {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .reward-remove:hover { color: #ef4444; border-color: #ef4444; }
+    .add-reward-btn {
+      padding: 6px 14px;
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .add-reward-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Image upload area */
+    .efm-image-upload {
+      width: 100%;
+      height: 120px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      overflow: hidden;
+      position: relative;
+      background: var(--dark3);
+    }
+    .efm-image-upload:hover { border-color: var(--gold); }
+    .efm-image-upload img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+    }
+    .efm-image-upload .upload-text {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      z-index: 1;
+    }
+    .efm-image-upload .upload-text span { font-size: 28px; display: block; margin-bottom: 4px; }
+
+    /* Admin add button */
+    .admin-add-event-bar {
+      display: none;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .events-grid { grid-template-columns: 1fr; }
+      .efm-row { grid-template-columns: 1fr; }
+      .event-form-overlay { padding: 20px 10px; }
+    }
+
+    @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  </style>
+</head>
+<body>
+
+  <!-- Admin Bar -->
+  <div class="admin-bar" id="adminBar" style="display:none;">
+    <div class="admin-bar-left">
+      <span class="admin-badge">ADMIN</span>
+      <a href="admin.html" class="admin-bar-link" data-i18n="nav_dashboard">Dashboard</a>
+    </div>
+    <div class="admin-bar-right">
+      <button class="admin-bar-btn" onclick="AdminAuth.logout()" data-i18n="nav_logout">Logout</button>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; <span data-i18n="nav_home">Home</span></a></li>
+      <li><a href="characters.html">&#9876; <span data-i18n="nav_characters">Characters</span></a></li>
+      <li><a href="weapons.html">&#128481; <span data-i18n="nav_weapons">Weapons</span></a></li>
+      <li><a href="tierlist.html">&#127942; <span data-i18n="nav_tierlist">Tier List</span></a></li>
+      <li><a href="events.html" class="active">&#127881; <span data-i18n="nav_events">Events</span></a></li>
+      <li><a href="guides.html">&#128218; <span data-i18n="nav_guides">Guides</span></a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-header">
+      <div class="page-header-title">&#127881; <span data-i18n="ev_title">Events</span></div>
+      <div class="page-header-sub" data-i18n="ev_subtitle">Current &amp; Upcoming In-Game Events</div>
+    </div>
+
+    <div class="container">
+      <!-- Admin: Add Event Button -->
+      <div class="admin-add-event-bar" id="adminAddEventBar">
+        <button class="btn btn-gold" onclick="showEventForm()" data-i18n="ev_add">+ Add New Event</button>
+      </div>
+
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterEvents('all',this)" data-i18n="ev_all">All</button>
+        <button class="filter-tab" onclick="filterEvents('active',this)" data-i18n="ev_active">Active</button>
+        <button class="filter-tab" onclick="filterEvents('upcoming',this)" data-i18n="ev_upcoming">Upcoming</button>
+        <button class="filter-tab" onclick="filterEvents('ended',this)" data-i18n="ev_ended">Ended</button>
+      </div>
+      <div class="events-grid" id="eventsGrid"></div>
+    </div>
+  </div>
+
+  <!-- Event Edit Modal -->
+  <div class="event-form-overlay" id="eventFormOverlay" onclick="if(event.target===this)hideEventForm()">
+    <div class="event-form-modal">
+      <div class="efm-header">
+        <h2 id="efmTitle">Add New Event</h2>
+        <button class="efm-close" onclick="hideEventForm()">&times;</button>
+      </div>
+      <div class="efm-body">
+        <input type="hidden" id="efmEditId">
+        <div class="efm-group">
+          <label data-i18n="form_event_title">Event Title *</label>
+          <input type="text" id="efmEventTitle" placeholder="e.g. Holy War Raid">
+        </div>
+        <div class="efm-group">
+          <label data-i18n="form_event_desc">Description *</label>
+          <textarea id="efmEventDesc" rows="3" placeholder="Event description..."></textarea>
+        </div>
+        <div class="efm-group">
+          <label data-i18n="form_event_image">Event Banner Image</label>
+          <div class="efm-image-upload" id="efmImageUpload" onclick="document.getElementById('efmImageFile').click();">
+            <input type="file" id="efmImageFile" accept="image/*" onchange="handleEventImageUpload(this)" style="display:none;">
+            <img id="efmImagePreview" src="" alt="" style="display:none;">
+            <div class="upload-text" id="efmImagePrompt"><span>&#128247;</span><p>Click to upload banner</p></div>
+          </div>
+        </div>
+        <div class="efm-row">
+          <div class="efm-group">
+            <label data-i18n="form_event_status">Status</label>
+            <select id="efmEventStatus">
+              <option value="active">Active</option>
+              <option value="upcoming">Upcoming</option>
+              <option value="ended">Ended</option>
+            </select>
+          </div>
+          <div class="efm-group">
+            <label data-i18n="form_event_tag">Tag</label>
+            <select id="efmEventTag">
+              <option value="event">Event</option>
+              <option value="update">Update</option>
+              <option value="guide">Guide</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+          </div>
+        </div>
+        <div class="efm-row">
+          <div class="efm-group">
+            <label data-i18n="form_event_start">Start Date</label>
+            <input type="date" id="efmEventStart">
+          </div>
+          <div class="efm-group">
+            <label data-i18n="form_event_end">End Date</label>
+            <input type="date" id="efmEventEnd">
+          </div>
+        </div>
+        <div class="efm-group">
+          <label data-i18n="form_event_color">Banner Color (CSS)</label>
+          <input type="text" id="efmEventColor" placeholder="linear-gradient(90deg,#3b82f6,#60a5fa)" value="linear-gradient(90deg,#3b82f6,#60a5fa)">
+        </div>
+        <div class="efm-group">
+          <label data-i18n="form_rewards">Rewards</label>
+          <div id="efmRewardsEditor"></div>
+          <button type="button" class="add-reward-btn" onclick="addRewardField()" data-i18n="form_add_reward">+ Add Reward</button>
+        </div>
+      </div>
+      <div class="efm-footer">
+        <button class="btn btn-outline" onclick="hideEventForm()" data-i18n="form_cancel">Cancel</button>
+        <button class="btn btn-gold" onclick="saveEvent()" id="efmSaveBtn"><span id="efmSaveBtnText" data-i18n="form_publish_event">Publish Event</span><span id="efmSaveBtnLoading" style="display:none;">Saving...</span></button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+    <p style="margin-top:8px;">
+      <a href="index.html">Home</a> &nbsp;&bull;&nbsp;
+      <a href="characters.html">Characters</a> &nbsp;&bull;&nbsp;
+      <a href="weapons.html">Weapons</a> &nbsp;&bull;&nbsp;
+      <a href="tierlist.html">Tier List</a> &nbsp;&bull;&nbsp;
+      <a href="events.html">Events</a>
+    </p>
+  </footer>
+
+  
+  
+  
+  
+  
+  
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/events-db.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    var allEvents = [];
+    var currentFilter = 'all';
+    var isAdmin = false;
+    var editingEventId = null;
+    var tempEventImageFile = null;
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        var d = new Date(dateStr + 'T00:00:00');
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+      } catch(e) { return dateStr; }
+    }
+
+    /* ── Filter ── */
+    function filterEvents(type, btn) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-tab').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderEvents();
+    }
+
+    /* ── Render ── */
+    function renderEvents() {
+      var grid = document.getElementById('eventsGrid');
+      var filtered = currentFilter === 'all' ? allEvents : allEvents.filter(function(e){ return e.status === currentFilter; });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);"><p style="font-size:48px;margin-bottom:16px;">&#127881;</p><p data-i18n="ev_no_events">No events found</p></div>';
+        if (typeof I18n !== 'undefined') I18n.applyTranslations();
+        return;
+      }
+
+      grid.innerHTML = filtered.map(function(ev) {
+        var statusLabel = ev.status === 'active' ? 'Active' : ev.status === 'upcoming' ? 'Upcoming' : 'Ended';
+        var statusCls = 'status-' + ev.status;
+        var tagCls = 'tag-' + (ev.tag || 'event');
+        var tagLabel = (ev.tag || 'event').charAt(0).toUpperCase() + (ev.tag || 'event').slice(1);
+        var rewardTags = (ev.rewards || []).map(function(r){ return '<span class="reward-tag">'+escHtml(r)+'</span>'; }).join('');
+
+        var adminBtns = '';
+        if (isAdmin) {
+          adminBtns = '<div class="event-admin-actions">' +
+            '<button class="event-admin-btn" onclick="event.stopPropagation();editEvent(\''+ev.id+'\')" title="Edit">&#9998;</button>' +
+            '<button class="event-admin-btn delete-btn" onclick="event.stopPropagation();deleteEvent(\''+ev.id+'\')" title="Delete">&#128465;</button>' +
+            '</div>';
+        }
+
+        /* Banner with optional image */
+        var bannerHTML = '';
+        if (ev.image) {
+          bannerHTML = '<div class="event-card-banner has-image" style="background-image:url(\''+escAttr(ev.image)+'\');background-color:'+getCSSColor(ev.color)+';"></div>';
+        } else {
+          bannerHTML = '<div class="event-card-banner" style="background:'+(ev.color||'var(--dark3)')+';"></div>';
+        }
+
+        var countdownHTML = '';
+        if (ev.status !== 'ended' && ev.end) {
+          var endDate = new Date(ev.end + 'T23:59:59');
+          var now = new Date();
+          var diff = endDate - now;
+          if (diff > 0) {
+            var days  = Math.floor(diff / 86400000);
+            var hours = Math.floor((diff % 86400000) / 3600000);
+            var mins  = Math.floor((diff % 3600000) / 60000);
+            var secs  = Math.floor((diff % 60000) / 1000);
+            countdownHTML = '<div style="font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:14px;text-transform:uppercase;" data-i18n="ev_time_remaining">Time Remaining</div>'
+              + '<div class="countdown">'
+              + '<div class="cd-block"><span class="cd-num" id="cd-d-'+ev.id+'">'+days+'</span><span class="cd-label" data-i18n="ev_days">Days</span></div>'
+              + '<div class="cd-block"><span class="cd-num" id="cd-h-'+ev.id+'">'+hours+'</span><span class="cd-label" data-i18n="ev_hrs">Hrs</span></div>'
+              + '<div class="cd-block"><span class="cd-num" id="cd-m-'+ev.id+'">'+mins+'</span><span class="cd-label" data-i18n="ev_min">Min</span></div>'
+              + '<div class="cd-block"><span class="cd-num" id="cd-s-'+ev.id+'">'+secs+'</span><span class="cd-label" data-i18n="ev_sec">Sec</span></div>'
+              + '</div>';
+          }
+        }
+
+        return '<div class="event-card reveal" data-status="'+ev.status+'" onclick="goToEventDetail(\''+ev.id+'\')">'
+          + adminBtns
+          + bannerHTML
+          + '<div class="event-card-body">'
+          + '<div class="event-status '+statusCls+'"><span class="status-dot"></span>'+statusLabel+'</div>'
+          + '<span class="event-tag-badge '+tagCls+'">'+tagLabel+'</span>'
+          + '<div class="event-title">'+escHtml(ev.title)+'</div>'
+          + '<div class="event-desc">'+escHtml(ev.desc)+'</div>'
+          + '<div class="event-meta"><div>&#128197; '+formatDate(ev.start)+'</div><div>&#8594; '+formatDate(ev.end)+'</div></div>'
+          + '<div class="event-rewards">'+rewardTags+'</div>'
+          + countdownHTML
+          + '</div></div>';
+      }).join('');
+
+      // Reveal animation
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      document.querySelectorAll('.event-card.reveal').forEach(function(el){ obs.observe(el); });
+
+      // Apply i18n
+      if (typeof I18n !== 'undefined') I18n.applyTranslations();
+    }
+
+    function goToEventDetail(id) {
+      window.location.href = 'event-detail.html?id=' + id;
+    }
+
+    function getCSSColor(gradient) {
+      if (!gradient) return '#1e293b';
+      var match = gradient.match(/#[0-9a-fA-F]{3,8}/);
+      return match ? match[0] : '#1e293b';
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function escAttr(str) {
+      if (!str) return '';
+      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    /* ── Event Image Upload ── */
+    function handleEventImageUpload(input) {
+      if (input.files && input.files[0]) {
+        tempEventImageFile = input.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('efmImagePreview').src = e.target.result;
+          document.getElementById('efmImagePreview').style.display = '';
+          document.getElementById('efmImagePrompt').style.display = 'none';
+        };
+        reader.readAsDataURL(tempEventImageFile);
+      }
+    }
+
+    /* ── Event Form (CRUD) ── */
+    function showEventForm(id) {
+      editingEventId = id || null;
+      tempEventImageFile = null;
+      if (id) {
+        var ev = allEvents.find(function(e) { return e.id == id; });
+        if (!ev) return;
+        document.getElementById('efmTitle').textContent = 'Edit Event';
+        document.getElementById('efmEditId').value = id;
+        document.getElementById('efmEventTitle').value = ev.title || '';
+        document.getElementById('efmEventDesc').value = ev.desc || '';
+        document.getElementById('efmEventStatus').value = ev.status || 'active';
+        document.getElementById('efmEventTag').value = ev.tag || 'event';
+        document.getElementById('efmEventStart').value = ev.start || '';
+        document.getElementById('efmEventEnd').value = ev.end || '';
+        document.getElementById('efmEventColor').value = ev.color || 'linear-gradient(90deg,#3b82f6,#60a5fa)';
+        if (ev.image) {
+          document.getElementById('efmImagePreview').src = ev.image;
+          document.getElementById('efmImagePreview').style.display = '';
+          document.getElementById('efmImagePrompt').style.display = 'none';
+        } else {
+          document.getElementById('efmImagePreview').style.display = 'none';
+          document.getElementById('efmImagePrompt').style.display = '';
+        }
+        var rh = '';
+        (ev.rewards || []).forEach(function(r) {
+          rh += '<div class="reward-item"><input type="text" class="efm-reward-input" value="'+r.replace(/"/g,'&quot;')+'"><button class="reward-remove" onclick="this.parentElement.remove();">&times;</button></div>';
+        });
+        document.getElementById('efmRewardsEditor').innerHTML = rh;
+      } else {
+        document.getElementById('efmTitle').textContent = 'Add New Event';
+        document.getElementById('efmEditId').value = '';
+        document.getElementById('efmEventTitle').value = '';
+        document.getElementById('efmEventDesc').value = '';
+        document.getElementById('efmEventStatus').value = 'active';
+        document.getElementById('efmEventTag').value = 'event';
+        document.getElementById('efmEventStart').value = '';
+        document.getElementById('efmEventEnd').value = '';
+        document.getElementById('efmEventColor').value = 'linear-gradient(90deg,#3b82f6,#60a5fa)';
+        document.getElementById('efmImagePreview').style.display = 'none';
+        document.getElementById('efmImagePrompt').style.display = '';
+        document.getElementById('efmRewardsEditor').innerHTML = '';
+        addRewardField();
+      }
+      document.getElementById('eventFormOverlay').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function hideEventForm() {
+      document.getElementById('eventFormOverlay').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function addRewardField() {
+      var div = document.createElement('div');
+      div.className = 'reward-item';
+      div.innerHTML = '<input type="text" class="efm-reward-input" placeholder="e.g. Gems x500"><button class="reward-remove" onclick="this.parentElement.remove();">&times;</button>';
+      document.getElementById('efmRewardsEditor').appendChild(div);
+    }
+
+    function editEvent(id) {
+      showEventForm(id);
+    }
+
+    async function saveEvent() {
+      var title = document.getElementById('efmEventTitle').value.trim();
+      if (!title) { alert('Title is required'); return; }
+
+      var saveBtn = document.getElementById('efmSaveBtn');
+      saveBtn.disabled = true;
+      document.getElementById('efmSaveBtnText').style.display = 'none';
+      document.getElementById('efmSaveBtnLoading').style.display = 'inline';
+
+      try {
+        var rewards = [];
+        document.querySelectorAll('.efm-reward-input').forEach(function(input) {
+          if (input.value.trim()) rewards.push(input.value.trim());
+        });
+
+        var eventData = {
+          title: title,
+          desc: document.getElementById('efmEventDesc').value,
+          status: document.getElementById('efmEventStatus').value,
+          tag: document.getElementById('efmEventTag').value,
+          start: document.getElementById('efmEventStart').value,
+          end: document.getElementById('efmEventEnd').value,
+          color: document.getElementById('efmEventColor').value,
+          rewards: rewards
+        };
+
+        /* Handle image upload */
+        if (tempEventImageFile && typeof EventDB !== 'undefined') {
+          var slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+          var uploadResult = await EventDB.uploadImage(tempEventImageFile, slug);
+          if (uploadResult.url) {
+            eventData.image = uploadResult.url;
+          }
+        } else if (editingEventId) {
+          var existing = allEvents.find(function(e) { return e.id == editingEventId; });
+          if (existing) eventData.image = existing.image || '';
+        }
+
+        var result;
+        if (editingEventId) {
+          result = await EventDB.update(editingEventId, eventData);
+        } else {
+          result = await EventDB.add(eventData);
+        }
+
+        if (result && result.error) throw result.error;
+
+        /* Reload events */
+        allEvents = await EventDB.fetchAll();
+        renderEvents();
+        hideEventForm();
+        showNotification('Event "' + title + '" saved!', 'success');
+      } catch(err) {
+        showNotification('Failed: ' + (err.message || err), 'error');
+      } finally {
+        saveBtn.disabled = false;
+        document.getElementById('efmSaveBtnText').style.display = 'inline';
+        document.getElementById('efmSaveBtnLoading').style.display = 'none';
+      }
+    }
+
+    async function deleteEvent(id) {
+      var ev = allEvents.find(function(e) { return e.id == id; });
+      if (!ev) return;
+      if (!confirm('Delete "' + ev.title + '"?')) return;
+      try {
+        var result = await EventDB.remove(id);
+        if (result && result.error) throw result.error;
+        allEvents = await EventDB.fetchAll();
+        renderEvents();
+        showNotification('Event deleted', 'success');
+      } catch(err) {
+        showNotification('Failed: ' + (err.message || err), 'error');
+      }
+    }
+
+    function showNotification(msg, type) {
+      var n = document.createElement('div');
+      n.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:12px 24px;border-radius:8px;color:white;z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,.3);font-family:sans-serif;font-size:14px;animation:slideIn .3s ease-out;';
+      if (type === 'success') { n.style.backgroundColor = '#16a34a'; n.innerHTML = '&#9989; ' + msg; }
+      else if (type === 'error') { n.style.backgroundColor = '#ef4444'; n.innerHTML = '&#10060; ' + msg; }
+      else { n.style.backgroundColor = '#3b82f6'; n.innerHTML = '&#8505; ' + msg; }
+      document.body.appendChild(n);
+      setTimeout(function() { n.style.opacity = '0'; n.style.transition = 'opacity .5s'; setTimeout(function() { n.remove(); }, 500); }, 3000);
+    }
+
+    /* ── Countdown Timer ── */
+    setInterval(function() {
+      allEvents.forEach(function(ev) {
+        if (ev.status === 'ended' || !ev.end) return;
+        var endDate = new Date(ev.end + 'T23:59:59');
+        var now = new Date();
+        var diff = endDate - now;
+        if (diff <= 0) return;
+        var days  = Math.floor(diff / 86400000);
+        var hours = Math.floor((diff % 86400000) / 3600000);
+        var mins  = Math.floor((diff % 3600000) / 60000);
+        var secs  = Math.floor((diff % 60000) / 1000);
+        var d = document.getElementById('cd-d-' + ev.id);
+        var h = document.getElementById('cd-h-' + ev.id);
+        var m = document.getElementById('cd-m-' + ev.id);
+        var s = document.getElementById('cd-s-' + ev.id);
+        if (d) d.textContent = days;
+        if (h) h.textContent = hours;
+        if (m) m.textContent = mins;
+        if (s) s.textContent = secs;
+      });
+    }, 1000);
+
+    /* ── Init ── */
+ document.addEventListener("DOMContentLoaded", async () => {
+
+  /* i18n */
+  if (typeof I18n !== 'undefined') I18n.init();
+
+  /* Local mode */
+  // Local mode - no Supabase initialization
+
+  /* EventDB */
+  if (typeof EventDB !== 'undefined') EventDB.init();
+
+  /* Auth check */
+  isAdmin = await AdminAuth.isLoggedIn();
+
+  if (isAdmin) {
+    document.getElementById('adminBar').style.display = 'flex';
+    document.getElementById('adminAddEventBar').style.display = 'flex';
+  }
+
+  /* Load events */
+  allEvents = await EventDB.fetchAll();
+  renderEvents();
+
+  if (typeof I18n !== 'undefined') I18n.applyTranslations();
+
+});
+  </script>
+</body>
+</html>

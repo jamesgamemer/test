@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Detail - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/navbar-auth.css">
+  <style>
+    .event-detail-hero {
+      position: relative;
+      min-height: 220px;
+      display: flex;
+      align-items: flex-end;
+      padding: 40px 20px 32px;
+      overflow: hidden;
+    }
+    .event-detail-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(10,15,30,0.85) 70%, var(--dark2) 100%);
+      z-index: 1;
+    }
+    .event-detail-hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(2px);
+    }
+    .event-detail-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .event-detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      transition: color 0.2s;
+    }
+    .event-detail-back:hover { color: var(--gold); }
+    .event-detail-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .ed-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .ed-status-active   { background: rgba(11,232,129,0.15); color: #0be881; }
+    .ed-status-upcoming { background: rgba(59,130,246,0.15);  color: #60a5fa; }
+    .ed-status-ended    { background: rgba(148,163,184,0.15); color: #94a3b8; }
+    .ed-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .ed-tag-event { background: rgba(59,130,246,0.2); color: #60a5fa; }
+    .ed-tag-update { background: rgba(240,192,64,0.2); color: #f0c040; }
+    .ed-tag-guide { background: rgba(52,211,153,0.2); color: #34d399; }
+    .ed-tag-maintenance { background: rgba(244,114,182,0.2); color: #f472b6; }
+    .event-detail-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(24px, 5vw, 40px);
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+      line-height: 1.2;
+    }
+
+    .event-detail-body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .ed-section {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .ed-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ed-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .ed-description {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.8;
+    }
+    .ed-dates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .ed-date-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .ed-date-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .ed-date-value {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .ed-rewards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .ed-reward-item {
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: rgba(240,192,64,0.08);
+      border: 1px solid rgba(240,192,64,0.2);
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .ed-countdown {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .ed-cd-block {
+      text-align: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 24px;
+      min-width: 80px;
+    }
+    .ed-cd-num {
+      font-family: 'Cinzel', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+    }
+    .ed-cd-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .ed-banner-image {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+    .ed-loading {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .ed-dates { grid-template-columns: 1fr; }
+      .ed-cd-block { min-width: 60px; padding: 12px 16px; }
+      .ed-cd-num { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="admin-bar" id="adminBar" style="display:none;">
+    <div class="admin-bar-left">
+      <span class="admin-badge">ADMIN</span>
+      <a href="admin.html" class="admin-bar-link">Dashboard</a>
+    </div>
+    <div class="admin-bar-right">
+      <button class="admin-bar-btn" onclick="AdminAuth.logout()">Logout</button>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; <span data-i18n="nav_home">Home</span></a></li>
+      <li><a href="characters.html">&#9876; <span data-i18n="nav_characters">Characters</span></a></li>
+      <li><a href="weapons.html">&#128481; <span data-i18n="nav_weapons">Weapons</span></a></li>
+      <li><a href="tierlist.html">&#127942; <span data-i18n="nav_tierlist">Tier List</span></a></li>
+      <li><a href="events.html">&#127881; <span data-i18n="nav_events">Events</span></a></li>
+      <li><a href="guides.html">&#128218; <span data-i18n="nav_guides">Guides</span></a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content" id="pageContent">
+    <div class="ed-loading" id="edLoading">Loading event...</div>
+  </div>
+
+  <footer class="site-footer">
+    <p data-i18n="footer_text">7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+    <p style="margin-top:8px;">
+      <a href="index.html">Home</a> &nbsp;&bull;&nbsp;
+      <a href="characters.html">Characters</a> &nbsp;&bull;&nbsp;
+      <a href="weapons.html">Weapons</a> &nbsp;&bull;&nbsp;
+      <a href="tierlist.html">Tier List</a> &nbsp;&bull;&nbsp;
+      <a href="events.html">Events</a>
+    </p>
+  </footer>
+
+  
+  
+  
+  
+  
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/events-db.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    function formatDate(dateStr) {
+      if (!dateStr) return 'TBD';
+      try {
+        var d = new Date(dateStr + 'T00:00:00');
+        var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+      } catch(e) { return dateStr; }
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function renderEventDetail(ev) {
+      if (!ev) {
+        document.getElementById('edLoading').innerHTML = '<p style="font-size:48px;margin-bottom:16px;">&#128533;</p><p>Event not found</p><a href="events.html" style="color:var(--gold);margin-top:12px;display:inline-block;">Back to Events</a>';
+        return;
+      }
+
+      document.title = ev.title + ' - 7DS Origin';
+
+      var statusCls = 'ed-status-' + ev.status;
+      var statusLabel = ev.status === 'active' ? 'Active' : ev.status === 'upcoming' ? 'Upcoming' : 'Ended';
+      var tagCls = 'ed-tag-' + (ev.tag || 'event');
+      var tagLabel = (ev.tag || 'event').charAt(0).toUpperCase() + (ev.tag || 'event').slice(1);
+
+      var heroBg = ev.image
+        ? '<div class="event-detail-hero-bg" style="background-image:url(\'' + ev.image + '\');"></div>'
+        : '<div class="event-detail-hero-bg" style="background:' + (ev.color || 'linear-gradient(135deg,#0d1f4a,#1e3a5f)') + ';"></div>';
+
+      var bannerImg = ev.image
+        ? '<img src="' + ev.image + '" alt="' + escHtml(ev.title) + '" class="ed-banner-image">'
+        : '';
+
+      /* Countdown */
+      var countdownHTML = '';
+      if (ev.status !== 'ended' && ev.end) {
+        var endDate = new Date(ev.end + 'T23:59:59');
+        var now = new Date();
+        var diff = endDate - now;
+        if (diff > 0) {
+          var days  = Math.floor(diff / 86400000);
+          var hours = Math.floor((diff % 86400000) / 3600000);
+          var mins  = Math.floor((diff % 3600000) / 60000);
+          var secs  = Math.floor((diff % 60000) / 1000);
+          countdownHTML = '<div class="ed-section">'
+            + '<div class="ed-section-title" data-i18n="ev_time_remaining">Time Remaining</div>'
+            + '<div class="ed-countdown">'
+            + '<div class="ed-cd-block"><span class="ed-cd-num" id="ed-cd-d">' + days + '</span><span class="ed-cd-label" data-i18n="ev_days">Days</span></div>'
+            + '<div class="ed-cd-block"><span class="ed-cd-num" id="ed-cd-h">' + hours + '</span><span class="ed-cd-label" data-i18n="ev_hrs">Hrs</span></div>'
+            + '<div class="ed-cd-block"><span class="ed-cd-num" id="ed-cd-m">' + mins + '</span><span class="ed-cd-label" data-i18n="ev_min">Min</span></div>'
+            + '<div class="ed-cd-block"><span class="ed-cd-num" id="ed-cd-s">' + secs + '</span><span class="ed-cd-label" data-i18n="ev_sec">Sec</span></div>'
+            + '</div></div>';
+        }
+      }
+
+      /* Rewards */
+      var rewardsHTML = '';
+      if (ev.rewards && ev.rewards.length > 0) {
+        rewardsHTML = '<div class="ed-section">'
+          + '<div class="ed-section-title" data-i18n="form_rewards">Rewards</div>'
+          + '<div class="ed-rewards-grid">'
+          + ev.rewards.map(function(r) { return '<div class="ed-reward-item">' + escHtml(r) + '</div>'; }).join('')
+          + '</div></div>';
+      }
+
+      var html = '<div class="event-detail-hero">'
+        + heroBg
+        + '<div class="event-detail-hero-content">'
+        + '<a href="events.html" class="event-detail-back">&#8592; Back to Events</a>'
+        + '<div class="event-detail-badges">'
+        + '<span class="ed-status ' + statusCls + '"><span class="status-dot" style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>' + statusLabel + '</span>'
+        + '<span class="ed-tag ' + tagCls + '">' + tagLabel + '</span>'
+        + '</div>'
+        + '<div class="event-detail-title">' + escHtml(ev.title) + '</div>'
+        + '</div></div>'
+        + '<div class="event-detail-body">'
+        + bannerImg
+        + countdownHTML
+        + '<div class="ed-section">'
+        + '<div class="ed-section-title" data-i18n="form_event_desc">Description</div>'
+        + '<div class="ed-description">' + escHtml(ev.desc).replace(/\n/g, '<br>') + '</div>'
+        + '</div>'
+        + '<div class="ed-section">'
+        + '<div class="ed-section-title">Event Period</div>'
+        + '<div class="ed-dates">'
+        + '<div class="ed-date-card"><div class="ed-date-label" data-i18n="form_event_start">Start Date</div><div class="ed-date-value">' + formatDate(ev.start) + '</div></div>'
+        + '<div class="ed-date-card"><div class="ed-date-label" data-i18n="form_event_end">End Date</div><div class="ed-date-value">' + formatDate(ev.end) + '</div></div>'
+        + '</div></div>'
+        + rewardsHTML
+        + '</div>';
+
+      document.getElementById('pageContent').innerHTML = html;
+
+      /* Start countdown timer */
+      if (ev.status !== 'ended' && ev.end) {
+        setInterval(function() {
+          var endDate = new Date(ev.end + 'T23:59:59');
+          var now = new Date();
+          var diff = endDate - now;
+          if (diff <= 0) return;
+          var d = document.getElementById('ed-cd-d');
+          var h = document.getElementById('ed-cd-h');
+          var m = document.getElementById('ed-cd-m');
+          var s = document.getElementById('ed-cd-s');
+          if (d) d.textContent = Math.floor(diff / 86400000);
+          if (h) h.textContent = Math.floor((diff % 86400000) / 3600000);
+          if (m) m.textContent = Math.floor((diff % 3600000) / 60000);
+          if (s) s.textContent = Math.floor((diff % 60000) / 1000);
+        }, 1000);
+      }
+
+      if (typeof I18n !== 'undefined') I18n.applyTranslations();
+    }
+
+    /* ── Init ── */
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (typeof I18n !== 'undefined') I18n.init();
+      if (typeof EventDB !== 'undefined') EventDB.init();
+
+      var isAdm = await AdminAuth.isLoggedIn();
+      if (isAdm) document.getElementById('adminBar').style.display = 'flex';
+
+      var params = new URLSearchParams(window.location.search);
+      var eventId = params.get('id');
+      if (!eventId) {
+        renderEventDetail(null);
+        return;
+      }
+
+      var ev = await EventDB.fetchById(eventId);
+      renderEventDetail(ev);
+    });
+  </script>
+</body>
+</html>

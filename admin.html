@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - 7DS Origin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/navbar-auth.css">
+  <style>
+    .admin-tabs{display:flex;gap:0;background:var(--dark3);border-radius:12px;padding:4px;border:1px solid var(--border);margin-bottom:24px;width:fit-content}
+    .admin-tab{padding:10px 24px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:.5px}
+    .admin-tab:hover{color:white;background:rgba(255,255,255,.05)}
+    .admin-tab.active{background:linear-gradient(135deg,var(--blue2),#2563eb);color:white;box-shadow:0 2px 12px rgba(59,130,246,.35)}
+    .admin-tab-content{display:none}.admin-tab-content.active{display:block}
+    .cms-section{background:var(--dark3);border:1px solid var(--border);border-radius:16px;margin-bottom:24px;overflow:hidden}
+    .cms-section-header{display:flex;align-items:center;gap:12px;padding:18px 24px;background:rgba(240,192,64,.04);border-bottom:1px solid var(--border)}
+    .cms-section-header h3{font-family:'Cinzel',serif;font-size:16px;color:var(--gold);margin:0;letter-spacing:1px}
+    .cms-section-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:rgba(240,192,64,.15);color:var(--gold);border:1px solid rgba(240,192,64,.3);flex-shrink:0}
+    .cms-section-body{padding:24px}
+    .two-col{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start}
+    @media(max-width:768px){.two-col{grid-template-columns:1fr}}
+    .portrait-upload{width:100%;aspect-ratio:3/4;border:2px dashed var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s;overflow:hidden;position:relative;background:var(--dark2)}
+    .portrait-upload:hover{border-color:var(--gold)}
+    .portrait-upload img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+    .portrait-upload .upload-text{text-align:center;color:var(--muted);font-size:13px;z-index:1}
+    .portrait-upload .upload-text span{font-size:36px;display:block;margin-bottom:8px}
+    .weapon-toggles{display:flex;flex-wrap:wrap;gap:8px}
+    .weapon-toggle{padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--dark2);color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;user-select:none}
+    .weapon-toggle:hover{border-color:var(--gold);color:var(--gold)}
+    .weapon-toggle.selected{background:rgba(240,192,64,.15);border-color:var(--gold);color:var(--gold);box-shadow:0 0 12px rgba(240,192,64,.15)}
+    .skill-expand-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+    .skill-expand-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;transition:background .2s}
+    .skill-expand-header:hover{background:rgba(255,255,255,.02)}
+    .skill-expand-header .skill-title{font-weight:700;font-size:14px;color:var(--text)}
+    .skill-expand-header .skill-type-tag{font-size:11px;padding:2px 10px;border-radius:12px;font-weight:600;background:rgba(96,165,250,.15);color:var(--blue)}
+    .skill-expand-header .expand-arrow{color:var(--muted);transition:transform .2s;font-size:16px}
+    .skill-expand-header .expand-arrow.open{transform:rotate(180deg)}
+    .skill-expand-body{padding:0 16px 16px;display:none}.skill-expand-body.open{display:block}
+    .potentials-grid-cms{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:600px){.potentials-grid-cms{grid-template-columns:1fr}}
+    .pot-card-cms{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px}
+    .pot-card-cms label{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.5px;margin-bottom:6px;display:block}
+    .pot-card-cms textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px;resize:vertical;box-sizing:border-box}
+    .pot-card-cms textarea:focus{outline:none;border-color:var(--gold)}
+    .costume-item-cms{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+    .costume-item-cms input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px}
+    .costume-item-cms input:focus{outline:none;border-color:var(--gold)}
+    .costume-item-cms-v2{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+    .costume-item-row1{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .costume-item-row1 input[type="text"]{padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px}
+    .costume-item-row1 input[type="text"]:focus{outline:none;border-color:var(--gold)}
+    .costume-item-row2{margin-top:8px}
+    .costume-item-row2 textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px;resize:vertical;box-sizing:border-box}
+    .costume-item-row2 textarea:focus{outline:none;border-color:var(--gold)}
+    .material-item-cms{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+    .material-item-cms input[type="text"]{padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px}
+    .material-item-cms input[type="text"]:focus{outline:none;border-color:var(--gold)}
+    .step-indicator{display:flex;justify-content:center;gap:0;margin-bottom:32px;flex-wrap:wrap}
+    .step-item{display:flex;align-items:center}
+    .step-item:last-child .step-line{display:none}
+    .step-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:var(--dark3);border:2px solid var(--border);color:var(--muted);transition:all .3s;cursor:pointer}
+    .step-circle.active{background:linear-gradient(135deg,#c8960c,#f0c040);border-color:var(--gold);color:#0b1020;box-shadow:0 0 16px rgba(240,192,64,.3)}
+    .step-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:6px;text-align:center}
+    .step-label.active{color:var(--gold)}
+    .step-line{width:40px;height:2px;background:var(--border);margin:0 8px;align-self:center}
+    .step-wrapper{display:flex;flex-direction:column;align-items:center}
+    .weapon-tab-btn{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--dark2);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+    .weapon-tab-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .weapon-tab-btn.active{background:rgba(240,192,64,.15);border-color:var(--gold);color:var(--gold)}
+    @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+
+    /* ── Weapons Manager Styles ── */
+    .icon-upload{width:120px;height:120px;border:2px dashed var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s;overflow:hidden;position:relative;background:var(--dark2);flex-shrink:0}
+    .icon-upload:hover{border-color:var(--gold)}
+    .icon-upload img{width:100%;height:100%;object-fit:contain;position:absolute;inset:0;padding:8px}
+    .icon-upload .upload-text{text-align:center;color:var(--muted);font-size:11px;z-index:1}
+    .icon-upload .upload-text span{font-size:28px;display:block;margin-bottom:4px}
+    .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    @media(max-width:600px){.form-row-3{grid-template-columns:1fr}}
+    .char-link-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+    .char-link-card{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--dark2);cursor:pointer;transition:all .2s;user-select:none}
+    .char-link-card:hover{border-color:var(--blue2);background:rgba(59,130,246,.05)}
+    .char-link-card.linked{border-color:var(--gold);background:rgba(240,192,64,.08);box-shadow:0 0 12px rgba(240,192,64,.1)}
+    .char-link-card img{width:36px;height:36px;border-radius:8px;object-fit:cover;background:var(--dark3)}
+    .char-link-card .char-link-name{font-size:13px;font-weight:600;color:var(--text);flex:1}
+    .char-link-card .char-link-rarity{font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px}
+    .char-link-card .char-link-rarity.SSR{background:rgba(250,204,21,.15);color:#facc15}
+    .char-link-card .char-link-rarity.SR{background:rgba(167,139,250,.15);color:#a78bfa}
+    .char-link-card .link-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(34,197,94,.15);color:#22c55e;display:none}
+    .char-link-card.linked .link-badge{display:inline-block}
+    .char-link-card .sig-toggle{font-size:10px;padding:2px 6px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;display:none}
+    .char-link-card.linked .sig-toggle{display:inline-block}
+    .char-link-card .sig-toggle.active{background:rgba(239,68,68,.15);border-color:#ef4444;color:#ef4444}
+    .font-control-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+    .font-control-row label{font-size:12px;font-weight:600;color:var(--muted);min-width:80px}
+    .font-control-row input[type="number"]{width:70px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px}
+    .font-control-row input[type="color"]{width:36px;height:30px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);cursor:pointer;padding:2px}
+    .font-control-row select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px}
+    .font-preview{padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--dark2);margin-top:12px;min-height:40px}
+    .wpn-stat-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;background:rgba(240,192,64,.1);color:var(--gold);border:1px solid rgba(240,192,64,.2)}
+    /* ── Mini Rich Text Toolbar ── */
+    .mini-rt-wrap{position:relative}
+    .mini-rt-toolbar{display:flex;flex-wrap:wrap;gap:3px;padding:5px 6px;background:var(--dark2);border:1px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0}
+    .mini-rt-toolbar .rt-btn{width:28px;height:28px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:'Rajdhani',sans-serif;font-weight:700}
+    .mini-rt-toolbar .rt-btn:hover{background:rgba(240,192,64,.1);color:var(--gold);border-color:var(--border)}
+    .mini-rt-toolbar .rt-btn.active{background:rgba(240,192,64,.15);color:var(--gold);border-color:var(--gold)}
+    .mini-rt-toolbar .rt-sep{width:1px;height:20px;background:var(--border);margin:4px 2px;align-self:center}
+    .mini-rt-toolbar .rt-color-wrap{position:relative;display:flex;align-items:center}
+    .mini-rt-toolbar .rt-color-wrap input[type="color"]{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer}
+    .mini-rt-editable{width:100%;min-height:48px;padding:8px 10px;border:1px solid var(--border);border-radius:0 0 6px 6px;background:var(--dark3);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;overflow-y:auto;max-height:150px;box-sizing:border-box;line-height:1.5}
+    .mini-rt-editable:focus{border-color:var(--gold)}
+    .mini-rt-editable:empty:before{content:attr(data-placeholder);color:var(--muted);pointer-events:none}
+    .mini-rt-case-menu{position:absolute;top:100%;left:0;background:var(--dark2);border:1px solid var(--border);border-radius:6px;padding:4px;z-index:100;display:none;min-width:140px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+    .mini-rt-case-menu.open{display:block}
+    .mini-rt-case-menu button{display:block;width:100%;text-align:left;padding:6px 10px;border:none;border-radius:4px;background:transparent;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;cursor:pointer}
+    .mini-rt-case-menu button:hover{background:rgba(240,192,64,.1);color:var(--gold)}
+  </style>
+</head>
+<body>
+
+  <div class="admin-bar" id="adminBar">
+    <div class="admin-bar-left">
+      <span class="admin-badge" data-i18n="admin_panel">ADMIN PANEL</span>
+      <a href="characters.html" class="admin-bar-link" data-i18n="view_site">View Site</a>
+    </div>
+    <div class="admin-bar-right">
+      <span id="adminEmail" class="admin-bar-email"></span>
+      <button class="admin-bar-btn" onclick="AdminAuth.logout()" data-i18n="nav_logout">Logout</button>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="index.html">&#127968; Home</a></li>
+      <li><a href="characters.html">&#9876; Characters</a></li>
+      <li><a href="weapons.html">&#128481; Weapons</a></li>
+      <li><a href="tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="events.html">&#127881; Events</a></li>
+      <li><a href="guides.html">&#128218; Guides</a></li>
+      <li><a href="team-builder.html">&#9881; Team Builder</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content" style="padding-top:104px;">
+    <div class="container">
+      <div id="connectionStatus" style="margin-bottom:16px;"></div>
+      <div class="admin-header">
+        <h1><span class="nav-icon">&#128736;</span> <span data-i18n="admin_dashboard">Admin Dashboard</span></h1>
+        <p data-i18n="admin_manage">Manage characters, weapons, and events</p>
+      </div>
+
+      <!-- Admin Tabs -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchAdminTab('characters',this)">&#9876; Characters</button>
+        <button class="admin-tab" onclick="switchAdminTab('weapons',this)">&#128481; Weapons</button>
+        <button class="admin-tab" onclick="switchAdminTab('events',this)">&#127881; Events</button>
+        <button class="admin-tab" onclick="switchAdminTab('translate',this)">&#127760; Translate</button>
+      </div>
+
+      <!-- ═══ CHARACTERS TAB ═══ -->
+      <div class="admin-tab-content active" id="tab-characters">
+        <div class="admin-actions">
+          <button class="btn btn-gold" onclick="showAddForm()">+ Add New Character</button>
+          <button class="btn btn-blue" onclick="doExport()">Export JSON</button>
+          <label class="btn btn-outline" style="cursor:pointer;">Import JSON<input type="file" accept=".json" style="display:none;" onchange="handleImport(event)"></label>
+        </div>
+        <div class="admin-stats" id="adminStats"></div>
+        <div class="admin-section">
+          <div class="admin-section-header">
+            <h2>All Characters</h2>
+            <input type="text" id="adminSearch" class="admin-search" placeholder="Search characters..." oninput="filterAdminList()">
+          </div>
+          <div class="admin-char-list" id="adminCharList"></div>
+        </div>
+      </div>
+
+      <!-- ═══ WEAPONS TAB ═══ -->
+      <div class="admin-tab-content" id="tab-weapons">
+        <div class="admin-actions">
+          <button class="btn btn-gold" onclick="showAddWeaponForm()">+ Add New Weapon</button>
+          <button class="btn btn-blue" onclick="doWeaponExport()">Export JSON</button>
+          <label class="btn btn-outline" style="cursor:pointer;">Import JSON<input type="file" accept=".json" style="display:none;" onchange="handleWeaponImport(event)"></label>
+          <label class="btn btn-outline" style="cursor:pointer;">Seed from Local<input type="file" accept=".json" style="display:none;" onchange="handleWeaponSeed(event)"></label>
+        </div>
+
+        <!-- ═══ AUTO-SYNC PANEL ═══ -->
+        <div class="cms-section" style="margin-bottom:24px;">
+          <div class="cms-section-header"><span class="cms-section-num">&#x21BB;</span> Auto-Sync System</div>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Automatically check external sources for new weapons, detect changes, and sync to local storage. Uses fingerprint comparison to minimize compute cost.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px;">
+            <div class="stat-card" style="text-align:center;padding:12px;">
+              <div style="font-size:20px;font-weight:700;color:var(--gold);" id="syncLastCheck">Never</div>
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;">Last Check</div>
+            </div>
+            <div class="stat-card" style="text-align:center;padding:12px;">
+              <div style="font-size:20px;font-weight:700;color:#86efac;" id="syncTotalSynced">0</div>
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;">Total Synced</div>
+            </div>
+            <div class="stat-card" style="text-align:center;padding:12px;">
+              <div style="font-size:20px;font-weight:700;color:#93c5fd;" id="syncAutoStatus">OFF</div>
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;">Auto-Check</div>
+            </div>
+            <div class="stat-card" style="text-align:center;padding:12px;">
+              <div style="font-size:20px;font-weight:700;color:var(--gold);" id="syncFingerprint">-</div>
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;">Fingerprint</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+            <button class="btn btn-gold" id="btnSyncNow" onclick="runManualSync()">&#x1F504; Check Now</button>
+            <button class="btn btn-blue" id="btnSyncLocal" onclick="runLocalSync()">&#x1F4C1; Sync from Local JSON</button>
+            <button class="btn btn-outline" id="btnAutoToggle" onclick="toggleAutoSync()">&#x23F0; Enable Auto-Check (6h)</button>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="color:var(--muted);font-size:12px;">Auto-Check Interval</label>
+            <select id="syncIntervalSelect" style="background:var(--dark3);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:13px;margin-left:8px;">
+              <option value="3600000">1 hour</option>
+              <option value="10800000">3 hours</option>
+              <option value="21600000" selected>6 hours</option>
+              <option value="43200000">12 hours</option>
+              <option value="86400000">24 hours</option>
+            </select>
+          </div>
+          <!-- Sync Progress -->
+          <div id="syncProgressWrap" style="display:none;margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px;">
+              <span id="syncProgressLabel">Checking...</span>
+              <span id="syncProgressPct">0%</span>
+            </div>
+            <div style="height:6px;background:var(--dark3);border-radius:3px;overflow:hidden;">
+              <div id="syncProgressBar" style="height:100%;background:linear-gradient(90deg,var(--gold),#f59e0b);border-radius:3px;width:0%;transition:width .3s;"></div>
+            </div>
+          </div>
+          <!-- Sync Log -->
+          <div style="background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:12px;max-height:200px;overflow-y:auto;font-family:monospace;font-size:12px;" id="syncLog">
+            <span style="color:var(--muted);">Sync log will appear here...</span>
+          </div>
+        </div>
+
+        <div class="admin-stats" id="weaponStats"></div>
+        <div class="admin-section">
+          <div class="admin-section-header">
+            <h2>All Weapons</h2>
+            <input type="text" id="weaponAdminSearch" class="admin-search" placeholder="Search weapons..." oninput="filterWeaponList()">
+          </div>
+          <div class="admin-char-list" id="adminWeaponList"></div>
+        </div>
+      </div>
+
+      <!-- ═══ EVENTS TAB ═══ -->
+      <div class="admin-tab-content" id="tab-events">
+        <div class="admin-actions">
+          <button class="btn btn-gold" onclick="showAddEventForm()">+ Add New Event</button>
+        </div>
+        <div class="admin-stats" id="eventStats"></div>
+        <div class="admin-section">
+          <div class="admin-section-header">
+            <h2>All Events</h2>
+            <input type="text" id="eventSearch" class="admin-search" placeholder="Search events..." oninput="filterEventList()">
+          </div>
+          <div class="admin-char-list" id="adminEventList"></div>
+        </div>
+      </div>
+
+      <!-- ═══ TRANSLATION TAB ═══ -->
+      <div class="admin-tab-content" id="tab-translate">
+        <!-- API Key Config -->
+        <div class="cms-section">
+          <div class="cms-section-header"><div class="cms-section-num">&#9881;</div><h3>OpenAI API Key</h3></div>
+          <div class="cms-section-body">
+            <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Enter your OpenAI API key to enable AI auto-translation. The key is stored locally in your browser and never sent to our servers.</p>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input type="password" id="aiApiKeyInput" placeholder="sk-..." style="flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--dark2);color:var(--text);font-family:monospace;font-size:13px;">
+              <button class="btn btn-blue" onclick="saveApiKey()" id="btnSaveKey">Save Key</button>
+              <button class="btn btn-outline" onclick="validateApiKeyUI()" id="btnValidateKey">Validate</button>
+            </div>
+            <div id="apiKeyStatus" style="margin-top:8px;font-size:12px;"></div>
+          </div>
+        </div>
+
+        <!-- Translation Stats -->
+        <div class="admin-stats" id="translateStats"></div>
+
+        <!-- Bulk Translation -->
+        <div class="cms-section">
+          <div class="cms-section-header"><div class="cms-section-num">1</div><h3>Bulk Translation (EN &rarr; TH)</h3></div>
+          <div class="cms-section-body">
+            <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Translate all content that has empty Thai fields. Existing Thai text will <strong style="color:#86efac;">never</strong> be overwritten.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px;">
+              <button class="btn btn-gold" onclick="bulkTranslateWeapons()" id="btnTransWeapons" style="width:100%;">&#128481; Translate All Weapons</button>
+              <button class="btn btn-blue" onclick="bulkTranslateCharacters()" id="btnTransChars" style="width:100%;">&#9876; Translate All Characters</button>
+              <button class="btn btn-outline" onclick="bulkTranslateEvents()" id="btnTransEvents" style="width:100%;">&#127881; Translate All Events</button>
+              <button class="btn btn-gold" onclick="bulkTranslateAll()" id="btnTransAll" style="width:100%;background:linear-gradient(135deg,#f59e0b,#dc2626);border:none;">&#127760; Translate Everything</button>
+            </div>
+            <!-- Progress Bar -->
+            <div id="translateProgressWrap" style="display:none;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span id="translatePhaseLabel" style="font-size:13px;font-weight:600;color:var(--gold);">Translating...</span>
+                <span id="translateProgressPct" style="font-size:13px;color:var(--muted);">0%</span>
+              </div>
+              <div style="width:100%;height:8px;background:var(--dark2);border-radius:4px;overflow:hidden;">
+                <div id="translateProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--gold),#f59e0b);border-radius:4px;transition:width .3s;"></div>
+              </div>
+              <div id="translateCurrentItem" style="margin-top:6px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+            </div>
+            <!-- Results -->
+            <div id="translateResults" style="display:none;margin-top:16px;"></div>
+          </div>
+        </div>
+
+        <!-- Translation Log -->
+        <div class="cms-section">
+          <div class="cms-section-header"><div class="cms-section-num">2</div><h3>Translation Log</h3></div>
+          <div class="cms-section-body">
+            <div id="translateLog" style="max-height:300px;overflow-y:auto;font-family:monospace;font-size:12px;color:var(--muted);background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:12px;">
+              <div style="color:#64748b;">Translation log will appear here...</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+              <button class="btn btn-outline" onclick="clearTranslateLog()" style="font-size:12px;">Clear Log</button>
+              <button class="btn btn-outline" onclick="exportTranslateLog()" style="font-size:12px;">Export Log</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cache Management -->
+        <div class="cms-section">
+          <div class="cms-section-header"><div class="cms-section-num">3</div><h3>Cache Management</h3></div>
+          <div class="cms-section-body">
+            <p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Translations are cached locally (IndexedDB) to reduce API calls and costs. Cache entries expire after 30 days.</p>
+            <div id="cacheStats" style="margin-bottom:12px;font-size:13px;"></div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline" onclick="refreshCacheStats()">Refresh Stats</button>
+              <button class="btn btn-outline" onclick="clearTranslationCache()" style="border-color:#dc2626;color:#fca5a5;">Clear All Cache</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ CHARACTER FORM MODAL ═══ -->
+      <div class="admin-form-overlay" id="formOverlay" style="display:none;" onclick="closeFormOverlay(event)">
+        <div class="admin-form-modal" onclick="event.stopPropagation();">
+          <div class="form-modal-header">
+            <h2 id="formTitle">Add New Character</h2>
+            <button class="form-close-btn" onclick="hideForm()">&times;</button>
+          </div>
+          <div class="form-modal-body">
+            <input type="hidden" id="editId">
+            <div class="step-indicator">
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle active" onclick="scrollToSection('sec-info')">1</div><div class="step-label active">Info</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('sec-weapons')">2</div><div class="step-label">Weapons</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('sec-skills')">3</div><div class="step-label">Skills</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('sec-potentials')">4</div><div class="step-label">Potentials</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('sec-costumes')">5</div><div class="step-label">Costumes</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('sec-materials')">6</div><div class="step-label">Materials</div></div></div>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="cms-section" id="sec-info">
+              <div class="cms-section-header"><div class="cms-section-num">1</div><h3>Basic Info</h3></div>
+              <div class="cms-section-body">
+                <div class="two-col">
+                  <div>
+                    <div class="portrait-upload" id="portraitUpload" onclick="document.getElementById('charImage').click();">
+                      <input type="file" id="charImage" accept="image/*" onchange="handleImageUpload(this)" style="display:none;">
+                      <img id="previewImg" src="" alt="Preview" style="display:none;">
+                      <div class="upload-text" id="imagePrompt"><span>&#128247;</span><p>Click to upload</p><p style="font-size:11px;margin-top:4px;color:#60a5fa;">PNG, JPG</p></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-group"><label>Character Name *</label><input type="text" id="charName" placeholder="e.g. Meliodas" required></div>
+                    <div class="form-group"><label>Slug</label><input type="text" id="charSlug" placeholder="auto-generated" readonly style="opacity:.6;"></div>
+                    <div class="form-row">
+                      <div class="form-group"><label>Rarity</label><select id="charRarity"><option value="SSR">SSR</option><option value="SR">SR</option></select></div>
+                      <div class="form-group"><label>Tier</label><select id="charTier"><option value="S">S</option><option value="A">A</option><option value="B" selected>B</option><option value="C">C</option></select></div>
+                    </div>
+                    <div class="form-group"><label>Description</label><textarea id="charDesc" rows="3" placeholder="Character background story..."></textarea></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="cms-section" id="sec-weapons">
+              <div class="cms-section-header"><div class="cms-section-num">2</div><h3>Weapon Types</h3></div>
+              <div class="cms-section-body">
+                <p class="form-hint">Select weapon types (multiple allowed)</p>
+                <div class="weapon-toggles" id="weaponToggles"></div>
+              </div>
+            </div>
+
+            <!-- SECTION 3 -->
+            <div class="cms-section" id="sec-skills">
+              <div class="cms-section-header"><div class="cms-section-num">3</div><h3>Skills</h3></div>
+              <div class="cms-section-body">
+                <p class="form-hint">Configure skills for each weapon type</p>
+                <div id="weaponSkillsTabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;"></div>
+                <div id="skillsEditor"></div>
+              </div>
+            </div>
+
+            <!-- SECTION 4 -->
+            <div class="cms-section" id="sec-potentials">
+              <div class="cms-section-header"><div class="cms-section-num">4</div><h3>Potentials</h3></div>
+              <div class="cms-section-body">
+                <p class="form-hint">10 tiers per weapon type</p>
+                <div id="weaponPotentialsTabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;"></div>
+                <div id="potentialsEditor"></div>
+              </div>
+            </div>
+
+            <!-- SECTION 5: COSTUMES (Enhanced) -->
+            <div class="cms-section" id="sec-costumes">
+              <div class="cms-section-header"><div class="cms-section-num">5</div><h3>Costumes</h3></div>
+              <div class="cms-section-body">
+                <p class="form-hint">Add costumes with name, image, and optional description (supports <b>bold</b>, <b>color</b>, and <b>text case</b> formatting)</p>
+                <div id="costumesEditor"></div>
+                <button type="button" class="btn-add-item" onclick="addCostumeField()" style="margin-top:12px;">+ Add Costume</button>
+              </div>
+            </div>
+
+            <!-- SECTION 6: MATERIALS -->
+            <div class="cms-section" id="sec-materials">
+              <div class="cms-section-header"><div class="cms-section-num">6</div><h3>Upgrade Materials</h3></div>
+              <div class="cms-section-body">
+                <p class="form-hint">Add upgrade materials with name and icon image</p>
+                <div id="materialsEditor"></div>
+                <button type="button" class="btn-add-item" onclick="addMaterialField()" style="margin-top:12px;">+ Add Material</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-modal-footer">
+            <button class="btn btn-outline" onclick="hideForm()">Cancel</button>
+            <button class="btn btn-gold" id="saveBtn" onclick="saveCharacter()"><span id="saveBtnText">Save Character</span><span id="saveBtnLoading" style="display:none;">Saving...</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ WEAPON FORM MODAL ═══ -->
+      <div class="admin-form-overlay" id="weaponFormOverlay" style="display:none;" onclick="if(event.target===this){hideWeaponForm()}">
+        <div class="admin-form-modal" style="max-width:900px;" onclick="event.stopPropagation();">
+          <div class="form-modal-header">
+            <h2 id="weaponFormTitle">Add New Weapon</h2>
+            <button class="form-close-btn" onclick="hideWeaponForm()">&times;</button>
+          </div>
+          <div class="form-modal-body">
+            <input type="hidden" id="editWeaponId">
+
+            <div class="step-indicator">
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle active" onclick="scrollToSection('wsec-info')">1</div><div class="step-label active">Info</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('wsec-stats')">2</div><div class="step-label">Stats</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('wsec-passive')">3</div><div class="step-label">Passive</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('wsec-chars')">4</div><div class="step-label">Characters</div></div><div class="step-line"></div></div>
+              <div class="step-item"><div class="step-wrapper"><div class="step-circle" onclick="scrollToSection('wsec-font')">5</div><div class="step-label">Font Style</div></div></div>
+            </div>
+
+            <!-- WEAPON SECTION 1: Basic Info -->
+            <div class="cms-section" id="wsec-info">
+              <div class="cms-section-header"><div class="cms-section-num">1</div><h3>Weapon Info</h3></div>
+              <div class="cms-section-body">
+                <div style="display:flex;gap:24px;align-items:flex-start;">
+                  <div>
+                    <div class="icon-upload" id="weaponIconUpload" onclick="document.getElementById('weaponIconFile').click();">
+                      <input type="file" id="weaponIconFile" accept="image/*" onchange="handleWeaponIconUpload(this)" style="display:none;">
+                      <img id="weaponIconPreview" src="" alt="" style="display:none;">
+                      <div class="upload-text" id="weaponIconPrompt"><span>&#128481;</span><p>Upload Icon</p></div>
+                    </div>
+                  </div>
+                  <div style="flex:1;">
+                    <div class="form-group"><label>Weapon Name (EN) *</label><input type="text" id="wpnName" placeholder="e.g. Eternal Grace Longsword"></div>
+                    <div class="form-group"><label>Weapon Name (TH)</label><input type="text" id="wpnNameTh" placeholder="e.g. ดาบยาวแห่งพระคุณนิรันดร์"></div>
+                    <div class="form-row">
+                      <div class="form-group"><label>Slug</label><input type="text" id="wpnSlug" placeholder="auto-generated" readonly style="opacity:.6;"></div>
+                      <div class="form-group"><label>Series</label><input type="text" id="wpnSeries" placeholder="e.g. Eternal Grace"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row-3" style="margin-top:16px;">
+                  <div class="form-group">
+                    <label>Category *</label>
+                    <select id="wpnCategory">
+                      <option value="">-- Select --</option>
+                      <option value="Axe">Axe</option>
+                      <option value="Cudgel">Cudgel</option>
+                      <option value="Dual Swords">Dual Swords</option>
+                      <option value="Gauntlets">Gauntlets</option>
+                      <option value="Greatsword">Greatsword</option>
+                      <option value="Grimoire">Grimoire</option>
+                      <option value="Lance">Lance</option>
+                      <option value="Longsword">Longsword</option>
+                      <option value="Rapier">Rapier</option>
+                      <option value="Staff">Staff</option>
+                      <option value="Sword & Shield">Sword &amp; Shield</option>
+                      <option value="Wand">Wand</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Rarity</label>
+                    <select id="wpnRarity"><option value="5">5-Star</option><option value="4">4-Star</option><option value="3">3-Star</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label>Tier</label>
+                    <select id="wpnTier"><option value="S">S</option><option value="A">A</option><option value="B" selected>B</option><option value="C">C</option></select>
+                  </div>
+                </div>
+                <div class="form-row-3">
+                  <div class="form-group">
+                    <label>Role</label>
+                    <select id="wpnRole"><option value="DPS">DPS</option><option value="Support">Support</option><option value="Healer">Healer</option><option value="Tank">Tank</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label>Playstyle</label>
+                    <select id="wpnPlaystyle">
+                      <option value="Striker">Striker</option><option value="Assassin">Assassin</option><option value="Warrior">Warrior</option>
+                      <option value="Brawler">Brawler</option><option value="Guardian">Guardian</option><option value="Lancer">Lancer</option>
+                      <option value="Duelist">Duelist</option><option value="Fencer">Fencer</option><option value="Caster">Caster</option>
+                      <option value="Enchanter">Enchanter</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Range</label>
+                    <select id="wpnRange"><option value="Melee">Melee</option><option value="Ranged">Ranged</option></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WEAPON SECTION 2: Stats -->
+            <div class="cms-section" id="wsec-stats">
+              <div class="cms-section-header"><div class="cms-section-num">2</div><h3>Weapon Stats</h3></div>
+              <div class="cms-section-body">
+                <div class="form-row-3">
+                  <div class="form-group"><label>Equipment ATK</label><input type="number" id="wpnAtk" placeholder="e.g. 624" min="0"></div>
+                  <div class="form-group">
+                    <label>Sub Stat Type</label>
+                    <select id="wpnSubStatType">
+                      <option value="">None</option>
+                      <option value="Crit Damage">Crit Damage</option>
+                      <option value="Crit Chance">Crit Chance</option>
+                      <option value="HP">HP</option>
+                      <option value="DEF">DEF</option>
+                      <option value="ATK">ATK</option>
+                      <option value="Healing Bonus">Healing Bonus</option>
+                      <option value="Energy Recharge">Energy Recharge</option>
+                      <option value="Elemental Mastery">Elemental Mastery</option>
+                    </select>
+                  </div>
+                  <div class="form-group"><label>Sub Stat Value</label><input type="text" id="wpnSubStatVal" placeholder="e.g. 6.3%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WEAPON SECTION 3: Passive & Lore -->
+            <div class="cms-section" id="wsec-passive">
+              <div class="cms-section-header"><div class="cms-section-num">3</div><h3>Passive Ability &amp; Lore</h3></div>
+              <div class="cms-section-body">
+                <div class="form-group"><label>Passive Description (EN)</label><textarea id="wpnPassiveEn" rows="3" placeholder="Activating a Burst increases Attack by 12%..."></textarea></div>
+                <div class="form-group"><label>Passive Description (TH)</label><textarea id="wpnPassiveTh" rows="3" placeholder="การเปิดใช้ Burst จะเพิ่มพลังโจมตี 12%..."></textarea></div>
+                <div class="form-group"><label>Lore (EN)</label><textarea id="wpnLoreEn" rows="2" placeholder="A legendary weapon forged in..."></textarea></div>
+                <div class="form-group"><label>Lore (TH)</label><textarea id="wpnLoreTh" rows="2" placeholder="อาวุธในตำนานที่ถูกหลอมขึ้นจาก..."></textarea></div>
+              </div>
+            </div>
+
+            <!-- WEAPON SECTION 4: Character Linking -->
+            <div class="cms-section" id="wsec-chars">
+              <div class="cms-section-header"><div class="cms-section-num">4</div><h3>Linked Characters</h3></div>
+              <div class="cms-section-body">
+                <p class="form-hint">Click to link/unlink characters. Toggle &#9733; for signature weapon.</p>
+                <input type="text" id="charLinkSearch" class="admin-search" placeholder="Search characters..." oninput="filterCharLinkGrid()" style="width:100%;margin-bottom:16px;">
+                <div class="char-link-grid" id="charLinkGrid"></div>
+              </div>
+            </div>
+
+            <!-- WEAPON SECTION 5: Font Styling -->
+            <div class="cms-section" id="wsec-font">
+              <div class="cms-section-header"><div class="cms-section-num">5</div><h3>Font Styling Controls</h3></div>
+              <div class="cms-section-body">
+                <p class="form-hint">Customize how this weapon's name and description appear on the frontend.</p>
+                <div class="font-control-row">
+                  <label>Name Font Size</label>
+                  <input type="number" id="wpnFontSize" value="18" min="10" max="48" step="1" oninput="updateFontPreview()">
+                  <label>Weight</label>
+                  <select id="wpnFontWeight" onchange="updateFontPreview()">
+                    <option value="400">Normal (400)</option>
+                    <option value="500">Medium (500)</option>
+                    <option value="600">Semi-Bold (600)</option>
+                    <option value="700" selected>Bold (700)</option>
+                    <option value="800">Extra-Bold (800)</option>
+                    <option value="900">Black (900)</option>
+                  </select>
+                  <label>Color</label>
+                  <input type="color" id="wpnFontColor" value="#e2e8f0" oninput="updateFontPreview()">
+                </div>
+                <div class="font-control-row">
+                  <label>Desc Font Size</label>
+                  <input type="number" id="wpnDescFontSize" value="14" min="10" max="36" step="1" oninput="updateFontPreview()">
+                  <label>Weight</label>
+                  <select id="wpnDescFontWeight" onchange="updateFontPreview()">
+                    <option value="400" selected>Normal (400)</option>
+                    <option value="500">Medium (500)</option>
+                    <option value="600">Semi-Bold (600)</option>
+                    <option value="700">Bold (700)</option>
+                  </select>
+                  <label>Color</label>
+                  <input type="color" id="wpnDescFontColor" value="#94a3b8" oninput="updateFontPreview()">
+                </div>
+                <div class="font-preview" id="fontPreview">
+                  <div id="fontPreviewName" style="font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:6px;">Weapon Name Preview</div>
+                  <div id="fontPreviewDesc" style="font-size:14px;font-weight:400;color:#94a3b8;">Passive ability description preview text will appear here...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-modal-footer">
+            <button class="btn btn-outline" onclick="hideWeaponForm()">Cancel</button>
+            <button class="btn btn-gold" id="saveWeaponBtn" onclick="saveWeapon()"><span id="saveWeaponBtnText">Save Weapon</span><span id="saveWeaponBtnLoading" style="display:none;">Saving...</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ EVENT FORM MODAL ═══ -->
+      <div class="admin-form-overlay" id="eventFormOverlay" style="display:none;" onclick="closeEventFormOverlay(event)">
+        <div class="admin-form-modal" onclick="event.stopPropagation();">
+          <div class="form-modal-header">
+            <h2 id="eventFormTitle">Add New Event</h2>
+            <button class="form-close-btn" onclick="hideEventForm()">&times;</button>
+          </div>
+          <div class="form-modal-body">
+            <input type="hidden" id="editEventId">
+            <div class="cms-section">
+              <div class="cms-section-header"><div class="cms-section-num">1</div><h3>Event Info</h3></div>
+              <div class="cms-section-body">
+                <div class="form-group"><label>Event Title *</label><input type="text" id="eventTitle" placeholder="e.g. Holy War Raid"></div>
+                <div class="form-group"><label>Description *</label><textarea id="eventDesc" rows="3" placeholder="Event description..."></textarea></div>
+                <div class="form-row">
+                  <div class="form-group"><label>Status</label><select id="eventStatus"><option value="active">Active</option><option value="upcoming">Upcoming</option><option value="ended">Ended</option></select></div>
+                  <div class="form-group"><label>Tag</label><select id="eventTag"><option value="event">Event</option><option value="update">Update</option><option value="guide">Guide</option><option value="maintenance">Maintenance</option></select></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><label>Start Date</label><input type="date" id="eventStart"></div>
+                  <div class="form-group"><label>End Date</label><input type="date" id="eventEnd"></div>
+                </div>
+                <div class="form-group"><label>Banner Color (CSS)</label><input type="text" id="eventColor" placeholder="linear-gradient(90deg,#3b82f6,#60a5fa)" value="linear-gradient(90deg,#3b82f6,#60a5fa)"></div>
+              </div>
+            </div>
+            <div class="cms-section">
+              <div class="cms-section-header"><div class="cms-section-num">2</div><h3>Rewards</h3></div>
+              <div class="cms-section-body">
+                <div id="rewardsEditor"></div>
+                <button type="button" class="btn-add-item" onclick="addRewardField()" style="margin-top:12px;">+ Add Reward</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-modal-footer">
+            <button class="btn btn-outline" onclick="hideEventForm()">Cancel</button>
+            <button class="btn btn-gold" onclick="saveEvent()"><span id="saveEventBtnText">Save Event</span><span id="saveEventBtnLoading" style="display:none;">Saving...</span></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer"><p>7DS Origin Database &mdash; Admin Panel &mdash; Local Mode (No Supabase)</p></footer>
+
+  <!-- Local Data & Admin Auth (No Supabase) -->
+  <script src="js/admin-auth.js"></script>
+  <script src="js/data-local.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/events-db.js"></script>
+  <script src="js/ai-translate.js"></script>
+  <script src="js/supabase-weapon-api.js"></script>
+  <script src="js/weapon-sync.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    var ALL_WEAPONS=['Axe','Book','Cudgel','Dual Swords','Gauntlets','Greatsword','Lance','Longsword','Rapier','Shield','Staff','Wand'];
+    var SKILL_TYPES=['Adventure','Passive','Normal Attack','Special','Skill','Tag','Ultimate'];
+    var editingId=null,currentSkillWeapon=null,currentPotWeapon=null,tempSkills={},tempPotentials={},tempImageFile=null,allCharacters=[];
+    var allEvents=[],editingEventId=null;
+    var allWeapons=[],editingWeaponId=null,tempWeaponIconFile=null,linkedCharacterIds=new Set(),signatureCharIds=new Set();
+
+    function switchAdminTab(tab,btn){
+      document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-'+tab).classList.add('active');
+      // TASK 5: Reload characters when tab is clicked
+      if(tab==='characters'){
+        (async function(){
+          allCharacters=await CharDB.loadAll();
+          renderDashboard();
+        })();
+      }
+      // TASK 6: Reload weapons and characters for weapon editor
+      if(tab==='weapons'){
+        (async function(){
+          allCharacters=await CharDB.loadAll();
+          await loadWeaponsFromDB();
+          renderWeaponDashboard();
+        })();
+      }
+    }
+
+    /* ── Events via EventDB (localStorage) ── */
+    async function loadEventsFromDB(){
+      if(typeof EventDB!=='undefined'){EventDB.init();allEvents=await EventDB.fetchAll();}else{allEvents=[];}
+    }
+
+    /* ── Init ── */
+    document.addEventListener("DOMContentLoaded",async()=>{
+      const admin=AdminAuth.isLoggedIn();
+      if(!admin){window.location.href='login.html';return}
+      const session=AdminAuth.getSession();
+      document.getElementById('adminEmail').textContent=session.username||'admin';
+      document.getElementById('connectionStatus').innerHTML='<div style="padding:12px 16px;background:#1e3a8a;border:1px solid #3b82f6;border-radius:8px;color:#93c5fd;font-size:14px;">&#9989; Local Admin Mode (No Supabase)</div>';
+      allCharacters=await CharDB.loadAll();
+      renderDashboard();
+      await loadEventsFromDB();
+      renderEventDashboard();
+      await loadWeaponsFromDB();
+      renderWeaponDashboard();
+    });
+
+    /* ══════════════════════════════════════════════════════════
+       CHARACTER DASHBOARD (unchanged)
+       ══════════════════════════════════════════════════════════ */
+    function renderDashboard(){
+      var c=allCharacters,ssr=c.filter(x=>x.rarity==='SSR').length,sr=c.filter(x=>x.rarity==='SR').length;
+      var ws=c.filter(x=>{if(!x.skills||typeof x.skills!=='object')return false;for(var k in x.skills){if(x.skills[k]&&x.skills[k].length>0)return true}return false}).length;
+      document.getElementById('adminStats').innerHTML=
+        '<div class="stat-card"><div class="stat-num">'+c.length+'</div><div class="stat-label">Total</div></div>'+
+        '<div class="stat-card ssr"><div class="stat-num">'+ssr+'</div><div class="stat-label">SSR</div></div>'+
+        '<div class="stat-card sr"><div class="stat-num">'+sr+'</div><div class="stat-label">SR</div></div>'+
+        '<div class="stat-card"><div class="stat-num">'+ws+'</div><div class="stat-label">With Skills</div></div>';
+      renderCharList(c);
+    }
+    function renderCharList(chars){
+      if(!chars||chars.length===0){document.getElementById('adminCharList').innerHTML='<div style="text-align:center;padding:60px 20px;color:#64748b;"><p style="font-size:48px;margin-bottom:16px;">&#128683;</p><p>No characters found</p><button class="btn btn-gold" onclick="showAddForm()" style="margin-top:12px;">+ Add Character</button></div>';return}
+      var h='';
+      chars.forEach(function(c){
+        var hasSkills=false;if(c.skills&&typeof c.skills==='object'){for(var k in c.skills){if(c.skills[k]&&c.skills[k].length>0){hasSkills=true;break}}}
+        var sc=hasSkills?'status-complete':'status-incomplete',st=hasSkills?'Complete':'Incomplete';
+        var tc={S:'#dc2626',A:'#f59e0b',B:'#3b82f6',C:'#6b7280'};
+        var tb='<span style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:'+(tc[c.tier]||tc.B)+';color:#fff;margin-left:6px;">'+(c.tier||'B')+'</span>';
+        var img=c.image||'https://placehold.co/300x400?text=No+Image';
+        h+='<div class="admin-char-row" data-name="'+(c.name_en||c.name||'').toLowerCase()+'">';
+        h+='<div class="admin-char-info"><img src="'+img+'" alt="'+(c.name_en||c.name||'')+'" class="admin-char-thumb" onerror="this.src=\'https://placehold.co/300x400?text=Error\'"><div>';
+        h+='<div class="admin-char-name">'+(c.name_en||c.name||'Unknown')+tb+'</div>';
+        h+='<div class="admin-char-meta"><span class="rarity-tag '+(c.rarity||'SR')+'">'+(c.rarity||'SR')+'</span> &bull; '+(c.types||[]).join(', ')+' &bull; <span class="'+sc+'">'+st+'</span></div>';
+        h+='</div></div><div class="admin-char-actions">';
+        h+='<a href="character.html?slug='+encodeURIComponent(c.slug)+'" class="action-btn view-btn" title="View">&#128065;</a>';
+        h+='<button class="action-btn edit-btn" title="Edit" onclick="editCharacter(\''+c.id+'\')">&#9998;</button>';
+        h+='<button class="action-btn delete-btn" title="Delete" onclick="deleteCharacter(\''+c.id+'\',\''+(c.name_en||c.name||'').replace(/'/g,"\\'")+'\')">&#128465;</button>';
+        h+='</div></div>';
+      });
+      document.getElementById('adminCharList').innerHTML=h;
+    }
+    function filterAdminList(){
+  var s = document.getElementById('adminSearch').value.toLowerCase();
+
+  document.querySelectorAll('#adminCharList .admin-char-row').forEach(r=>{
+    var name = r.getAttribute('data-name') || '';
+    r.style.display = name.includes(s) ? '' : 'none';
+  });
+}
+
+    /* ══════════════════════════════════════════════════════════
+       WEAPONS DASHBOARD
+       ══════════════════════════════════════════════════════════ */
+async function loadWeaponsFromDB(){
+  if(typeof WeaponDB!=='undefined' && true){
+    allWeapons = await WeaponDB.fetchAll();
+  }
+
+  if(!allWeapons || allWeapons.length===0){
+    try{
+      var r = await fetch('data/weapons.json');
+      if(r.ok) allWeapons = await r.json();
+    }catch(e){
+      allWeapons = [];
+    }
+  }
+}
+
+function renderWeaponDashboard(){
+  var w = allWeapons || [];
+
+  var r5 = w.filter(x => x.rarity == 5 || x.rarity === '5').length;
+  var r4 = w.filter(x => x.rarity == 4 || x.rarity === '4').length;
+
+  var cats = new Set();
+  w.forEach(x=>{
+    if(x.category) cats.add(x.category);
+  });
+
+  document.getElementById('weaponStats').innerHTML =
+    '<div class="stat-card"><div class="stat-num">'+w.length+'</div><div class="stat-label">Total</div></div>'+
+    '<div class="stat-card ssr"><div class="stat-num">'+r5+'</div><div class="stat-label">5-Star</div></div>'+
+    '<div class="stat-card sr"><div class="stat-num">'+r4+'</div><div class="stat-label">4-Star</div></div>'+
+    '<div class="stat-card"><div class="stat-num">'+cats.size+'</div><div class="stat-label">Categories</div></div>';
+
+  renderWeaponList(w);
+}
+
+function renderWeaponList(weapons){
+
+  if(!weapons || weapons.length===0){
+    document.getElementById('adminWeaponList').innerHTML =
+      '<div style="text-align:center;padding:60px 20px;color:#64748b;">'+
+      '<p style="font-size:48px;margin-bottom:16px;">&#128481;</p>'+
+      '<p>No weapons found</p>'+
+      '<button class="btn btn-gold" onclick="showAddWeaponForm()" style="margin-top:12px;">+ Add Weapon</button>'+
+      '</div>';
+    return;
+  }
+
+  var h='';
+
+  weapons.forEach(function(w){
+
+    /* ⭐ FIX NAME SYSTEM */
+    var weaponName = w.name_en || w.name || 'Unknown';
+
+    var icon = w.icon_url || w.image || 'https://placehold.co/80x80?text=No+Icon';
+
+    var rarityClass = w.rarity==5 ? 'ssr' : 'sr';
+    var rarityLabel = w.rarity==5 ? '5&#9733;' : '4&#9733;';
+
+    var tc={S:'#dc2626',A:'#f59e0b',B:'#3b82f6',C:'#6b7280'};
+
+    var tierBadge =
+      '<span style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:'+
+      (tc[w.tier]||tc.B)+';color:#fff;margin-left:6px;">'+
+      (w.tier||'B')+
+      '</span>';
+
+    h+='<div class="admin-char-row" data-name="'+weaponName.toLowerCase()+'">';
+
+    h+='<div class="admin-char-info">'+
+       '<img src="'+icon+'" alt="'+weaponName+'" class="admin-char-thumb" style="border-radius:8px;object-fit:contain;background:var(--dark3);" onerror="this.src=\'https://placehold.co/80x80?text=Error\'">'+
+       '<div>';
+
+    h+='<div class="admin-char-name">'+weaponName+tierBadge+'</div>';
+
+    h+='<div class="admin-char-meta">'+
+       '<span class="rarity-tag '+rarityClass+'">'+rarityLabel+'</span> &bull; '+
+       (w.category||'N/A')+' &bull; '+
+       (w.role||'DPS')+' &bull; ATK '+
+       (w.equipment_atk||'?')+
+       '</div>';
+
+    h+='</div></div>';
+
+    h+='<div class="admin-char-actions">'+
+       '<a href="weapons.html" class="action-btn view-btn" title="View">&#128065;</a>'+
+       '<button class="action-btn edit-btn" title="Edit" onclick="editWeapon(\''+(w.id||w.slug)+'\')">&#9998;</button>'+
+       '<button class="action-btn delete-btn" title="Delete" onclick="deleteWeapon(\''+(w.id||w.slug)+'\',\''+weaponName.replace(/'/g,"\\'")+'\')">&#128465;</button>'+
+       '</div>';
+
+    h+='</div>';
+
+  });
+
+  document.getElementById('adminWeaponList').innerHTML = h;
+}
+
+function filterWeaponList(){
+  var s = document.getElementById('weaponAdminSearch').value.toLowerCase();
+
+  document.querySelectorAll('#adminWeaponList .admin-char-row')
+  .forEach(r=>{
+    r.style.display =
+      (r.getAttribute('data-name')||'').indexOf(s)!==-1 ? '' : 'none';
+  });
+}
+    /* ── Weapon Form ── */
+    function showAddWeaponForm(){
+      editingWeaponId=null;tempWeaponIconFile=null;
+      linkedCharacterIds=new Set();signatureCharIds=new Set();
+      document.getElementById('weaponFormTitle').textContent='Add New Weapon';
+      document.getElementById('editWeaponId').value='';
+      document.getElementById('wpnName').value='';
+      document.getElementById('wpnNameTh').value='';
+      document.getElementById('wpnSlug').value='';
+      document.getElementById('wpnSeries').value='';
+      document.getElementById('wpnCategory').value='';
+      document.getElementById('wpnRarity').value='5';
+      document.getElementById('wpnTier').value='B';
+      document.getElementById('wpnRole').value='DPS';
+      document.getElementById('wpnPlaystyle').value='Striker';
+      document.getElementById('wpnRange').value='Melee';
+      document.getElementById('wpnAtk').value='';
+      document.getElementById('wpnSubStatType').value='';
+      document.getElementById('wpnSubStatVal').value='';
+      document.getElementById('wpnPassiveEn').value='';
+      document.getElementById('wpnPassiveTh').value='';
+      document.getElementById('wpnLoreEn').value='';
+      document.getElementById('wpnLoreTh').value='';
+      document.getElementById('wpnFontSize').value='18';
+      document.getElementById('wpnFontWeight').value='700';
+      document.getElementById('wpnFontColor').value='#e2e8f0';
+      document.getElementById('wpnDescFontSize').value='14';
+      document.getElementById('wpnDescFontWeight').value='400';
+      document.getElementById('wpnDescFontColor').value='#94a3b8';
+      document.getElementById('weaponIconPreview').style.display='none';
+      document.getElementById('weaponIconPrompt').style.display='';
+      buildCharLinkGrid();
+      updateFontPreview();
+      document.getElementById('weaponFormOverlay').style.display='flex';
+      document.body.style.overflow='hidden';
+    }
+    async function editWeapon(idOrSlug){
+      var w=allWeapons.find(x=>x.id===idOrSlug||x.slug===idOrSlug);if(!w)return;
+      editingWeaponId=w.id||w.slug;tempWeaponIconFile=null;
+      linkedCharacterIds=new Set();signatureCharIds=new Set();
+      document.getElementById('weaponFormTitle').textContent='Edit: '+(w.name_en||w.name||'Unknown');
+      document.getElementById('editWeaponId').value=w.id||'';
+      document.getElementById('wpnName').value = w.name_en || w.name || '';
+      document.getElementById('wpnNameTh').value=w.name_th||'';
+      document.getElementById('wpnSlug').value=w.slug||'';
+      document.getElementById('wpnSeries').value=w.series||'';
+      document.getElementById('wpnCategory').value=w.category||'';
+      document.getElementById('wpnRarity').value=w.rarity||'5';
+      document.getElementById('wpnTier').value=w.tier||'B';
+      document.getElementById('wpnRole').value=w.role||'DPS';
+      document.getElementById('wpnPlaystyle').value=w.playstyle||'Striker';
+      document.getElementById('wpnRange').value=w.range||'Melee';
+      document.getElementById('wpnAtk').value=w.equipment_atk||'';
+      document.getElementById('wpnSubStatType').value=w.sub_stat_type||'';
+      document.getElementById('wpnSubStatVal').value=w.sub_stat_value||'';
+      document.getElementById('wpnPassiveEn').value=w.passive_description||w.passive_en||'';
+      document.getElementById('wpnPassiveTh').value=w.passive_th||'';
+      document.getElementById('wpnLoreEn').value=w.lore_en||'';
+      document.getElementById('wpnLoreTh').value=w.lore_th||'';
+      // Font styling
+      var fs=w.font_style||{};
+      document.getElementById('wpnFontSize').value=fs.name_size||18;
+      document.getElementById('wpnFontWeight').value=fs.name_weight||'700';
+      document.getElementById('wpnFontColor').value=fs.name_color||'#e2e8f0';
+      document.getElementById('wpnDescFontSize').value=fs.desc_size||14;
+      document.getElementById('wpnDescFontWeight').value=fs.desc_weight||'400';
+      document.getElementById('wpnDescFontColor').value=fs.desc_color||'#94a3b8';
+      // Icon
+      var iconUrl=w.icon_url||w.image||'';
+      if(iconUrl){document.getElementById('weaponIconPreview').src=iconUrl;document.getElementById('weaponIconPreview').style.display='';document.getElementById('weaponIconPrompt').style.display='none'}
+      else{document.getElementById('weaponIconPreview').style.display='none';document.getElementById('weaponIconPrompt').style.display=''}
+      // Load existing linked characters from DB
+      if(true&&w.id&&typeof WeaponDB!=='undefined'){
+        try{
+          var existingLinks=await WeaponDB.fetchLinkedCharacters(w.id);
+          if(existingLinks&&existingLinks.length>0){
+            existingLinks.forEach(function(link){
+              linkedCharacterIds.add(link.character_id);
+              if(link.is_signature)signatureCharIds.add(link.character_id);
+            });
+          }
+        }catch(e){console.warn('Failed to load linked characters:',e)}
+      }
+      buildCharLinkGrid();
+      updateFontPreview();
+      document.getElementById('weaponFormOverlay').style.display='flex';
+      document.body.style.overflow='hidden';
+    }
+    function hideWeaponForm(){document.getElementById('weaponFormOverlay').style.display='none';document.body.style.overflow=''}
+    function handleWeaponIconUpload(input){
+      if(input.files&&input.files[0]){
+        tempWeaponIconFile=input.files[0];
+        var reader=new FileReader();
+        reader.onload=function(e){document.getElementById('weaponIconPreview').src=e.target.result;document.getElementById('weaponIconPreview').style.display='';document.getElementById('weaponIconPrompt').style.display='none'};
+        reader.readAsDataURL(tempWeaponIconFile);
+      }
+    }
+
+    /* ── Character Link Grid ── */
+    function buildCharLinkGrid(){
+      var grid=document.getElementById('charLinkGrid');
+      if(!allCharacters||allCharacters.length===0){grid.innerHTML='<p class="form-hint">No characters loaded</p>';return}
+      var h='';
+      allCharacters.forEach(function(c){
+        var isLinked=linkedCharacterIds.has(c.id);
+        var isSig=signatureCharIds.has(c.id);
+        var img=c.image||'https://placehold.co/80x80?text=?';
+        h+='<div class="char-link-card'+(isLinked?' linked':'')+'" data-cid="'+c.id+'" data-name="'+(c.name_en || c.name || c.slug || '').toLowerCase()+'" onclick="toggleCharLink(this,\''+c.id+'\')">';
+        h+='<img src="'+img+'" alt="'+(c.name_en||c.name||'')+'" onerror="this.src=\'https://placehold.co/80x80?text=?\'"><div class="char-link-name">'+(c.name_en||c.name||'?')+'</div>';
+        h+='<span class="char-link-rarity '+(c.rarity||'SR')+'">'+(c.rarity||'SR')+'</span>';
+        h+='<span class="link-badge">Linked</span>';
+        h+='<button class="sig-toggle'+(isSig?' active':'')+'" onclick="event.stopPropagation();toggleSignature(this,\''+c.id+'\')" title="Signature Weapon">&#9733;</button>';
+        h+='</div>';
+      });
+      grid.innerHTML=h;
+    }
+    function toggleCharLink(card,cid){
+      if(linkedCharacterIds.has(cid)){linkedCharacterIds.delete(cid);signatureCharIds.delete(cid);card.classList.remove('linked');card.querySelector('.sig-toggle').classList.remove('active')}
+      else{linkedCharacterIds.add(cid);card.classList.add('linked')}
+    }
+    function toggleSignature(btn,cid){
+      if(signatureCharIds.has(cid)){signatureCharIds.delete(cid);btn.classList.remove('active')}
+      else{signatureCharIds.add(cid);btn.classList.add('active')}
+    }
+    function filterCharLinkGrid(){
+      var s=document.getElementById('charLinkSearch').value.toLowerCase();
+      document.querySelectorAll('#charLinkGrid .char-link-card').forEach(c=>{c.style.display=(c.getAttribute('data-name')||'').indexOf(s)!==-1?'':'none'});
+    }
+
+    /* ── Font Preview ── */
+    function updateFontPreview(){
+      var n=document.getElementById('fontPreviewName'),d=document.getElementById('fontPreviewDesc');
+      n.style.fontSize=document.getElementById('wpnFontSize').value+'px';
+      n.style.fontWeight=document.getElementById('wpnFontWeight').value;
+      n.style.color=document.getElementById('wpnFontColor').value;
+      d.style.fontSize=document.getElementById('wpnDescFontSize').value+'px';
+      d.style.fontWeight=document.getElementById('wpnDescFontWeight').value;
+      d.style.color=document.getElementById('wpnDescFontColor').value;
+      var name=document.getElementById('wpnName').value||'Weapon Name Preview';
+      var desc=document.getElementById('wpnPassiveEn').value||'Passive ability description preview text will appear here...';
+      n.textContent=name;d.textContent=desc;
+    }
+
+    /* ── Save Weapon ── */
+    async function saveWeapon(){
+      var name=document.getElementById('wpnName').value.trim();
+      if(!name){alert('Weapon name is required');return}
+      var cat=document.getElementById('wpnCategory').value;
+      if(!cat){alert('Category is required');return}
+      var btn=document.getElementById('saveWeaponBtn');btn.disabled=true;
+      document.getElementById('saveWeaponBtnText').style.display='none';
+      document.getElementById('saveWeaponBtnLoading').style.display='inline';
+      try{
+        var slug=document.getElementById('wpnSlug').value.trim();
+        if(!slug)slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+        var weaponData={
+          name_en:name,
+          name_th:document.getElementById('wpnNameTh').value.trim()||null,
+          slug:slug,
+          series:document.getElementById('wpnSeries').value.trim()||null,
+          category:cat,
+          rarity:parseInt(document.getElementById('wpnRarity').value)||5,
+          tier:document.getElementById('wpnTier').value||'B',
+          role:document.getElementById('wpnRole').value||'DPS',
+          playstyle:document.getElementById('wpnPlaystyle').value||'Striker',
+          range:document.getElementById('wpnRange').value||'Melee',
+          equipment_atk:parseInt(document.getElementById('wpnAtk').value)||0,
+          sub_stat_type:document.getElementById('wpnSubStatType').value||null,
+          sub_stat_value:document.getElementById('wpnSubStatVal').value||null,
+          passive_en:document.getElementById('wpnPassiveEn').value||null,
+          passive_th:document.getElementById('wpnPassiveTh').value||null,
+          lore_en:document.getElementById('wpnLoreEn').value||null,
+          lore_th:document.getElementById('wpnLoreTh').value||null,
+          font_style:{
+            name_size:parseInt(document.getElementById('wpnFontSize').value)||18,
+            name_weight:document.getElementById('wpnFontWeight').value||'700',
+            name_color:document.getElementById('wpnFontColor').value||'#e2e8f0',
+            desc_size:parseInt(document.getElementById('wpnDescFontSize').value)||14,
+            desc_weight:document.getElementById('wpnDescFontWeight').value||'400',
+            desc_color:document.getElementById('wpnDescFontColor').value||'#94a3b8'
+          }
+        };
+        // Upload icon
+        if(tempWeaponIconFile){
+          try{
+            var upload=await WeaponDB.uploadIcon(tempWeaponIconFile,slug);
+            if(!upload.error&&upload.url)weaponData.icon_url=upload.url;
+          }catch(ue){console.warn('Icon upload failed:',ue)}
+        }else if(editingWeaponId){
+          var ex=allWeapons.find(x=>x.id===editingWeaponId||x.slug===editingWeaponId);
+          if(ex)weaponData.icon_url=ex.icon_url||ex.image||null;
+        }
+        // Save to localStorage
+        var result;
+        if(editingWeaponId&&true){
+          result=await WeaponDB.update(editingWeaponId,weaponData);
+        }else if(true){
+          result=await WeaponDB.insert(weaponData);
+        }else{
+          // Local fallback: update allWeapons array
+          weaponData.id=slug;
+          if(editingWeaponId){var idx=allWeapons.findIndex(x=>x.id===editingWeaponId||x.slug===editingWeaponId);if(idx>=0)allWeapons[idx]=Object.assign(allWeapons[idx],weaponData)}
+          else allWeapons.push(weaponData);
+          result={data:weaponData,error:null};
+        }
+        if(result&&result.error)throw result.error;
+        // Save character links
+        if(true&&result&&result.data&&result.data.id){
+          var wpnId=result.data.id;
+          await WeaponDB.unlinkAllCharacters(wpnId);
+          var priority=1;
+          for(var cid of linkedCharacterIds){
+            await WeaponDB.linkCharacter(wpnId,cid,{is_signature:signatureCharIds.has(cid),priority:priority++});
+          }
+        }
+        showNotification('"'+name+'" saved!','success');
+        hideWeaponForm();
+        await loadWeaponsFromDB();
+        renderWeaponDashboard();
+      }catch(err){
+        showNotification('Failed: '+(err.message||err),'error');
+      }finally{
+        btn.disabled=false;
+        document.getElementById('saveWeaponBtnText').style.display='inline';
+        document.getElementById('saveWeaponBtnLoading').style.display='none';
+      }
+    }
+    async function deleteWeapon(idOrSlug,name){
+      if(!confirm('Delete "'+name+'"?'))return;
+      try{
+        if(true){var r=await WeaponDB.remove(idOrSlug);if(r.error)throw r.error}
+        else{allWeapons=allWeapons.filter(w=>w.id!==idOrSlug&&w.slug!==idOrSlug)}
+        showNotification('Weapon deleted','success');
+        await loadWeaponsFromDB();renderWeaponDashboard();
+      }catch(e){showNotification('Failed: '+(e.message||e),'error')}
+    }
+    function doWeaponExport(){if(typeof WeaponDB!=='undefined')WeaponDB.exportJSON(allWeapons)}
+    function handleWeaponImport(event){
+      var file=event.target.files[0];if(!file)return;
+      var reader=new FileReader();
+      reader.onload=async function(e){
+        try{
+          var data=JSON.parse(e.target.result);
+          if(!Array.isArray(data)){alert('Invalid JSON: expected array');return}
+          if(true){
+            var r=await WeaponDB.bulkImport(data);
+            if(r.error)showNotification('Import failed: '+r.error.message,'error');
+            else{showNotification('Imported '+(r.data?r.data.length:0)+' weapons!','success');await loadWeaponsFromDB();renderWeaponDashboard()}
+          }else{
+            allWeapons=data;renderWeaponDashboard();showNotification('Loaded '+data.length+' weapons locally','success');
+          }
+        }catch(err){alert('JSON parse error: '+err.message)}
+      };reader.readAsText(file);
+    }
+    function handleWeaponSeed(event){
+      var file=event.target.files[0];if(!file)return;
+      var reader=new FileReader();
+      reader.onload=async function(e){
+        try{
+          var data=JSON.parse(e.target.result);
+          if(!Array.isArray(data)){alert('Invalid JSON');return}
+          allWeapons=data;renderWeaponDashboard();
+          showNotification('Seeded '+data.length+' weapons from local file','success');
+        }catch(err){alert('JSON error: '+err.message)}
+      };reader.readAsText(file);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       EVENT DASHBOARD (unchanged)
+       ══════════════════════════════════════════════════════════ */
+    function renderEventDashboard(){
+      var a=allEvents.filter(e=>e.status==='active').length,u=allEvents.filter(e=>e.status==='upcoming').length,en=allEvents.filter(e=>e.status==='ended').length;
+      document.getElementById('eventStats').innerHTML=
+        '<div class="stat-card"><div class="stat-num">'+allEvents.length+'</div><div class="stat-label">Total</div></div>'+
+        '<div class="stat-card ssr"><div class="stat-num">'+a+'</div><div class="stat-label">Active</div></div>'+
+        '<div class="stat-card sr"><div class="stat-num">'+u+'</div><div class="stat-label">Upcoming</div></div>'+
+        '<div class="stat-card"><div class="stat-num">'+en+'</div><div class="stat-label">Ended</div></div>';
+      renderEventList();
+    }
+    function renderEventList(){
+      if(!allEvents||allEvents.length===0){document.getElementById('adminEventList').innerHTML='<div style="text-align:center;padding:60px 20px;color:#64748b;"><p style="font-size:48px;">&#127881;</p><p>No events</p><button class="btn btn-gold" onclick="showAddEventForm()" style="margin-top:12px;">+ Add Event</button></div>';return}
+      var h='';
+      allEvents.forEach(function(ev){
+        var sc=ev.status==='active'?'#22c55e':ev.status==='upcoming'?'#3b82f6':'#6b7280';
+        var sl=ev.status.charAt(0).toUpperCase()+ev.status.slice(1);
+        var tl=(ev.tag||'event').charAt(0).toUpperCase()+(ev.tag||'event').slice(1);
+        h+='<div class="admin-char-row" data-name="'+(ev.title||'').toLowerCase()+'">';
+        h+='<div class="admin-char-info"><div style="width:44px;height:44px;border-radius:8px;background:'+(ev.color||'var(--dark3)')+';flex-shrink:0;"></div><div>';
+        h+='<div class="admin-char-name">'+(ev.title||'Untitled')+' <span style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:'+sc+';color:#fff;margin-left:6px;">'+sl+'</span></div>';
+        h+='<div class="admin-char-meta">'+tl+' &bull; '+(ev.start||'')+' &rarr; '+(ev.end||'')+'</div>';
+        h+='</div></div><div class="admin-char-actions">';
+        h+='<button class="action-btn edit-btn" title="Edit" onclick="editEvent(\''+ev.id+'\')">&#9998;</button>';
+        h+='<button class="action-btn delete-btn" title="Delete" onclick="deleteEvent(\''+ev.id+'\')">&#128465;</button>';
+        h+='</div></div>';
+      });
+      document.getElementById('adminEventList').innerHTML=h;
+    }
+    function filterEventList(){var s=document.getElementById('eventSearch').value.toLowerCase();document.querySelectorAll('#adminEventList .admin-char-row').forEach(r=>{r.style.display=(r.getAttribute('data-name')||'').indexOf(s)!==-1?'':'none'})}
+
+    /* ── Event Form ── */
+    function showAddEventForm(){
+      editingEventId=null;
+      document.getElementById('eventFormTitle').textContent='Add New Event';
+      document.getElementById('editEventId').value='';
+      document.getElementById('eventTitle').value='';
+      document.getElementById('eventDesc').value='';
+      document.getElementById('eventStatus').value='active';
+      document.getElementById('eventTag').value='event';
+      document.getElementById('eventStart').value='';
+      document.getElementById('eventEnd').value='';
+      document.getElementById('eventColor').value='linear-gradient(90deg,#3b82f6,#60a5fa)';
+      document.getElementById('rewardsEditor').innerHTML='';
+      addRewardField();
+      document.getElementById('eventFormOverlay').style.display='flex';
+      document.body.style.overflow='hidden';
+    }
+    function editEvent(id){
+      var ev=allEvents.find(e=>e.id===id);if(!ev)return;
+      editingEventId=id;
+      document.getElementById('eventFormTitle').textContent='Edit: '+ev.title;
+      document.getElementById('editEventId').value=id;
+      document.getElementById('eventTitle').value=ev.title||'';
+      document.getElementById('eventDesc').value=ev.desc||'';
+      document.getElementById('eventStatus').value=ev.status||'active';
+      document.getElementById('eventTag').value=ev.tag||'event';
+      document.getElementById('eventStart').value=ev.start||'';
+      document.getElementById('eventEnd').value=ev.end||'';
+      document.getElementById('eventColor').value=ev.color||'linear-gradient(90deg,#3b82f6,#60a5fa)';
+      var rh='';(ev.rewards||[]).forEach(r=>{rh+='<div class="costume-item-cms"><input type="text" class="reward-input" value="'+r.replace(/"/g,'&quot;')+'" placeholder="Reward"><button class="btn-remove-item" onclick="this.parentElement.remove();">&times;</button></div>'});
+      document.getElementById('rewardsEditor').innerHTML=rh;
+      document.getElementById('eventFormOverlay').style.display='flex';
+      document.body.style.overflow='hidden';
+    }
+    function hideEventForm(){document.getElementById('eventFormOverlay').style.display='none';document.body.style.overflow=''}
+    function closeEventFormOverlay(e){if(e.target.id==='eventFormOverlay')hideEventForm()}
+    function addRewardField(){
+      var d=document.createElement('div');d.className='costume-item-cms';
+      d.innerHTML='<input type="text" class="reward-input" placeholder="e.g. Gems x500"><button class="btn-remove-item" onclick="this.parentElement.remove();">&times;</button>';
+      document.getElementById('rewardsEditor').appendChild(d);
+    }
+    async function saveEvent(){
+      var t=document.getElementById('eventTitle').value.trim();if(!t){alert('Title required');return}
+      var rewards=[];document.querySelectorAll('.reward-input').forEach(i=>{if(i.value.trim())rewards.push(i.value.trim())});
+      var d={title:t,desc:document.getElementById('eventDesc').value,status:document.getElementById('eventStatus').value,tag:document.getElementById('eventTag').value,start:document.getElementById('eventStart').value,end:document.getElementById('eventEnd').value,color:document.getElementById('eventColor').value,rewards:rewards};
+      try{
+        if(editingEventId){await EventDB.update(editingEventId,d);}else{await EventDB.add(d);}
+        allEvents=await EventDB.fetchAll();
+        renderEventDashboard();hideEventForm();showNotification('Event "'+t+'" saved!','success');
+      }catch(err){showNotification('Failed: '+(err.message||err),'error');}
+    }
+    async function deleteEvent(id){
+      var ev=allEvents.find(e=>e.id==id);if(!ev)return;
+      if(!confirm('Delete "'+ev.title+'"?'))return;
+      try{await EventDB.remove(id);allEvents=await EventDB.fetchAll();renderEventDashboard();showNotification('Event deleted','success');}catch(err){showNotification('Failed: '+(err.message||err),'error');}
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       CHARACTER FORM (unchanged)
+       ══════════════════════════════════════════════════════════ */
+    function scrollToSection(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+    function showAddForm(){
+      editingId=null;
+      document.getElementById('formTitle').textContent='Add New Character';
+      document.getElementById('editId').value='';
+      document.getElementById('charName').value='';
+      document.getElementById('charRarity').value='SSR';
+      document.getElementById('charTier').value='B';
+      document.getElementById('charSlug').value='';
+      document.getElementById('charDesc').value='';
+      tempImageFile=null;
+      document.getElementById('previewImg').style.display='none';
+      document.getElementById('imagePrompt').style.display='';
+      tempSkills={};tempPotentials={};costumeRTCounter=0;
+      buildWeaponToggles([]);
+      document.getElementById('skillsEditor').innerHTML='';
+      document.getElementById('potentialsEditor').innerHTML='';
+      document.getElementById('costumesEditor').innerHTML='';
+      document.getElementById('materialsEditor').innerHTML='';
+      document.getElementById('weaponSkillsTabs').innerHTML='';
+      document.getElementById('weaponPotentialsTabs').innerHTML='';
+      document.getElementById('formOverlay').style.display='flex';
+      document.body.style.overflow='hidden';
+    }
+    function editCharacter(id){
+      var c=allCharacters.find(ch=>ch.id===id);if(!c)return;
+      editingId=id;
+      document.getElementById('formTitle').textContent='Edit: '+(c.name_en || c.name || c.slug || 'Unknown')
+      document.getElementById('editId').value=id;
+      document.getElementById('charName').value=c.name_en||c.name||'';
+      document.getElementById('charRarity').value=c.rarity||'SSR';
+      document.getElementById('charTier').value=c.tier||'B';
+      document.getElementById('charSlug').value=c.slug||'';
+      document.getElementById('charDesc').value=c.description||'';
+      tempImageFile=null;
+      if(c.image){document.getElementById('previewImg').src=c.image;document.getElementById('previewImg').style.display='';document.getElementById('imagePrompt').style.display='none'}
+      else{document.getElementById('previewImg').style.display='none';document.getElementById('imagePrompt').style.display=''}
+      tempSkills=JSON.parse(JSON.stringify(c.skills||{}));
+      tempPotentials=JSON.parse(JSON.stringify(c.potentials||{}));
+      costumeRTCounter=0;
+      buildWeaponToggles(c.types||[]);
+      updateSkillsTabs();updatePotentialsTabs();
+      document.getElementById('costumesEditor').innerHTML='';
+      (c.costumes||[]).forEach(cos=>{
+        var n=(typeof cos==='string')?cos:(cos.name||'');
+        var img=(typeof cos==='object'&&cos.image)?cos.image:'';
+        var desc=(typeof cos==='object'&&cos.description)?cos.description:'';
+        addCostumeField(n,img,desc);
+      });
+      document.getElementById('materialsEditor').innerHTML='';
+      (c.materials||[]).forEach(mat=>{
+        var n=(typeof mat==='object')?mat.name||'':'';
+        var img=(typeof mat==='object')?mat.image||'':'';
+        addMaterialField(n,img);
+      });
+      document.getElementById('formOverlay').style.display='flex';
+      document.body.style.overflow='hidden';
+    }
+    function hideForm(){document.getElementById('formOverlay').style.display='none';document.body.style.overflow=''}
+    function closeFormOverlay(e){if(e.target.id==='formOverlay')hideForm()}
+
+    /* ── Weapon Toggles ── */
+    function buildWeaponToggles(sel){
+      var c=document.getElementById('weaponToggles'),h='';
+      ALL_WEAPONS.forEach(w=>{var s=sel.indexOf(w)!==-1?' selected':'';h+='<div class="weapon-toggle'+s+'" onclick="toggleWeaponType(this)">'+w+'</div>'});
+      c.innerHTML=h;
+    }
+    function toggleWeaponType(el){el.classList.toggle('selected');updateSkillsTabs();updatePotentialsTabs()}
+    function getSelectedWeapons(){var r=[];document.querySelectorAll('.weapon-toggle.selected').forEach(w=>r.push(w.textContent));return r}
+
+    /* ── Mini Rich Text Editor Helper ── */
+    function createMiniRichText(containerId, initialHTML, onChangeCb, placeholder){
+      var wrap=document.createElement('div');wrap.className='mini-rt-wrap';
+      var toolbar=document.createElement('div');toolbar.className='mini-rt-toolbar';
+      /* Bold */
+      var bBtn=document.createElement('button');bBtn.type='button';bBtn.className='rt-btn';bBtn.innerHTML='<b>B</b>';bBtn.title='Bold';
+      bBtn.onclick=function(){document.execCommand('bold',false,null);editable.focus();onChangeCb(editable.innerHTML)};toolbar.appendChild(bBtn);
+      /* Italic */
+      var iBtn=document.createElement('button');iBtn.type='button';iBtn.className='rt-btn';iBtn.innerHTML='<i>I</i>';iBtn.title='Italic';
+      iBtn.onclick=function(){document.execCommand('italic',false,null);editable.focus();onChangeCb(editable.innerHTML)};toolbar.appendChild(iBtn);
+      /* Underline */
+      var uBtn=document.createElement('button');uBtn.type='button';uBtn.className='rt-btn';uBtn.innerHTML='<u>U</u>';uBtn.title='Underline';
+      uBtn.onclick=function(){document.execCommand('underline',false,null);editable.focus();onChangeCb(editable.innerHTML)};toolbar.appendChild(uBtn);
+      /* Separator */
+      var sep1=document.createElement('div');sep1.className='rt-sep';toolbar.appendChild(sep1);
+      /* Text Color */
+      var colorWrap=document.createElement('div');colorWrap.className='rt-color-wrap';
+      var colorBtn=document.createElement('button');colorBtn.type='button';colorBtn.className='rt-btn';colorBtn.innerHTML='<span style="border-bottom:3px solid var(--gold)">A</span>';colorBtn.title='Text Color';
+      var colorInput=document.createElement('input');colorInput.type='color';colorInput.value='#f0c040';
+      colorInput.addEventListener('input',function(){document.execCommand('foreColor',false,colorInput.value);editable.focus();onChangeCb(editable.innerHTML)});
+      colorWrap.appendChild(colorBtn);colorWrap.appendChild(colorInput);toolbar.appendChild(colorWrap);
+      /* Separator */
+      var sep2=document.createElement('div');sep2.className='rt-sep';toolbar.appendChild(sep2);
+      /* Text Case (uppercase / lowercase / capitalize) */
+      var caseWrap=document.createElement('div');caseWrap.style.cssText='position:relative;display:inline-block;';
+      var caseBtn=document.createElement('button');caseBtn.type='button';caseBtn.className='rt-btn';caseBtn.innerHTML='Aa';caseBtn.title='Text Case';
+      var caseMenu=document.createElement('div');caseMenu.className='mini-rt-case-menu';
+      var cases=[{label:'UPPERCASE',transform:'uppercase'},{label:'lowercase',transform:'lowercase'},{label:'Capitalize',transform:'capitalize'},{label:'Normal',transform:'none'}];
+      cases.forEach(function(c){
+        var cb=document.createElement('button');cb.type='button';cb.textContent=c.label;
+        cb.onclick=function(){
+          var sel=window.getSelection();
+          if(sel.rangeCount>0&&!sel.isCollapsed){
+            var range=sel.getRangeAt(0);
+            var span=document.createElement('span');
+            span.style.textTransform=c.transform;
+            try{range.surroundContents(span)}catch(e){span.appendChild(range.extractContents());range.insertNode(span)}
+          }
+          caseMenu.classList.remove('open');
+          editable.focus();onChangeCb(editable.innerHTML);
+        };
+        caseMenu.appendChild(cb);
+      });
+      caseBtn.onclick=function(e){e.stopPropagation();caseMenu.classList.toggle('open')};
+      document.addEventListener('click',function(){caseMenu.classList.remove('open')});
+      caseWrap.appendChild(caseBtn);caseWrap.appendChild(caseMenu);toolbar.appendChild(caseWrap);
+      /* Separator */
+      var sep3=document.createElement('div');sep3.className='rt-sep';toolbar.appendChild(sep3);
+      /* Remove Formatting */
+      var clearBtn=document.createElement('button');clearBtn.type='button';clearBtn.className='rt-btn';clearBtn.innerHTML='&#10006;';clearBtn.title='Remove Formatting';
+      clearBtn.onclick=function(){document.execCommand('removeFormat',false,null);editable.focus();onChangeCb(editable.innerHTML)};toolbar.appendChild(clearBtn);
+      wrap.appendChild(toolbar);
+      /* Editable area */
+      var editable=document.createElement('div');editable.className='mini-rt-editable';editable.contentEditable='true';
+      if(placeholder)editable.setAttribute('data-placeholder',placeholder);
+      editable.innerHTML=initialHTML||'';
+      editable.addEventListener('input',function(){onChangeCb(editable.innerHTML)});
+      editable.addEventListener('paste',function(e){
+        /* Allow paste but keep formatting */
+      });
+      wrap.appendChild(editable);
+      var container=document.getElementById(containerId);
+      if(container){container.innerHTML='';container.appendChild(wrap);}
+      return {wrap:wrap,editable:editable};
+    }
+
+    /* ── Skills Editor ── */
+    function updateSkillsTabs(){
+      var ws=getSelectedWeapons(),tabs=document.getElementById('weaponSkillsTabs'),h='';
+      ws.forEach((w,i)=>{var a=i===0?' active':'';h+='<button class="weapon-tab-btn'+a+'" onclick="switchSkillTab(this,\''+w.replace(/'/g,"\\'")+'\')" type="button">'+w+'</button>'});
+      tabs.innerHTML=h;
+      if(ws.length>0){currentSkillWeapon=ws[0];renderSkillsForWeapon(ws[0])}else{document.getElementById('skillsEditor').innerHTML='<p class="form-hint">Select weapon types first</p>'}
+    }
+    function switchSkillTab(btn,w){document.querySelectorAll('#weaponSkillsTabs .weapon-tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentSkillWeapon=w;renderSkillsForWeapon(w)}
+    function renderSkillsForWeapon(w){
+      var skills=tempSkills[w]||[];var h='';
+      skills.forEach(function(s,i){
+        var open=i===0?' open':'';
+        h+='<div class="skill-expand-card"><div class="skill-expand-header" onclick="toggleSkillExpand(this)">';
+        h+='<div style="display:flex;align-items:center;gap:8px;"><span class="skill-title">'+(s.name||'Skill '+(i+1))+'</span><span class="skill-type-tag">'+(s.type||'Skill')+'</span></div>';
+        h+='<span class="expand-arrow'+open+'">&#9660;</span></div>';
+        h+='<div class="skill-expand-body'+open+'">';
+        h+='<div class="form-group"><label>Skill Name</label><input type="text" value="'+(s.name||'').replace(/"/g,'&quot;')+'" onchange="updateSkillField(\''+w.replace(/'/g,"\\'")+'\','+i+',\'name\',this.value)"></div>';
+        h+='<div class="form-group"><label>Type</label><select onchange="updateSkillField(\''+w.replace(/'/g,"\\'")+'\','+i+',\'type\',this.value)">';
+        SKILL_TYPES.forEach(function(t){h+='<option'+(t===s.type?' selected':'')+'>'+t+'</option>'});h+='</select></div>';
+        h+='<div class="form-group"><label>Description</label><div id="skillDescRT_'+w.replace(/[^a-zA-Z0-9]/g,'_')+'_'+i+'"></div></div>';
+        h+='<div style="text-align:right;"><button class="btn-remove-item" onclick="removeSkill(\''+w.replace(/'/g,"\\'")+'\','+i+')">&times;</button></div>';
+        h+='</div></div>';
+      });
+      h+='<button class="btn-add-item" onclick="addSkill(\''+w.replace(/'/g,"\\'")+'\')">+ Add Skill</button>';
+      document.getElementById('skillsEditor').innerHTML=h;
+      /* Attach rich text editors to each skill description */
+      skills.forEach(function(s,i){
+        var cid='skillDescRT_'+w.replace(/[^a-zA-Z0-9]/g,'_')+'_'+i;
+        createMiniRichText(cid,s.description||'',function(html){updateSkillField(w,i,'description',html)},'Enter skill description...');
+      });
+    }
+    function toggleSkillExpand(hdr){var b=hdr.nextElementSibling,a=hdr.querySelector('.expand-arrow');b.classList.toggle('open');a.classList.toggle('open')}
+    function addSkill(w){if(!tempSkills[w])tempSkills[w]=[];tempSkills[w].push({name:'',type:'Skill',description:''});renderSkillsForWeapon(w)}
+    function removeSkill(w,i){if(tempSkills[w])tempSkills[w].splice(i,1);renderSkillsForWeapon(w)}
+    function updateSkillField(w,i,f,v){if(tempSkills[w]&&tempSkills[w][i])tempSkills[w][i][f]=v}
+
+    /* ── Potentials Editor ── */
+    function updatePotentialsTabs(){
+      var ws=getSelectedWeapons(),tabs=document.getElementById('weaponPotentialsTabs'),h='';
+      ws.forEach((w,i)=>{var a=i===0?' active':'';h+='<button class="weapon-tab-btn'+a+'" onclick="switchPotTab(this,\''+w.replace(/'/g,"\\'")+'\')">'+w+'</button>'});
+      tabs.innerHTML=h;
+      if(ws.length>0){currentPotWeapon=ws[0];renderPotentialsForWeapon(ws[0])}else{document.getElementById('potentialsEditor').innerHTML='<p class="form-hint">Select weapon types first</p>'}
+    }
+    function switchPotTab(btn,w){document.querySelectorAll('#weaponPotentialsTabs .weapon-tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentPotWeapon=w;renderPotentialsForWeapon(w)}
+    function renderPotentialsForWeapon(w){
+      /* Support both array [{tier,description}] and legacy object {tier1:"..."} */
+      var raw=tempPotentials[w];
+      var potsArr=[];
+      if(Array.isArray(raw)){
+        potsArr=raw;
+      }else if(raw&&typeof raw==='object'){
+        for(var t=1;t<=10;t++){var k='tier'+t;if(raw[k])potsArr.push({tier:t,description:raw[k]})}
+      }
+      /* Ensure 10 tiers */
+      while(potsArr.length<10)potsArr.push({tier:potsArr.length+1,description:''});
+      /* Store normalized array back */
+      tempPotentials[w]=potsArr;
+      var h='<div class="potentials-grid-cms">';
+      for(var t=0;t<10;t++){h+='<div class="pot-card-cms"><label>Tier '+(t+1)+'</label><textarea rows="2" oninput="updatePotField(\''+w.replace(/'/g,"\\'")+'\','+t+',this.value)">'+((potsArr[t]&&potsArr[t].description)||'')+'</textarea></div>'}
+      h+='</div>';document.getElementById('potentialsEditor').innerHTML=h;
+    }
+    function updatePotField(w,idx,v){
+      if(!tempPotentials[w])tempPotentials[w]=[];
+      while(tempPotentials[w].length<=idx)tempPotentials[w].push({tier:tempPotentials[w].length+1,description:''});
+      tempPotentials[w][idx].description=v;
+    }
+
+    /* ── Costumes (Enhanced with description + Rich Text) ── */
+    var costumeRTCounter=0;
+    function addCostumeField(name,image,desc){
+      var rtId='costumeDescRT_'+(costumeRTCounter++);
+      var d=document.createElement('div');d.className='costume-item-cms-v2';
+      d.innerHTML='<div class="costume-item-row1">'+
+        '<input type="text" class="costume-input" value="'+(name||'').replace(/"/g,'&quot;')+'" placeholder="Costume name" style="flex:1;min-width:120px;">'+
+        '<label style="display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--muted);font-size:12px;cursor:pointer;">'+
+        '<input type="file" accept="image/*" class="costume-image-input" style="display:none;" onchange="previewCostumeImg(this)">&#128247; Image</label>'+
+        '<input type="text" class="costume-image-url" value="'+(image||'').replace(/"/g,'&quot;')+'" placeholder="or paste image URL" style="flex:1;min-width:120px;">'+
+        '<img class="costume-thumb" src="'+(image||'')+'" style="width:40px;height:40px;border-radius:6px;object-fit:cover;'+(image?'':'display:none;')+'">'+
+        '<button class="btn-remove-item" onclick="this.closest(\'.costume-item-cms-v2\').remove();">&times;</button></div>'+
+        '<div class="costume-item-row2"><div id="'+rtId+'"></div></div>';
+      document.getElementById('costumesEditor').appendChild(d);
+      /* Attach rich text editor */
+      var rt=createMiniRichText(rtId,desc||'',function(html){
+        /* Store in a hidden data attribute for save */
+        d.setAttribute('data-desc-html',html);
+      },'Description (optional, supports formatting)');
+      d.setAttribute('data-desc-html',desc||'');
+    }
+    function previewCostumeImg(inp){
+      if(inp.files&&inp.files[0]){
+        var r=new FileReader();
+        r.onload=function(e){
+          var card=inp.closest('.costume-item-cms-v2');
+          var th=card.querySelector('.costume-thumb');th.src=e.target.result;th.style.display='';
+          card.querySelector('.costume-image-url').value='';
+        };r.readAsDataURL(inp.files[0]);
+      }
+    }
+
+    /* ── Materials Editor ── */
+    function addMaterialField(name,image){
+      var d=document.createElement('div');d.className='material-item-cms';
+      d.innerHTML='<input type="text" class="material-input" value="'+(name||'').replace(/"/g,'&quot;')+'" placeholder="Material name" style="flex:1;min-width:120px;">'+
+        '<label style="display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--dark3);color:var(--muted);font-size:12px;cursor:pointer;">'+
+        '<input type="file" accept="image/*" class="material-image-input" style="display:none;" onchange="previewMaterialImg(this)">&#128247; Icon</label>'+
+        '<input type="text" class="material-image-url" value="'+(image||'').replace(/"/g,'&quot;')+'" placeholder="or paste icon URL" style="flex:1;min-width:100px;">'+
+        '<img class="material-thumb" src="'+(image||'')+'" style="width:32px;height:32px;border-radius:6px;object-fit:cover;'+(image?'':'display:none;')+'">'+
+        '<button class="btn-remove-item" onclick="this.parentElement.remove();">&times;</button>';
+      document.getElementById('materialsEditor').appendChild(d);
+    }
+    function previewMaterialImg(inp){
+      if(inp.files&&inp.files[0]){
+        var r=new FileReader();
+        r.onload=function(e){
+          var card=inp.closest('.material-item-cms');
+          var th=card.querySelector('.material-thumb');th.src=e.target.result;th.style.display='';
+          card.querySelector('.material-image-url').value='';
+        };r.readAsDataURL(inp.files[0]);
+      }
+    }
+
+    /* ── Image Upload ── */
+    function handleImageUpload(input){
+      if(input.files&&input.files[0]){
+        tempImageFile=input.files[0];
+        var reader=new FileReader();
+        reader.onload=function(e){document.getElementById('previewImg').src=e.target.result;document.getElementById('previewImg').style.display='';document.getElementById('imagePrompt').style.display='none'};
+        reader.readAsDataURL(tempImageFile);
+      }
+    }
+
+    /* ── Save Character ── */
+    async function saveCharacter(){
+      var name=document.getElementById('charName').value.trim();
+      if(!name){alert('Character name is required');return}
+      var btn=document.getElementById('saveBtn');btn.disabled=true;
+      document.getElementById('saveBtnText').style.display='none';
+      document.getElementById('saveBtnLoading').style.display='inline';
+      try{
+        var slug=document.getElementById('charSlug').value.trim();
+        if(!slug)slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+        var types=getSelectedWeapons();
+        /* Collect costumes with image URL and description */
+        var costumes=[];var costumeCards=document.querySelectorAll('.costume-item-cms-v2');
+        for(var ci=0;ci<costumeCards.length;ci++){
+          var card=costumeCards[ci];
+          var n=card.querySelector('.costume-input').value.trim();
+          if(!n)continue;
+          var imgUrl=card.querySelector('.costume-image-url').value.trim();
+          var imgFile=card.querySelector('.costume-image-input').files[0];
+          var img=imgUrl;
+          /* Upload file if selected and connected */
+          if(imgFile){
+            /* Image upload skipped - using local mode */
+            try{var cUpload=null;}catch(ce){console.warn('Costume image upload failed:',ce);}
+          }
+          if(!img){var imgThumb=card.querySelector('.costume-thumb');if(imgThumb&&imgThumb.style.display!=='none'&&imgThumb.src&&!imgThumb.src.startsWith('data:'))img=imgThumb.src;}
+          var desc=(card.getAttribute('data-desc-html')||'').trim();
+          var obj={name:n};
+          if(img)obj.image=img;
+          if(desc)obj.description=desc;
+          costumes.push(obj);
+        }
+        /* Collect materials */
+        var materials=[];var materialCards=document.querySelectorAll('.material-item-cms');
+        for(var mi=0;mi<materialCards.length;mi++){
+          var mcard=materialCards[mi];
+          var mn=mcard.querySelector('.material-input').value.trim();
+          if(!mn)continue;
+          var mImgUrl=mcard.querySelector('.material-image-url').value.trim();
+          var mImgFile=mcard.querySelector('.material-image-input').files[0];
+          var mImg=mImgUrl;
+          if(mImgFile){
+            /* Image upload skipped - using local mode */
+            try{var mUpload=null;}catch(me){console.warn('Material image upload failed:',me);}
+          }
+          if(!mImg){var mThumb=mcard.querySelector('.material-thumb');if(mThumb&&mThumb.style.display!=='none'&&mThumb.src&&!mThumb.src.startsWith('data:'))mImg=mThumb.src;}
+          var mObj={name:mn};
+          if(mImg)mObj.image=mImg;
+          materials.push(mObj);
+        }
+        var charData={name_en:name,slug:slug,rarity:document.getElementById('charRarity').value,tier:document.getElementById('charTier').value,description:document.getElementById('charDesc').value,types:types,skills:tempSkills,potentials:tempPotentials,costumes:costumes,materials:materials};
+        if(editingId){var ex=allCharacters.find(x=>x.id===editingId);if(ex)charData.image=ex.image||null}
+        charData.id=slug;
+        var result;
+        if(editingId){
+          result=await CharDB.update(editingId,charData);
+        }else{
+          result=await CharDB.add(charData);
+        }
+        if(!result)throw new Error('Failed to save character');
+        showNotification('"'+name+'" saved!','success');hideForm();
+        allCharacters=await CharDB.loadAll();renderDashboard();
+      }catch(err){showNotification('Failed: '+(err.message||err),'error')}
+      finally{btn.disabled=false;document.getElementById('saveBtnText').style.display='inline';document.getElementById('saveBtnLoading').style.display='none'}
+    }
+    async function deleteCharacter(id,name){
+      if(!confirm('Delete "'+name+'"?'))return;
+      try{
+        var success=await CharDB.remove(id);
+        if(!success)throw new Error('Failed to delete character');
+        showNotification('Character deleted','success');
+        allCharacters=await CharDB.loadAll();renderDashboard();
+      }catch(e){showNotification('Failed: '+(e.message||e),'error')}
+    }
+
+    /* ── Export / Import ── */
+    function doExport(){
+      var blob=new Blob([JSON.stringify(allCharacters,null,2)],{type:'application/json'});
+      var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='characters-export.json';a.click();URL.revokeObjectURL(url);
+    }
+    function handleImport(event){
+      var file=event.target.files[0];if(!file)return;
+      var reader=new FileReader();
+      reader.onload=async function(e){
+        try{
+          var data=JSON.parse(e.target.result);
+          if(!Array.isArray(data)){alert('Invalid JSON');return}
+          allCharacters=data;renderDashboard();showNotification('Loaded '+data.length+' characters locally','success')
+        }catch(err){alert('JSON parse error: '+err.message)}
+      };reader.readAsText(file);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       TRANSLATION TAB FUNCTIONS
+       ══════════════════════════════════════════════════════════ */
+    var translateLogEntries=[];
+
+    function addLogEntry(msg,type){
+      var ts=new Date().toLocaleTimeString();
+      var color=type==='success'?'#86efac':type==='error'?'#fca5a5':type==='skip'?'#fbbf24':'#94a3b8';
+      translateLogEntries.push({ts:ts,msg:msg,type:type});
+      var log=document.getElementById('translateLog');
+      log.innerHTML+='<div style="color:'+color+';margin-bottom:2px;">['+ts+'] '+msg+'</div>';
+      log.scrollTop=log.scrollHeight;
+    }
+
+    function updateTranslateProgress(phase,current,total,item){
+      var wrap=document.getElementById('translateProgressWrap');
+      wrap.style.display='block';
+      var pct=total>0?Math.round((current/total)*100):0;
+      document.getElementById('translatePhaseLabel').textContent=phase;
+      document.getElementById('translateProgressPct').textContent=pct+'%';
+      document.getElementById('translateProgressBar').style.width=pct+'%';
+      document.getElementById('translateCurrentItem').textContent=item||'';
+    }
+
+    function showTranslateResults(results){
+      var el=document.getElementById('translateResults');
+      var h='<div style="padding:16px;background:var(--dark2);border:1px solid var(--border);border-radius:10px;">';
+      h+='<h4 style="color:var(--gold);margin:0 0 12px 0;font-family:Cinzel,serif;">Translation Complete</h4>';
+      h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;">';
+      if(results.weapons!==undefined)h+='<div style="padding:10px;background:var(--dark3);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:#86efac;">'+results.weapons+'</div><div style="font-size:11px;color:var(--muted);">Weapons</div></div>';
+      if(results.characters!==undefined)h+='<div style="padding:10px;background:var(--dark3);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:#93c5fd;">'+results.characters+'</div><div style="font-size:11px;color:var(--muted);">Characters</div></div>';
+      if(results.events!==undefined)h+='<div style="padding:10px;background:var(--dark3);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:#fbbf24;">'+results.events+'</div><div style="font-size:11px;color:var(--muted);">Events</div></div>';
+      if(results.cached!==undefined)h+='<div style="padding:10px;background:var(--dark3);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:#a78bfa;">'+results.cached+'</div><div style="font-size:11px;color:var(--muted);">From Cache</div></div>';
+      h+='</div></div>';
+      el.innerHTML=h;el.style.display='block';
+    }
+
+    function setTranslateButtonsEnabled(enabled){
+      ['btnTransWeapons','btnTransChars','btnTransEvents','btnTransAll'].forEach(function(id){
+        var btn=document.getElementById(id);
+        if(btn){btn.disabled=!enabled;btn.style.opacity=enabled?'1':'0.5';}
+      });
+    }
+
+    /* ── API Key ── */
+    function saveApiKey(){
+      var key=document.getElementById('aiApiKeyInput').value.trim();
+      if(!key){showNotification('Please enter an API key','error');return;}
+      AITranslate.setApiKey(key);
+      document.getElementById('apiKeyStatus').innerHTML='<span style="color:#86efac;">&#10003; Key saved to browser storage</span>';
+      showNotification('API key saved','success');
+      refreshTranslateStats();
+    }
+
+    async function validateApiKeyUI(){
+      var key=document.getElementById('aiApiKeyInput').value.trim()||AITranslate.getApiKey();
+      if(!key){showNotification('No API key to validate','error');return;}
+      document.getElementById('apiKeyStatus').innerHTML='<span style="color:#fbbf24;">Validating...</span>';
+      var valid=await AITranslate.validateApiKey(key);
+      if(valid){
+        document.getElementById('apiKeyStatus').innerHTML='<span style="color:#86efac;">&#10003; API key is valid</span>';
+        showNotification('API key validated successfully','success');
+      }else{
+        document.getElementById('apiKeyStatus').innerHTML='<span style="color:#fca5a5;">&#10007; Invalid API key</span>';
+        showNotification('API key validation failed','error');
+      }
+    }
+
+    /* ── Translation Stats ── */
+    function refreshTranslateStats(){
+      var hasKey=AITranslate.hasApiKey();
+      var wTotal=allWeapons.length;
+      var wNeedTrans=allWeapons.filter(function(w){return w.name_en&&(!w.name_th||!w.name_th.trim());}).length;
+      var wComplete=wTotal-wNeedTrans;
+      var cTotal=allCharacters.length;
+      var cNeedTrans=allCharacters.filter(function(c){return c.description&&(!c.description_th||!c.description_th.trim());}).length;
+      var cComplete=cTotal-cNeedTrans;
+
+      var h='';
+      h+='<div class="stat-card"><div class="stat-num" style="color:'+(hasKey?'#86efac':'#fca5a5')+';">'+( hasKey?'&#10003;':'&#10007;')+'</div><div class="stat-label">API Key</div></div>';
+      h+='<div class="stat-card"><div class="stat-num">'+wComplete+'/'+wTotal+'</div><div class="stat-label">Weapons TH</div></div>';
+      h+='<div class="stat-card"><div class="stat-num">'+cComplete+'/'+cTotal+'</div><div class="stat-label">Characters TH</div></div>';
+      h+='<div class="stat-card"><div class="stat-num">'+(wNeedTrans+cNeedTrans)+'</div><div class="stat-label">Pending</div></div>';
+      document.getElementById('translateStats').innerHTML=h;
+    }
+
+    /* ── Bulk Translate Weapons ── */
+    async function bulkTranslateWeapons(){
+      if(!AITranslate.hasApiKey()){showNotification('Please set your OpenAI API key first','error');return;}
+      setTranslateButtonsEnabled(false);
+      addLogEntry('Starting weapon translation...','info');
+      try{
+        var updates=await AITranslate.translateWeapons(allWeapons,function(cur,total,name){
+          updateTranslateProgress('Translating Weapons',cur,total,name);
+          addLogEntry('Weapon: '+name,'info');
+        });
+        addLogEntry('Translation done: '+updates.length+' weapons translated','success');
+        if(updates.length>0&&true){
+          addLogEntry('Saving to local storage...','info');
+          var stats=await AITranslate.applyWeaponUpdates(updates,function(cur,total){
+            updateTranslateProgress('Saving to DB',cur,total,'');
+          });
+          addLogEntry('Saved: '+stats.success+' success, '+stats.failed+' failed','success');
+          if(stats.errors.length>0)stats.errors.forEach(function(e){addLogEntry('Error: '+e.error,'error');});
+          await loadWeaponsFromDB();renderWeaponDashboard();
+        }else if(updates.length>0){
+          addLogEntry('Saving to local storage...','info');
+          updates.forEach(function(u){
+            var w=allWeapons.find(function(x){return x.id===u.id||x.slug===u.slug;});
+            if(w)Object.assign(w,u.updates);
+          });
+        }
+        showTranslateResults({weapons:updates.length});
+        showNotification('Translated '+updates.length+' weapons','success');
+      }catch(err){
+        addLogEntry('Error: '+err.message,'error');
+        showNotification('Translation failed: '+err.message,'error');
+      }
+      setTranslateButtonsEnabled(true);
+      refreshTranslateStats();
+    }
+
+    /* ── Bulk Translate Characters ── */
+    async function bulkTranslateCharacters(){
+      if(!AITranslate.hasApiKey()){showNotification('Please set your OpenAI API key first','error');return;}
+      setTranslateButtonsEnabled(false);
+      addLogEntry('Starting character translation...','info');
+      try{
+        var updates=await AITranslate.translateCharacters(allCharacters,function(cur,total,name){
+          updateTranslateProgress('Translating Characters',cur,total,name);
+          addLogEntry('Character: '+name,'info');
+        });
+        addLogEntry('Translation done: '+updates.length+' characters translated','success');
+        if(updates.length>0&&true){
+          addLogEntry('Saving to local storage...','info');
+          var stats=await AITranslate.applyCharacterUpdates(updates,function(cur,total){
+            updateTranslateProgress('Saving to DB',cur,total,'');
+          });
+          addLogEntry('Saved: '+stats.success+' success, '+stats.failed+' failed','success');
+          allCharacters=await CharDB.loadAll();renderDashboard();
+        }
+        showTranslateResults({characters:updates.length});
+        showNotification('Translated '+updates.length+' characters','success');
+      }catch(err){
+        addLogEntry('Error: '+err.message,'error');
+        showNotification('Translation failed: '+err.message,'error');
+      }
+      setTranslateButtonsEnabled(true);
+      refreshTranslateStats();
+    }
+
+    /* ── Bulk Translate Events ── */
+    async function bulkTranslateEvents(){
+      if(!AITranslate.hasApiKey()){showNotification('Please set your OpenAI API key first','error');return;}
+      setTranslateButtonsEnabled(false);
+      addLogEntry('Starting event translation...','info');
+      try{
+        var count=0;
+        for(var i=0;i<allEvents.length;i++){
+          var ev=allEvents[i];
+          updateTranslateProgress('Translating Events',i+1,allEvents.length,ev.title||'');
+          var updates=await AITranslate.translateEvent(ev);
+          if(Object.keys(updates).length>0){
+            count++;
+            addLogEntry('Event: '+(ev.title||'untitled'),'info');
+            if(true){
+              // Local mode - database updates skipped
+            }
+            Object.assign(ev,updates);
+          }else{
+            addLogEntry('Event: '+(ev.title||'untitled')+' (skipped - already translated)','skip');
+          }
+        }
+        addLogEntry('Translation done: '+count+' events translated','success');
+        showTranslateResults({events:count});
+        showNotification('Translated '+count+' events','success');
+      }catch(err){
+        addLogEntry('Error: '+err.message,'error');
+        showNotification('Translation failed: '+err.message,'error');
+      }
+      setTranslateButtonsEnabled(true);
+      refreshTranslateStats();
+    }
+
+    /* ── Translate Everything ── */
+    async function bulkTranslateAll(){
+      if(!AITranslate.hasApiKey()){showNotification('Please set your OpenAI API key first','error');return;}
+      setTranslateButtonsEnabled(false);
+      addLogEntry('=== Starting full translation ===','info');
+      var totalResults={weapons:0,characters:0,events:0};
+      try{
+        // Weapons
+        var wUpdates=await AITranslate.translateWeapons(allWeapons,function(cur,total,name){
+          updateTranslateProgress('Weapons',cur,total,name);
+        });
+        totalResults.weapons=wUpdates.length;
+        if(wUpdates.length>0&&true)await AITranslate.applyWeaponUpdates(wUpdates);
+        addLogEntry('Weapons: '+wUpdates.length+' translated','success');
+
+        // Characters
+        var cUpdates=await AITranslate.translateCharacters(allCharacters,function(cur,total,name){
+          updateTranslateProgress('Characters',cur,total,name);
+        });
+        totalResults.characters=cUpdates.length;
+        if(cUpdates.length>0&&true)await AITranslate.applyCharacterUpdates(cUpdates);
+        addLogEntry('Characters: '+cUpdates.length+' translated','success');
+
+        // Events
+        var evCount=0;
+        for(var i=0;i<allEvents.length;i++){
+          updateTranslateProgress('Events',i+1,allEvents.length,allEvents[i].title||'');
+          var evUp=await AITranslate.translateEvent(allEvents[i]);
+          if(Object.keys(evUp).length>0){
+            evCount++;
+            if(true)// Local mode - database updates skipped
+            Object.assign(allEvents[i],evUp);
+          }
+        }
+        totalResults.events=evCount;
+        addLogEntry('Events: '+evCount+' translated','success');
+
+        addLogEntry('=== Full translation complete ===','success');
+        showTranslateResults(totalResults);
+        showNotification('All translations complete!','success');
+
+        // Refresh data
+        if(true){
+          allCharacters=await CharDB.loadAll();renderDashboard();
+          await loadWeaponsFromDB();renderWeaponDashboard();
+        }
+      }catch(err){
+        addLogEntry('Error: '+err.message,'error');
+        showNotification('Translation failed: '+err.message,'error');
+      }
+      setTranslateButtonsEnabled(true);
+      refreshTranslateStats();
+    }
+
+    /* ── Cache Management ── */
+    async function refreshCacheStats(){
+      var stats=await AITranslate.getCacheStats();
+      document.getElementById('cacheStats').innerHTML=
+        '<span style="color:var(--text);">Cached translations: <strong>'+stats.entries+'</strong> entries</span>';
+    }
+
+    async function clearTranslationCache(){
+      if(!confirm('Clear all cached translations? This will increase API calls on next translation.'))return;
+      var db=indexedDB.deleteDatabase('7ds_translation_cache');
+      db.onsuccess=function(){
+        showNotification('Translation cache cleared','success');
+        refreshCacheStats();
+      };
+    }
+
+    /* ── Log Management ── */
+    function clearTranslateLog(){
+      translateLogEntries=[];
+      document.getElementById('translateLog').innerHTML='<div style="color:#64748b;">Translation log cleared.</div>';
+    }
+
+    function exportTranslateLog(){
+      var text=translateLogEntries.map(function(e){return '['+e.ts+'] ['+e.type+'] '+e.msg;}).join('\n');
+      var blob=new Blob([text],{type:'text/plain'});
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='translation_log_'+new Date().toISOString().slice(0,10)+'.txt';
+      a.click();
+    }
+
+    /* ── Init translate tab on switch ── */
+    var origSwitchTab=switchAdminTab;
+    switchAdminTab=function(tab,btn){
+      origSwitchTab(tab,btn);
+      if(tab==='translate'){
+        var savedKey=AITranslate.getApiKey();
+        if(savedKey)document.getElementById('aiApiKeyInput').value=savedKey;
+        refreshTranslateStats();
+        refreshCacheStats();
+      }
+      if(tab==='weapons'){
+        initWeaponSync();
+      }
+    };
+
+    /* ══════════════════════════════════════════
+       WEAPON AUTO-SYNC CONTROLS
+       ══════════════════════════════════════════ */
+
+    var syncLogEl=null;
+    var syncFirstLog=true;
+
+    function initWeaponSync(){
+      syncLogEl=document.getElementById('syncLog');
+      if(typeof WeaponSync==='undefined')return;
+      WeaponSync.init({
+        onStart:function(){
+          document.getElementById('syncProgressWrap').style.display='';
+          document.getElementById('btnSyncNow').disabled=true;
+          document.getElementById('btnSyncNow').textContent='Checking...';
+        },
+        onProgress:function(step,total,label){
+          var pct=Math.round((step/total)*100);
+          document.getElementById('syncProgressBar').style.width=pct+'%';
+          document.getElementById('syncProgressPct').textContent=pct+'%';
+          document.getElementById('syncProgressLabel').textContent=label||('Step '+step+'/'+total);
+        },
+        onComplete:function(result){
+          document.getElementById('syncProgressWrap').style.display='none';
+          document.getElementById('btnSyncNow').disabled=false;
+          document.getElementById('btnSyncNow').textContent='\uD83D\uDD04 Check Now';
+          refreshSyncStats();
+          if(result.success){
+            var msg='Sync complete: '+result.fetched+' fetched, '+result.newWeapons+' new, '+result.updatedWeapons+' updated, '+result.unchanged+' unchanged';
+            showNotification(msg,'success');
+            if(result.newWeapons>0||result.updatedWeapons>0)loadWeaponList();
+          }else{
+            showNotification('Sync failed: '+(result.errors[0]||'Unknown error'),'error');
+          }
+        },
+        onLog:function(entry){
+          if(!syncLogEl)syncLogEl=document.getElementById('syncLog');
+          if(!syncLogEl)return;
+          if(syncFirstLog){syncLogEl.innerHTML='';syncFirstLog=false;}
+          var color=entry.type==='error'?'#fca5a5':entry.type==='success'?'#86efac':entry.type==='warn'?'#fde68a':'#94a3b8';
+          var time=entry.timestamp.split('T')[1].split('.')[0];
+          syncLogEl.innerHTML+='<div style="color:'+color+';margin-bottom:2px;">['+time+'] '+entry.message+'</div>';
+          syncLogEl.scrollTop=syncLogEl.scrollHeight;
+        }
+      });
+      refreshSyncStats();
+    }
+
+    function refreshSyncStats(){
+      if(typeof WeaponSync==='undefined')return;
+      var st=WeaponSync.getState();
+      document.getElementById('syncLastCheck').textContent=st.lastCheck?new Date(st.lastCheck).toLocaleString():'Never';
+      document.getElementById('syncTotalSynced').textContent=st.totalSynced||0;
+      document.getElementById('syncAutoStatus').textContent=st.autoCheckActive?'ON':'OFF';
+      document.getElementById('syncAutoStatus').style.color=st.autoCheckActive?'#86efac':'#fca5a5';
+      document.getElementById('syncFingerprint').textContent=st.lastFingerprint?st.lastFingerprint.slice(0,10)+'...':'-';
+      var btn=document.getElementById('btnAutoToggle');
+      if(st.autoCheckActive){
+        btn.textContent='\u23F0 Disable Auto-Check';
+        btn.className='btn btn-gold';
+      }else{
+        var sel=document.getElementById('syncIntervalSelect');
+        var hrs=parseInt(sel.value)/3600000;
+        btn.textContent='\u23F0 Enable Auto-Check ('+hrs+'h)';
+        btn.className='btn btn-outline';
+      }
+    }
+
+    async function runManualSync(){
+      if(typeof WeaponSync==='undefined'){showNotification('WeaponSync module not loaded','error');return;}
+      syncFirstLog=true;
+      await WeaponSync.checkForUpdates();
+    }
+
+    async function runLocalSync(){
+      if(typeof WeaponSync==='undefined'){showNotification('WeaponSync module not loaded','error');return;}
+      syncFirstLog=true;
+      var result=await WeaponSync.syncFromLocalJSON();
+      if(result.success){
+        showNotification('Synced '+result.count+' weapons from local JSON','success');
+        loadWeaponList();
+      }else{
+        showNotification('Local sync failed: '+(result.errors?result.errors[0]:'Unknown'),'error');
+      }
+    }
+
+    function toggleAutoSync(){
+      if(typeof WeaponSync==='undefined')return;
+      var st=WeaponSync.getState();
+      if(st.autoCheckActive){
+        WeaponSync.stopAutoCheck();
+        showNotification('Auto-check disabled','info');
+      }else{
+        var interval=parseInt(document.getElementById('syncIntervalSelect').value);
+        WeaponSync.startAutoCheck(interval);
+        showNotification('Auto-check enabled (every '+(interval/3600000)+'h)','success');
+      }
+      refreshSyncStats();
+    }
+
+    // Init sync on weapons tab switch
+    var origSwitchTab2=switchAdminTab;
+    switchAdminTab=function(tab,btn){
+      origSwitchTab2(tab,btn);
+      if(tab==='weapons'){
+        initWeaponSync();
+      }
+    };
+
+    /* ── Notification ── */
+    function showNotification(msg,type){
+      var n=document.createElement('div');
+      var bg=type==='success'?'#052e16':type==='error'?'#7f1d1d':'#172554';
+      var bc=type==='success'?'#16a34a':type==='error'?'#dc2626':'#3b82f6';
+      var tc=type==='success'?'#86efac':type==='error'?'#fca5a5':'#93c5fd';
+      n.style.cssText='position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 24px;border-radius:10px;font-size:14px;font-weight:600;animation:slideIn .3s;background:'+bg+';border:1px solid '+bc+';color:'+tc;
+      n.textContent=msg;document.body.appendChild(n);
+      setTimeout(()=>{n.style.opacity='0';n.style.transition='opacity .3s';setTimeout(()=>n.remove(),300)},3000);
+    }
+  </script>
+</body>
+</html>
