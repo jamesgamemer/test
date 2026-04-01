@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Griamore - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Griamore</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Griamore.png" class="char-img" alt="Griamore">
+          <div><span class="char-rarity-badge sr">SR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">A Holy Knight of Liones, the son of former Holy Knight Grandmaster Dreyfus, and wielder of the magic known as &quot;Wall.&quot; He is prepared to do anything for Princess Veronica. Together with Howzer and Gilthunder, he is known as one of the Trio of Troublemakers.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Shield</span><span class="type-pill">Cudgel</span><span class="type-pill">Gauntlets</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Shield',this)" class="active">Shield</button>
+        <button onclick="showWeapon('Cudgel',this)">Cudgel</button>
+        <button onclick="showWeapon('Gauntlets',this)">Gauntlets</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Shield": {"skills": [{"name": "Speed Star", "type": "Adventure", "description": ""}, {"name": "Wall Master", "type": "Passive", "description": "Increases Defense by 15% when all allied heroes have barriers."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 113% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 49%"}, {"name": "Special Attack", "type": "Special", "description": "Increases Defense by 25% while the stance is maintained. Restores the hero's Tag Gauge by 100 when hit while the stance is maintained. The stance lasts up to 10 sec, and it is removed when hit 5 time(s)."}, {"name": "Drop Attack", "type": "Skill", "description": "Inflicts damage equal to 195% of Attack and additional damage equal to 45% of Defense."}, {"name": "Shell Drop", "type": "Tag", "description": "Inflicts damage equal to 88% of Attack."}, {"name": "Perfect Shell", "type": "Ultimate", "description": "Inflicts damage equal to 284% of Attack and decreases the enemy's Shatter Resistance by 5% for 20 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 26% 3rd hit: 41% 4th hit: 69%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases Special Attack's Defense boost by 40%."}, {"tier": 5, "description": "Using the Normal Skill increases the hero's Defense by 20% for 15 sec."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Gains a barrier equal to 20% of Max HP while the Special Attack's stance is maintained."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Landing the Ultimate Move inflicts additional damage equal to 150% of Defense."}], "costumes": ["Princess's Guardian Knight", "Casual Outing", "Holy Knight of the Iron Wall", "Makeshift Barricade", "Impregnable Iron Fortress"]}, "Cudgel": {"skills": [{"name": "Speed Star", "type": "Adventure", "description": ""}, {"name": "Wall Master", "type": "Passive", "description": "Restores the Tag Gauge by 250 when the hero's Special Attack grants a barrier."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 141% of Attack. 1st hit: 21% 2nd hit: 23% 3rd hit: 37%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 149% of Attack. Removes the hero's barrier to increase their Attack by 15% for 10 sec. Gains a barrier equal to 85% of Attack for 5 sec when the attack lands."}, {"name": "Wall Push", "type": "Skill", "description": "Inflicts damage equal to 239% of Attack. Decreases the Special Attack cooldown by 75% if the hero has a barrier."}, {"name": "Wall Rising", "type": "Tag", "description": "Inflicts damage equal to 113% of Attack."}, {"name": "Wall Crash", "type": "Ultimate", "description": "Inflicts damage equal to 386% of Attack. Removes the hero's barrier to increase their Ultimate Move damage by 50% and Stuns the enemy for 5 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Inflicts damage equal to 40% of Attack. 1st hit: 30% 2nd hit: 33% 3rd hit: 51% 4th hit: 84%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Slightly increases the range of the Special Attack."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Increases damage dealt with the Normal Skill by 45%. Decreases the Special Attack cooldown even if no barrier is active."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Slightly increases the range of the Ultimate Move."}], "costumes": ["Princess's Guardian Knight", "Casual Outing", "Holy Knight of the Iron Wall", "Makeshift Barricade", "Impregnable Iron Fortress"]}, "Gauntlets": {"skills": [{"name": "Speed Star", "type": "Adventure", "description": ""}, {"name": "Wall Master", "type": "Passive", "description": "Increases Burst Efficiency by 20% when all allied heroes have barriers. Restores 2 Magic Points when the hero activates a Burst. (Cooldown: 60 sec)"}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 103% of Attack. 1st hit: 15% 2nd hit: 17% 3rd hit: 27%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 104% of Attack and Stuns for 5 sec."}, {"name": "Shield Rush", "type": "Skill", "description": "Inflicts damage equal to 164% of Attack and increases their Stun duration by 3 sec. Inflicts additional damage equal to 55% of Defense if the hero has a barrier."}, {"name": "Shield Fist", "type": "Tag", "description": "Inflicts damage equal to 84% of Attack and grants all allied heroes barriers equal to 10% of Max HP for 15 sec."}, {"name": "Emission Shield", "type": "Ultimate", "description": "Inflicts damage equal to 254% of Attack. Additionally increases Burst Gauge on Stunned enemies by 250"}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Inflicts damage equal to 40% of Attack. 1st hit: 22% 2nd hit: 23% 3rd hit: 37% 4th hit: 61%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Changes the Special Attack into a skill that can be used 2 time(s)."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Landing the Tag Skill inflicts Stun for 8 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Additionally inflicts damage equal to 120% of Attack when using the Ultimate Move."}], "costumes": ["Princess's Guardian Knight", "Casual Outing", "Holy Knight of the Iron Wall", "Makeshift Barricade", "Impregnable Iron Fortress"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Shield', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dreyfus - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Dreyfus</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Dreyfus.png" class="char-img" alt="Dreyfus">
+          <div><span class="char-rarity-badge sr">SR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">A swordsmanship instructor in the Kingdom of Liones. In the past, he served as a Grandmaster of the Holy Knights, but spent ten years possessed by Fraudrin, a Demon. Now, he dedicates himself to training the next generation in the royal capital. He is the father of Griamore and grandfather of Dredrin.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Longsword</span><span class="type-pill">Lance</span><span class="type-pill">Rapier</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Longsword',this)" class="active">Longsword</button>
+        <button onclick="showWeapon('Lance',this)">Lance</button>
+        <button onclick="showWeapon('Rapier',this)">Rapier</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Longsword": {"skills": [{"name": "One-Shot Breaker", "type": "Adventure", "description": ""}, {"name": "Grandmaster's Honor", "type": "Passive", "description": "Increases damage dealt to enemies with Earth Burst activated by 30%."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 98% of Attack. 1st hit: 23% 2nd hit: 28% 3rd hit: 47%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 143% of Attack and inflicts Pride for 20 sec. ※ Pride: Increases damage taken from the hero by 20%."}, {"name": "Earth Blade", "type": "Skill", "description": "Inflicts damage equal to 249% of Attack. Decreases the Normal Skill cooldown by 50% when attacking an enemy affected by Pride."}, {"name": "Angled Earth Slash", "type": "Tag", "description": "Inflicts damage equal to 116% of Attack."}, {"name": "Earth Break", "type": "Ultimate", "description": "Inflicts damage equal to 367% of Attack. Increases damage dealt to Petrified enemies by 50%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 32% 2nd hit: 39% 3rd hit: 66%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Landing the Normal Skill decreases the enemy's Earth Defense by 20% for 20 sec."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Slightly increases the range of the Ultimate Move and Stuns the enemy for 4 sec when landing the final strike of the Ultimate Move."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Increases the damage boost from the Passive by 80%."}], "costumes": ["Kingdom Sword Art Instructor", "Royal Butler", "Old Soldier's Honor", "Simple Attire", "Honorable Knight"]}, "Lance": {"skills": [{"name": "One-Shot Breaker", "type": "Adventure", "description": ""}, {"name": "Grandmaster's Honor", "type": "Passive", "description": "Increases damage dealt by 30% when attacking an enemy with a barrier."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 142% of Attack. 61% chance to gain 1 Surge effect(s) for 10 sec. 1st hit: 21% 2nd hit: 23% 3rd hit: 37% 4th hit: 61% ※ Surge: Increases Crit Damage by 8%. (Max: 40%) At max stacks, changes to Enhanced Surge which increases Crit Damage by 40%."}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 144% of Attack and gains 1 Surge effect(s) for 10 sec. Hitting an enemy with a Burst activated additionally grants 1 Surge effect(s). ※ Surge: Increases Crit Damage by 8%. (Max: 40%) At max stacks, changes to Enhanced Surge which increases Crit Damage by 40%."}, {"name": "Pillar of Light", "type": "Skill", "description": "Inflicts damage equal to 264% of Attack. Stuns enemies in range for 5 sec if the hero has Surge."}, {"name": "Spear Fall", "type": "Tag", "description": "Inflicts damage equal to 118% of Attack."}, {"name": "Light Spear", "type": "Ultimate", "description": "Inflicts damage equal to 452% of Attack, resulting in a Critical Hit if the hero has Enhanced Surge. Enhanced Surge is then removed from the hero."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 29% 2nd hit: 32% 3rd hit: 52% 4th hit: 85%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Inflicts damage equal to 34% of Attack to enemies in range every 0.5 sec for 5 sec when using the Normal Skill."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Changes the Special Attack into a skill that can be used 2 time(s)."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Additionally inflicts damage equal to 476% of Attack after the final strike of the Ultimate Move."}], "costumes": ["Kingdom Sword Art Instructor", "Royal Butler", "Old Soldier's Honor", "Simple Attire", "Honorable Knight"]}, "Rapier": {"skills": [{"name": "One-Shot Breaker", "type": "Adventure", "description": ""}, {"name": "Grandmaster's Honor", "type": "Passive", "description": "Increases all allied heroes' DoT by 15%. Decreases the DoT interval by 50% for 5 sec when the hero attacks a Stunned or Paralyzed enemy."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 111% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 28% 4th hit: 48%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 114% of Attack. Landing the final strike inflicts 1 Weaken effect(s) for 20 sec. ※ Weaken: Increases DoT damage taken by 5%. (Max: 25%)"}, {"name": "Piercing Lightning", "type": "Skill", "description": "Inflicts damage equal to 180% of Attack. Restores the Tag Gauge by 150 for every 1 Weaken effect(s) on the enemy."}, {"name": "Flash Drop", "type": "Tag", "description": "Inflicts damage equal to 95% of Attack. Inflicts 2 Weaken effect(s) for 20 sec if the enemy is affected by Shock, Bleed, or Chill. ※ Weaken: Increases DoT damage taken by 5%. (Max: 25%)"}, {"name": "Light Bomber", "type": "Ultimate", "description": "Inflicts damage equal to 271% of Attack. When the Weaken effect on the enemy reaches max stacks, it Stuns them for 5 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 40% 4th hit: 68%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Changes the Special Attack into a skill that can be used 2 time(s)."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Increases damage dealt with the Normal Skill by 35% and the number of hits by 4. Increases the Tag Gauge recovery by 40 for every 1 Weaken effect(s) on the enemy."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Inflicts damage equal to 30% of Attack to enemies in range every 1 sec for 5 sec when using the Ultimate Move."}], "costumes": ["Kingdom Sword Art Instructor", "Royal Butler", "Old Soldier's Honor", "Simple Attire", "Honorable Knight"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Longsword', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

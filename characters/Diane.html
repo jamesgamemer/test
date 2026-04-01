@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diane - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Diane</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Diane.png" class="char-img" alt="Diane">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">A member of &lt;The Seven Deadly Sins&gt; bearing the mark of Envy. In the past, she was falsely accused of treason and went into hiding, eventually settling in the Forest of White Dreams. She has a fondness for Meliodas, the leader of &lt;The Seven Deadly Sins&gt;.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Gauntlets</span><span class="type-pill">Axe</span><span class="type-pill">Cudgel</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Gauntlets',this)" class="active">Gauntlets</button>
+        <button onclick="showWeapon('Axe',this)">Axe</button>
+        <button onclick="showWeapon('Cudgel',this)">Cudgel</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Gauntlets": {"skills": [{"name": "Giant Girl", "type": "Passive", "description": "Additionally inflicts damage equal to 10% of Defense when attacking the enemy."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 111% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 47%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 120% of Attack. 50% chance to reset the Normal Skill cooldown on the final strike."}, {"name": "Martial Drive", "type": "Skill", "description": "Inflicts damage equal to 192% of Attack. Increases the hero's Defense by 30% for 10 sec."}, {"name": "Rock Down", "type": "Tag", "description": "Inflicts damage equal to 94% of Attack and Taunts for 3 sec."}, {"name": "Metal Drop", "type": "Ultimate", "description": "Inflicts damage equal to 286% of Attack and gains Heavy Metal for 15 sec. ※ Heavy Metal: Becomes immune to Reactions. Increases the enemy's Burst Gauge by 50 and increases the hero's Shatter Resistance by 3% for 20 sec. (Max: 30%)"}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 41% 4th hit: 67%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "100% chance to reset the Normal Skill cooldown and increase damage dealt with the Normal Skill by 50% once when landing the final strike of the Special Attack."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Additionally inflicts damage equal to 270% of Attack when using the Ultimate Move."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Increases damage dealt by the Special Attack's final strike by 300% and decreases the enemy's Earth Defense by 30% for 20 sec."}], "costumes": ["Giant Girl in Love", "Tavern Hostess", "<The Serpent Sin of Envy>", "Cheerful Girl"]}, "Axe": {"skills": [{"name": "Giant Girl", "type": "Passive", "description": "Increases damage dealt by 40% when attacking an enemy with Earth Burst activated, and inflicts Breaker for 10 sec when attacking them 3 time(s). ※ Breaker: Inflicts Stun for 4 sec the first time the effect is inflicted. Inflicts damage equal to 150% of the caster's Defense. Increases damage taken from the caster by 30%."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 88% of Attack. 1st hit: 21% 2nd hit: 25% 3rd hit: 42%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 114% / 167% of Attack based on the charge level. Decreases the cooldown by 50% when attacking an enemy affected by Breaker."}, {"name": "Charged Slash", "type": "Skill", "description": "Inflicts damage equal to 215% of Attack. Increases damage dealt to enemies affected by Breaker by 100%."}, {"name": "Ground Down", "type": "Tag", "description": "Inflicts damage equal to 113% of Attack, and inflicts Breaker for 10 sec if the enemy is Petrified. ※ Breaker: Inflicts Stun for 4 sec the first time the effect is inflicted. Inflicts damage equal to 150% of the caster's Defense. Increases damage taken from the caster by 30%."}, {"name": "Rock Blast", "type": "Ultimate", "description": "Inflicts damage equal to 283% of Attack and inflicts Breaker for 10 sec. ※ Breaker: Inflicts Stun for 4 sec the first time the effect is inflicted. Inflicts damage equal to 150% of the caster's Defense. Increases damage taken from the caster by 30%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 29% 2nd hit: 35% 3rd hit: 58%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Inflicts damage equal to 240% of Defense 3 sec after landing the Normal Skill on an enemy. Increases damage dealt by 100% if they are affected by Breaker."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Slightly increases the range of the Special Attack and increases damage dealt by 20%."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Increases Breaker's damage dealt by 100% and the hero's damage dealt by 50%"}], "costumes": ["Giant Girl in Love", "Tavern Hostess", "<The Serpent Sin of Envy>", "Cheerful Girl"]}, "Cudgel": {"skills": [{"name": "Giant Girl", "type": "Passive", "description": "Taunts enemies for 5 sec and grants all allied heroes Heart of the Land for 20 sec when activating Earth Burst. ※ Heart of the Land: Grants a barrier equal to 30% of Max HP and restores HP equal to 10% of Defense every 0.5 sec."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 111% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 29% 4th hit: 48%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 124% of Attack. Increases damage dealt to Petrified enemies by 50%."}, {"name": "Desert Sands", "type": "Skill", "description": "Inflicts damage equal to 210% of Attack and decreases the Movement Speed of enemies in range by 40%. Enemies hit 5 time(s) are Petrified for 6 sec. ※ Petrify: Incapacitated. Increases Physical and Earth damage taken by 50%, and decreases damage taken from elements other than Physical and Earth by 75%."}, {"name": "Crushing Art", "type": "Tag", "description": "Inflicts damage equal to 92% of Attack."}, {"name": "Ground Rising", "type": "Ultimate", "description": "Inflicts damage equal to 282% of Attack. Additionally increases the Burst Gauge by 500 if the enemy's Movement Speed is decreased."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 67%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Slightly increases the range of the Normal Skill and pulls enemies toward the center. The enemies in the central area additionally take damage equal to 45% of Attack."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Decreases damage dealt with the Special Attack by 70% and increases the number of boulders to 8."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Increases the Heart of the Land's barrier by 233% and Earth damage dealt by 30%."}], "costumes": ["Giant Girl in Love", "Tavern Hostess", "<The Serpent Sin of Envy>", "Cheerful Girl"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Gauntlets', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

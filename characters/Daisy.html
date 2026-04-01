@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daisy - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Daisy</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Daisy.png" class="char-img" alt="Daisy">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">A Fairy transposed from the distant past. She is said to have created a mysterious artifact while conducting research with explorers of various races. By what seems like fate, or mere chance, she crosses paths with Tristan and the gang and becomes caught up in a turmoil that shakes all of Britannia</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Shield</span><span class="type-pill">Book</span><span class="type-pill">Wand</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Shield',this)" class="active">Shield</button>
+        <button onclick="showWeapon('Book',this)">Book</button>
+        <button onclick="showWeapon('Wand',this)">Wand</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Shield": {"skills": [{"name": "Artisan's Touch", "type": "Adventure", "description": ""}, {"name": "Offbeat Girl", "type": "Passive", "description": "Increases the default state's Magic Charging Efficiency by 50%, and the Ultimate Move does not consume Magic."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 142% of Attack. Increases damage dealt by 30% when Riding. 1st hit: 21% 2nd hit: 23% 3rd hit: 37% 4th hit: 61%"}, {"name": "Special Attack", "type": "Special", "description": "[Default] Decreases damage taken by 70% while the stance is maintained. Additionally, nearby enemies are Staggered and the Magic Gauge is restored by 100 every 1 sec. [Riding] Inflicts damage equal to up to 163% of Attack. Consumes 100 Magic Gauge to increase damage by 10% every 0.4 sec while the stance is maintained. Restores Magic by 300 when the stance is maintained for 2 sec."}, {"name": "Go Away / Energy Blast", "type": "Skill", "description": "[Default] Inflicts damage equal to 174% of Attack. Magic Gauge is restored by 300 if an enemy is struck, and their Earth Resistance is decreased by 20% for 20 sec. [Riding] Inflicts damage equal to 256% of Attack. Each hit consumes 100 of the Magic Gauge to increase damage by 10%. Restores the Magic Gauge by 100 when the same target is hit 5 time(s)."}, {"name": "Here Comes Daisy", "type": "Tag", "description": "Inflicts damage equal to 113% of Attack."}, {"name": "Help Me, Domby", "type": "Ultimate", "description": "The hero summons and rides Domby for 20 sec. The hero gains Reaction Immunity while riding."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 29% 2nd hit: 32% 3rd hit: 52% 4th hit: 85%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Using the Special Attack does not decrease Movement Speed, and its range is greatly increased. The Magic Gauge recovery from Staggering nearby enemies increases by 100%."}, {"tier": 6, "description": "Decreases the Magic consumption of the Special Attack and Normal Skill when riding by 50%."}, {"tier": 7, "description": "Slightly increases the range of the Normal Skill while riding. Taking damage from a Normal Skill increases the enemy's damage taken by 20%."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Normal Skill by 90% and increases the riding duration by 10 sec."}, {"tier": 10, "description": "Changes the Normal Skill into a skill that can be used 2 time(s) while riding. The Special Attack's damage dealt increases by 100% when fully charged."}], "costumes": ["Fairy of the Past", "Small Explorer", "Autumn Scent"]}, "Book": {"skills": [{"name": "Artisan's Touch", "type": "Adventure", "description": ""}, {"name": "Offbeat Girl", "type": "Passive", "description": "Grants Static Shock for 20 sec when an allied hero lands the Tag Skill. (Max: 3 times) ※ Static Shock: Increases Lightning damage by 5% for every 1 effect(s). Static Shock is removed at max stacks and grants High Voltage to all allied heroes for 20 sec. ※ High Voltage: Increases Lightning damage by 25% and Crit Chance by 15%."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 111% of Attack. Inflicts Electromagnet on the enemy for 10 sec if the final strike lands. 1st hit: 16% 2nd hit: 18% 3rd hit: 28% 4th hit: 49% ※ Electromagnet: Decreases Crit Resistance by 10%."}, {"name": "Special Attack", "type": "Special", "description": "Increases Crit Damage of allies in range by 15% for 20 sec. Using the skill on a Shocking Streetlamp in range slightly increases its Attack Speed for 10 sec."}, {"name": "Summon Shocking Streetlamp", "type": "Skill", "description": "Summons a Shocking Streetlamp for 15 sec, inflicting damage equal to 13% of Attack with each hit. Increases damage dealt to enemies affected by Electromagnet by 15%. Every 5 time(s) the Shocking Streetlamp attacks, it grants Electric Charge to allies in range for 20 sec. (Max: 5 times) ※ Electric Charge: Increases Crit Damage by 5% and Crit Chance by 2%."}, {"name": "Here Comes Daisy", "type": "Tag", "description": "Inflicts damage equal to 80% of Attack."}, {"name": "Fruit Barrage!", "type": "Ultimate", "description": "Inflicts damage equal to 261% of Attack and decreases Crit Defense by 30%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 26% 3rd hit: 40% 4th hit: 68%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Tag Skill by 60%."}, {"tier": 5, "description": "Slightly increases the range of the Special Attack and increases Crit Damage boost by 100%."}, {"tier": 6, "description": "Increases the Normal Attack's Electromagnet duration by 10 and increases the Ultimate Move's Crit Defense reduction by 15%."}, {"tier": 7, "description": "Changes the Normal Skill into a skill that can be used 4 time(s) and increases the duration of Shocking Streetlamp by 50%."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Slightly increases the range of the Ultimate Move and increases the duration by 100%."}], "costumes": ["Fairy of the Past", "Small Explorer", "Autumn Scent"]}, "Wand": {"skills": [{"name": "Artisan's Touch", "type": "Adventure", "description": ""}, {"name": "Offbeat Girl", "type": "Passive", "description": "Inflicts Wind Seed for 20 sec when the hero's attack results in a Critical Hit. ※ Wind Seed: Additionally inflicts damage equal to 80% of Attack and decreases Wind Defense by 5% (Max: 20%) for 20 sec when struck by a Critical Hit, then the effect is removed."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 100% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 30% 4th hit: 52%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 17% of Attack every 1 sec while the stance is maintained, and the final strike inflicts damage equal to 48% of Attack. If the stance is maintained for 3 sec or more, the enemy hit by the final strike is Stunned for 4 sec and all allied heroes' Crit Chance is increased by 20% for 20 sec."}, {"name": "Seed Bomb", "type": "Skill", "description": "Launches 4 Seed Bomb(s), each inflicting damage equal to 40% of Attack. Decreases Crit Resistance of enemies hit by 3% for 20 sec. (Max: 24%) Results in a Critical Hit against Stunned enemies."}, {"name": "Here Comes Daisy", "type": "Tag", "description": "Inflicts damage equal to 89% of Attack."}, {"name": "Oddball's Incense Burner", "type": "Ultimate", "description": "Decreases Wind Resistance and Block Rate of enemies in range by 20% and 50% respectively, and inflicts Wind Seed every 1 sec for 10 sec. ※ Wind Seed: Additionally inflicts damage equal to 80% of Attack and decreases Wind Defense by 5% (Max: 20%) for 20 sec when struck by a Critical Hit, then the effect is removed."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 42% 4th hit: 73%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Inflicts damage equal to 50% of Attack when using the Normal Skill. Adds 2 Seed Bomb(s) that decrease Movement Speed by 40%, and 2 Seed Bomb(s) that decrease Wind Resistance by 20% for 20 sec."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Slightly increases the range of the Ultimate Move and increases the duration by 10 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Inflicts damage equal to 50% of Attack to enemies in range of the Ultimate Move every 1 sec."}, {"tier": 10, "description": "Increases final strike damage by 300% and decreases Shatter Resistance by 15% for 20 sec when the Special Attack stance is maintained for 3 sec."}], "costumes": ["Fairy of the Past", "Small Explorer", "Autumn Scent"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Shield', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

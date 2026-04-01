@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>King</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/King.png" class="char-img" alt="King">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">A member of &lt;The Seven Deadly Sins&gt; bearing the mark of Sloth. He is also known as Harlequin, the king of the Fairies. After losing everything dear to him during the 700 years he spent away from the forest, he abandoned the name Harlequin and now lives as King, a member of &lt;The Seven Deadly Sins&gt;.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Book</span><span class="type-pill">Wand</span><span class="type-pill">Staff</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Book',this)" class="active">Book</button>
+        <button onclick="showWeapon('Wand',this)">Wand</button>
+        <button onclick="showWeapon('Staff',this)">Staff</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Book": {"skills": [{"name": "Flight", "type": "Adventure", "description": ""}, {"name": "Fairy King", "type": "Passive", "description": "Decreases all allied heroes' damage taken by 20% and increases the hero's Healing Efficiency by 50% when HP is 30% or lower."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 99% of Attack. 20% chance to inflict Mark of the Forest for 10 sec. (Max: 10 times) 1st hit: 15% 2nd hit: 16% 3rd hit: 26% 4th hit: 42% ※ Mark of the Forest: Increases damage taken by 1% and Earth damage taken by 3%."}, {"name": "Special Attack", "type": "Special", "description": "Decreases damage taken by 20% and increases Healing Efficiency by 3% every 0.5 sec for 10 sec while the stance is maintained. (Max: 15%) When hit, the stance is removed, then the hero inflicts damage equal to 99% of Attack and restores HP by 30% of Attack. Increases damage dealt by 5% per 1 Mark of the Forest on the enemy."}, {"name": "Protector of the Forest", "type": "Skill", "description": "Inflicts damage equal to 166% of Attack, then inflicts Mark of the Forest for 10 sec. (Max: 10 times) ※ Mark of the Forest: Increases damage taken by 8 and Earth damage taken by 9."}, {"name": "Upper Arc", "type": "Tag", "description": "Inflicts damage equal to 82% of Attack."}, {"name": "Forest's Protection", "type": "Ultimate", "description": "Grants all allied heroes Forest's Protection for 20 sec. ※ Forest's Protection: Grants a barrier equal to 50% of Max HP. Restores HP by 35% of Attack every 2 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 20% 2nd hit: 22% 3rd hit: 36% 4th hit: 59%."}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases the Special Attack's HP Recovery by 50%."}, {"tier": 5, "description": "Becomes immune to Reactions and decreases damage taken by 30% when using the Special Attack while the stance is maintained."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Increases the Normal Skill's number of Mark of the Forest effects applied by 2, and restores the Magic Gauge by 75 per every 1 Mark of the Forest effect(s) on the enemy."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases the HP Recovery of Forest's Protection by 50%."}, {"tier": 10, "description": "Increases the duration of Forest's Protection by 10 sec, and increases Defense by 20% while it is active."}], "costumes": ["Inexperienced Fairy King", "Forest's Footsteps", "<The Grizzly Sin of Sloth>", "Shadow of the Deep Forest"]}, "Wand": {"skills": [{"name": "Flight", "type": "Adventure", "description": ""}, {"name": "Fairy King", "type": "Passive", "description": "Increases all allied Earth heroes' Attack and Defense by 10% per every 1 Magic Point(s)."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 77% of Attack. 1st hit: 18% 2nd hit: 22% 3rd hit: 37%"}, {"name": "Special Attack", "type": "Special", "description": "Restores the Magic Gauge by 100 every 1 sec and increases all allied heroes' Defense by 6% for 20 sec while the stance is maintained. (Max: 5 times)"}, {"name": "Fairy Power", "type": "Skill", "description": "Grants all allied heroes Forest Fairy for 20 sec. ※ Forest Fairy: Increases Earth damage by 20%."}, {"name": "Earth Impact", "type": "Tag", "description": "Inflicts damage equal to 91% of Attack. Restores the Magic Gauge by 500."}, {"name": "Sharp Slash", "type": "Ultimate", "description": "Inflicts damage equal to 245% of Attack. Each hit restores the Magic Gauge by 50."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 25% 2nd hit: 30% 3rd hit: 51%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases the Special Attack's Magic Gauge Recovery by 150."}, {"tier": 5, "description": "Changes the Forest Fairy effect to Forest Fairy King. ※ Forest Fairy King: Increases Earth damage by 40% and increases Magic Charging Efficiency by 30%."}, {"tier": 6, "description": "Increases Magic Charging Efficiency by 5% for every 1 Magic Point(s)."}, {"tier": 7, "description": "Increases the enemy's Burst Gauge by 250 and additionally restores Magic by 300 when landing the final strike of the Ultimate Move."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Increases all allied heroes' Earth Attack by 30% for 30 sec when the Special Attack stance is maintained for 5 sec."}], "costumes": ["Inexperienced Fairy King", "Forest's Footsteps", "<The Grizzly Sin of Sloth>", "Shadow of the Deep Forest"]}, "Staff": {"skills": [{"name": "Flight", "type": "Adventure", "description": ""}, {"name": "Fairy King", "type": "Passive", "description": "20% chance to gain Bloom for 10 sec when landing an attack. Gains Bloom for 10 sec when landing the Normal Skill on an enemy with Burst activated. (Max: 20) ※ Bloom: Increases Attack by 1% per every 1 effect(s). When Bloom is at max stacks, all Bloom effects are removed and the hero gains Full Bloom for 10 sec. ※ Full Bloom: Increases Attack by 35% and Defense Shatter by 10%."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 119% of Attack. 1st hit: 18% 2nd hit: 19% 3rd hit: 31% 4th hit: 51%."}, {"name": "Special Attack", "type": "Special", "description": "Gains 1 Bloom effect(s) for 10 sec (Max: 20), then inflicts damage equal to 136% of Attack. ※ Bloom: Increases Attack by 1% per every 1 effect(s). When Bloom is at max stacks, all Bloom effects are removed and the hero gains Full Bloom for 10 sec. ※ Full Bloom: Increases Attack by 35% and Defense Shatter by 10%."}, {"name": "Holy Swarm", "type": "Skill", "description": "Inflicts damage equal to 190% of Attack, then gains Bloom effects equal to the number of enemies hit by the first strike for 10 sec. (Max: 20) Increases damage dealt by 2% per every 1 Bloom effect on the hero. If the hero has a Full Bloom effect, damage dealt increases by 50%. ※ Bloom: Increases Attack by 1% per 1 effect(s). When Bloom is at max stacks, all Bloom effects are removed and the hero gains Full Bloom for 10 sec. ※ Full Bloom: Increases Attack by 35% and Defense Shatter by 10%."}, {"name": "Bee Chase", "type": "Tag", "description": "Inflicts damage equal to 104% of Attack."}, {"name": "Shining Blaze", "type": "Ultimate", "description": "Inflicts damage equal to 306% of Attack, then increases damage dealt by 2% per 1 Bloom effect on the hero. If the hero has a Full Bloom effect, damage dealt increases by 60% and Crit Chance increases by 50%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 25% 2nd hit: 27% 3rd hit: 43% 4th hit: 71%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Slightly increases the range of the Special Attack. Increases the Passive's Bloom chance by 100% when landing the Special Attack."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Additionally gains 2 Bloom effect(s) when using the Normal Skill, and increases the number of Bloom effects applied when attacking an enemy with Burst activated by 1."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Inflicts damage equal to 15% of Attack to enemies in range every 0.5 sec for 5 sec when using the Ultimate Move."}], "costumes": ["Inexperienced Fairy King", "Forest's Footsteps", "<The Grizzly Sin of Sloth>", "Shadow of the Deep Forest"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Book', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

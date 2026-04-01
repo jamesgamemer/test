@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dreydrin - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Dreydrin</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Dreydrin.png" class="char-img" alt="Dreydrin">
+          <div><span class="char-rarity-badge sr">SR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">An Apprentice Holy Knight of the Kingdom of Liones, he proved his exceptional skill by earning the title at just thirteen years old. He is a gentle soul who has a deep fondness for flowers and plants.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Axe</span><span class="type-pill">Shield</span><span class="type-pill">Rapier</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Axe',this)" class="active">Axe</button>
+        <button onclick="showWeapon('Shield',this)">Shield</button>
+        <button onclick="showWeapon('Rapier',this)">Rapier</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Axe": {"skills": [{"name": "Garden of Vitality", "type": "Adventure", "description": "No description available."}, {"name": "Strong Determination", "type": "Passive", "description": "Attacking an enemy affected by Petrify, Freeze, Stun, or Paralysis decreases their Defense by 10% for 5 sec."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 142% of Attack. 1st hit: 15% 2nd hit: 17% 3rd hit: 23% 4th hit: 36% 5th hit: 51%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 108% / 154% of Attack according to the charge level. Landing a charged attack Stuns the enemy for 5 sec."}, {"name": "Battle Cry", "type": "Skill", "description": "Inflicts damage equal to 163% of Attack. Restores the Tag Gauge by 300 when attacking an enemy affected by Petrify, Freeze, Stun, or Paralysis."}, {"name": "Axe Uppercut", "type": "Tag", "description": "Inflicts damage equal to 83% of Attack."}, {"name": "Giant's Cry", "type": "Ultimate", "description": "Inflicts damage equal to 282% of Attack. Increases damage dealt to an enemy affected by Petrify, Freeze, Stun, or Paralysis by 30%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 20% 2nd hit: 23% 3rd hit: 33% 4th hit: 51% 5th hit: 71%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases Special Attack damage by 35% / 50% based on the charge level."}, {"tier": 5, "description": "Slightly increases the range of the Normal Skill."}, {"tier": 6, "description": "Increases the duration of the Special Attack's Stun by 3 sec."}, {"tier": 7, "description": "Increases the Passive's Defense reduction by 100% and increases its duration by 5 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Landing the Tag Skill inflicts Stun on the enemy for 6 sec."}], "costumes": ["Friendly Apprentice Holy Knight", "A Nice Day Off", "Descendant of Royalty", "Thorough Preparation", "Solid Defense"]}, "Shield": {"skills": [{"name": "Garden of Vitality", "type": "Adventure", "description": "No description available."}, {"name": "Strong Determination", "type": "Passive", "description": "When the hero is hit while HP is 30% or lower, grants all allied heroes barriers equal to 50% of Max HP for 20 sec. (Cooldown: 60 sec)"}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 147% of Attack. 1st hit: 14% 2nd hit: 17% 3rd hit: 25% 4th hit: 40% 5th hit: 51%"}, {"name": "Special Attack", "type": "Special", "description": "Gains a barrier equal to 50% of Defense while the stance is maintained. The stance lasts up to 10 sec, and is removed when the barrier is removed. When hit while the stance is maintained, the attacking enemy's Burst Gauge increases by 100, and all allied heroes' Defense increases by 5% for 20 sec. (Max: 25%)"}, {"name": "Shield Crush", "type": "Skill", "description": "Inflicts damage equal to 80% of Attack. If the attack lands, attacks once more to inflict damage equal to 104% of Attack. Each hit additionally inflicts damage equal to 30% of the hero's Defense."}, {"name": "Sword Landing", "type": "Tag", "description": "Inflicts damage equal to 92% of Attack."}, {"name": "Pure Garden", "type": "Ultimate", "description": "Increases the hero's Max HP equal to 100% of Defense for 20 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 20% 2nd hit: 24% 3rd hit: 35% 4th hit: 56% 5th hit: 71%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases the Defense boost gained when hit while the Special Attack's stance is maintained by 100%."}, {"tier": 5, "description": "Increases the damage taken reduction by 70% and slightly increases Movement Speed while the Special Attack's stance is maintained."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Restores HP of nearby allies by 10% of Defense every 1 sec for 10 sec when using the Ultimate Move."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases the Ultimate Move's Max HP boost to 200% of the hero's Defense."}, {"tier": 10, "description": "Increases the HP of barriers from the Passive to 100% of Max HP. Restores HP by 50% of Max HP when gaining a barrier."}], "costumes": ["Friendly Apprentice Holy Knight", "A Nice Day Off", "Descendant of Royalty", "Thorough Preparation", "Solid Defense"]}, "Rapier": {"skills": [{"name": "Garden of Vitality", "type": "Adventure", "description": "No description available."}, {"name": "Strong Determination", "type": "Passive", "description": "Attacking an enemy with Burst activated decreases Normal Skill cooldown by 2 sec."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 109% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 28% 4th hit: 47%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 105% of Attack. Increases all allied heroes' Magic Charging Efficiency by 15% for 20 sec."}, {"name": "Divine Will", "type": "Skill", "description": "Inflicts damage equal to 216% of Attack. Each hit restores the hero's Magic by 50."}, {"name": "Spear of Light", "type": "Tag", "description": "Inflicts damage equal to 100% of Attack."}, {"name": "Divine Combat", "type": "Ultimate", "description": "Increases Holy and Fire Attack of allies in range by 10% for 15 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 40% 4th hit: 66%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Changes the Special Attack into a skill that can be used 2 time(s), and changes the Magic Charging Efficiency boost effect to be applied up to 3 times."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Increases the Magic Charging Efficiency of allies in range of the Normal Skill by 20%."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases the Ultimate Move's Attack boost by 100%."}, {"tier": 10, "description": "Increases the Ultimate Move's Attack boost zone duration by 10 sec."}], "costumes": ["Friendly Apprentice Holy Knight", "A Nice Day Off", "Descendant of Royalty", "Thorough Preparation", "Solid Defense"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Axe', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tristan - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Tristan</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Tristan.png" class="char-img" alt="Tristan">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">The son of Meliodas and Elizabeth, and the prince of the Kingdom of Liones. He admires and looks up to &lt;The Seven Deadly Sins&gt;. Though polite and cautious by nature, he will face any danger if it means protecting those he cares about.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Longsword</span><span class="type-pill">Dual Swords</span><span class="type-pill">Greatsword</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Longsword',this)" class="active">Longsword</button>
+        <button onclick="showWeapon('Dual Swords',this)">Dual Swords</button>
+        <button onclick="showWeapon('Greatsword',this)">Greatsword</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Longsword": {"skills": [{"name": "Novice Adventurer", "type": "Adventure", "description": ""}, {"name": "Sense of Justice", "type": "Passive", "description": "When the hero activates Wind Burst, all allied heroes' Wind Attack increases by 15% for 20 sec."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 105% of Attack. 1st hit: 16% 2nd hit: 17% 3rd hit: 27% 4th hit: 45%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 103% of Attack, then inflicts Bleed for 20 sec. ※ Bleed: Inflicts Wind damage equal to 10% of the damage dealt every 1 sec. Decreases Healing Efficiency by 20%. Additionally decreases Healing Efficiency by 6% when landing a Critical Hit. (Max: 10 times)"}, {"name": "Wind Thrust", "type": "Skill", "description": "Inflicts damage equal to 173% of Attack. Additionally increases the Burst Gauge by 200 if the enemy is Bleeding."}, {"name": "Wind Strike", "type": "Tag", "description": "Inflicts damage equal to 88% of Attack."}, {"name": "Blade Storm", "type": "Ultimate", "description": "Increases all allied Wind heroes' All Elemental Burst Efficiency by 20% for 20 sec, then inflicts damage equal to 295% of Attack."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 38% 4th hit: 63%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Landing the Special Attack additionally increases the Burst Gauge by 200."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Changes the Normal Skill into a skill that can be used 2 time(s). Activating Wind Burst with a Normal Skill decreases the enemy's Crit Resistance by 15% for 20 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Enhances the Ultimate Move to increase damage dealt with Flurry by 150%."}], "costumes": ["Little Prince", "Prince's Training Outfit", "Formal Attire", "Royal Dignity", "Prince's Adventure"]}, "Dual Swords": {"skills": [{"name": "Novice Adventurer", "type": "Adventure", "description": ""}, {"name": "Sense of Justice", "type": "Passive", "description": "When Fire Burst is activated, all allied heroes' Fire Attack increases by 15% for 20 sec."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 105% of Attack. 1st hit: 16% 2nd hit: 17% 3rd hit: 27% 4th hit: 45%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 101% of Attack. Decreases the enemy's Fire Defense by 10% for 20 sec."}, {"name": "Vertical Slice", "type": "Skill", "description": "Inflicts damage equal to 185% of Attack. If the enemy's Fire Defense is decreased, additionally increases the Burst Gauge by 200."}, {"name": "Burning Blow", "type": "Tag", "description": "Inflicts damage equal to 87% of Attack."}, {"name": "Rain of Fire", "type": "Ultimate", "description": "Inflicts damage equal to 261% of Attack. Increases all allied heroes' All Elemental Burst Efficiency by 15% for 20 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 38% 4th hit: 64%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Inflicts Fire damage equal to 45% of Attack to enemies around the target if Fire Burst activates with the Normal Skill."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "When a Critical Hit is landed with a Special Attack, its cooldown is reset and its damage dealt is increased by 30% for 10 sec. Cooldown reset can be triggered up to 3 time(s) in a row."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "When Fire Burst activates, all allied heroes' Fire Attack increases by 30%, and Fire heroes' Crit Chance increases by 10% for 30 sec."}], "costumes": ["Little Prince", "Prince's Training Outfit", "Formal Attire", "Royal Dignity", "Prince's Adventure"]}, "Greatsword": {"skills": [{"name": "Novice Adventurer", "type": "Adventure", "description": ""}, {"name": "Sense of Justice", "type": "Passive", "description": "Each time the Special Attack hits, the hero's Crit Chance increases by 1% (Max: 20%) for 10 sec."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 144% of Attack. 1st hit: 22% 2nd hit: 23% 3rd hit: 37% 4th hit: 62%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 12% of Attack on nearby enemies while the stance is maintained, and inflicts damage equal to 72% of Attack with the final strike. Whenever the attack lands, there is a(n) 50% chance to apply 1 Ember effect(s) on the hero for 10 sec. (Max: 10 times) ※ Ember: Increases Normal Skill damage by 2% and Ultimate Move damage by 3%."}, {"name": "Punisher", "type": "Skill", "description": "Inflicts damage equal to 243% of Attack, then removes Ember from self."}, {"name": "Surprise Attack", "type": "Tag", "description": "Inflicts damage equal to 121% of Attack."}, {"name": "Severing Cut", "type": "Ultimate", "description": "Inflicts damage equal to 258% / 280% / 324% of Attack based on the charge level, then removes Ember from self."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 30% 2nd hit: 32% 3rd hit: 53% 4th hit: 86%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 30% and the final strike by 50%."}, {"tier": 5, "description": "A fully charged Ultimate Move deals additional damage equal to 85% of Attack without removing Ember."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "The Special Attack's chance to grant Ember is increased to 100%. Landing the attack pulls the enemy toward the hero, and landing the final strike Stuns the enemy for 5 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases Ultimate Move damage to 15% / 30% / 50% based on the charge level."}, {"tier": 10, "description": "For every 5 Special Attack hit(s), additional damage equal to 35% of Attack is dealt to nearby enemies."}], "costumes": ["Little Prince", "Prince's Training Outfit", "Formal Attire", "Royal Dignity", "Prince's Adventure"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Longsword', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

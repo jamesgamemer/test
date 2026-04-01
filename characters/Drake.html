@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drake - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Drake</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Drake.png" class="char-img" alt="Drake">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">As the king of the Dracos, he holds a deep love and devotion for his kind. When he learned that his people were fated to perish, he vowed to resurrect the Elder Dragon and lead the Dracos to a new era of prosperity.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Longsword</span><span class="type-pill">Greatsword</span><span class="type-pill">Staff</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Longsword',this)" class="active">Longsword</button>
+        <button onclick="showWeapon('Greatsword',this)">Greatsword</button>
+        <button onclick="showWeapon('Staff',this)">Staff</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Longsword": {"skills": [{"name": "Treasure Detection", "type": "Adventure", "description": ""}, {"name": "Dragon King", "type": "Passive", "description": "Increases the hero's Lightning Burst Efficiency by 30% while Pulse is active."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 100% of Attack. 1st hit: 15% 2nd hit: 16% 3rd hit: 26% 4th hit: 43%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 106% of Attack. Additionally increases the Burst Gauge by 20 whenever the Special Attack lands 3 time(s) while Pulse is active."}, {"name": "Pulse", "type": "Skill", "description": "Grants all allied heroes Pulse for 20 sec. ※ Pulse: Inflicts damage equal to 3% of Attack to nearby enemies every 0.3 sec. Additionally increases the Burst Gauge by 30 when hit 5 times."}, {"name": "Thunder Slash", "type": "Tag", "description": "Inflicts damage equal to 88% of Attack."}, {"name": "Phantom Blade", "type": "Ultimate", "description": "Inflicts damage equal to 314% of Attack, then decreases All Elemental Burst Resistance by 30% for 20 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 61%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Increases the number of Ultimate Move attacks by 4 and damage dealt with the Ultimate Move by 40%."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Increases the Special Attack's damage dealt by 110%, and the Burst Gauge by 100%."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Slightly increases the range of Pulse and additionally increases the Burst Gauge by 100%."}], "costumes": ["Dragon Descendent", "Oath of the Throne", "Glory of the Past", "Shadow Lord"]}, "Greatsword": {"skills": [{"name": "Treasure Detection", "type": "Adventure", "description": ""}, {"name": "Dragon King", "type": "Passive", "description": "25% chance to decrease the cooldown of the Normal Skill by 2 sec when using a Normal Attack on an enemy with Lightning Burst activated."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 164% of Attack. 1st hit: 16% 2nd hit: 19% 3rd hit: 28% 4th hit: 44% 5th hit: 57%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 124% of Attack. Increases the Burst duration by 2 sec each time the attack hits an enemy with Lightning Burst activated."}, {"name": "Lightning Stream", "type": "Skill", "description": "Inflicts damage equal to 230% of Attack. The hero gains King's Magic for 10 sec when attacking an enemy with Lightning Burst activated. (Max: 3) ※ King's Magic: Increases Lightning Attack by 10% and Crit Chance by 5% for every 1 effect(s)."}, {"name": "Lightning Dragon Strike", "type": "Tag", "description": "Inflicts damage equal to 104% of Attack. Gains King of the Dracos for 15 sec when attacking an enemy with Lightning Burst activated. ※ King of the Dracos: Consumes 5% Stamina every 1 sec to decrease the cooldown of the Normal Skill by 3 sec."}, {"name": "Lightning Dragon's Wrath", "type": "Ultimate", "description": "Inflicts damage equal to 356% of Attack. Increases damage dealt by 30% per every 1 King's Magic effect on the hero."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 61%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Increases the number of Ultimate Move attacks by 4 and damage dealt with the Ultimate Move by 40%."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Increases the Special Attack's damage dealt by 110%, and the Burst Gauge by 100%."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Slightly increases the range of Pulse and additionally increases the Burst Gauge by 100%."}], "costumes": ["Dragon Descendent", "Oath of the Throne", "Glory of the Past", "Shadow Lord"]}, "Staff": {"skills": [{"name": "Treasure Detection", "type": "Adventure", "description": ""}, {"name": "Dragon King", "type": "Passive", "description": "Inflicts Electric Current for 20 sec when landing 4 Normal Attack hit(s). (Max: 5 times) ※ Electric Current: Decreases Crit Defense by 8%."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 109% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 28% 4th hit: 47%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 104% of Attack, then inflicts 2 Electric Current effect(s) for 20 sec. (Max: 5 times) Inflicts Paralysis if the enemy is Shocked. ※ Electric Current: Decreases Crit Defense by 8%. ※ Paralysis: Incapacitated. Decreases Lightning Defense by 15%. The effect remains if the target is Shocked."}, {"name": "Lightning Spear", "type": "Skill", "description": "Inflicts damage equal to 199% of Attack, and inflicts Shock for 10 sec if the enemy has 3 or more Electric Current effects. ※ Shock: Inflicts Lightning damage equal to 15% of Attack every 2 sec. Inflicts Shock on nearby enemies for 10 sec when hit."}, {"name": "Lightning Staff Strike", "type": "Tag", "description": "Inflicts damage equal to 94% of Attack and inflicts Shock for 10 sec. ※ Shock: Inflicts Lightning damage equal to 15% of Attack every 2 sec. Inflicts Shock on nearby enemies for 10 sec when hit."}, {"name": "Lightning Overdrive", "type": "Ultimate", "description": "Inflicts damage equal to 296% of Attack. Results in a Critical Hit if the enemy is Paralyzed."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 61%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Increases the number of Ultimate Move attacks by 4 and damage dealt with the Ultimate Move by 40%."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Increases the Special Attack's damage dealt by 110%, and the Burst Gauge by 100%."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Slightly increases the range of Pulse and additionally increases the Burst Gauge by 100%."}], "costumes": ["Dragon Descendent", "Oath of the Throne", "Glory of the Past", "Shadow Lord"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Longsword', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

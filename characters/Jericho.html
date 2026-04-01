@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jericho - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Jericho</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Jericho.png" class="char-img" alt="Jericho">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">She was once a Holy Knight of Liones and also served as the mentor to Lancelot, the child of Ban and Elaine. For reasons unknown, however, she became a Holy Knight of Camelot under King Arthur&#x27;s rule and is now in open conflict with all of Liones.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Dual Swords</span><span class="type-pill">Lance</span><span class="type-pill">Rapier</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Dual Swords',this)" class="active">Dual Swords</button>
+        <button onclick="showWeapon('Lance',this)">Lance</button>
+        <button onclick="showWeapon('Rapier',this)">Rapier</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Dual Swords": {"skills": [{"name": "Ice Field", "type": "Adventure", "description": ""}, {"name": "Glacier", "type": "Passive", "description": "Activating Cold Burst inflicts Freeze on the enemy for 6 sec. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 107% of Attack. 1st hit: 16% 2nd hit: 17% 3rd hit: 28% 4th hit: 46%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 111% of Attack. Inflicts Freeze on the target for 6 sec if the hero has a Frozen Saber effect when landing the final strike. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."}, {"name": "Weapon Enchantment", "type": "Skill", "description": "Gains Frozen Saber for 15 sec. ※ Frozen Saber: Increases Crit Chance by 30%. Using a Normal Attack teleports the hero behind the enemy to inflict additional damage equal to 50% of Attack and increase their Burst Gauge by 30."}, {"name": "Frozen Slash", "type": "Tag", "description": "Inflicts damage equal to 87% of Attack. Inflicts Freeze on the target for 6 sec if they have Cold Burst activated. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."}, {"name": "Ice Needle", "type": "Ultimate", "description": "Inflicts damage equal to 262% of Attack and decreases Cold Resistance by 20%. If the hero has a Frozen Saber effect, the Ultimate Move's Crit Damage increases by 60%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 24% 3rd hit: 39% 4th hit: 65%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Increases the additional damage of Normal Attacks enhanced by Frozen Saber by 100%."}, {"tier": 6, "description": "Increases Frozen Saber duration by 50% and Burst Gauge increase by 100%."}, {"tier": 7, "description": "The Ultimate Move creates additional afterimages, each inflicting damage equal to 55% of Attack and increasing the Burst Gauge by 200."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Adds 2 projectile(s) to the Ultimate Move, inflicting damage equal to 320% of Attack."}], "costumes": ["Runaway Holy Knight", "Leisurely Moment", "Holy Knight With the Star-Shaped Visor", "Secretive Traveler", "Trace of Memories"]}, "Lance": {"skills": [{"name": "Ice Field", "type": "Adventure", "description": ""}, {"name": "Glacier", "type": "Passive", "description": "If the hero has a barrier and inflicts damage on an enemy, all allied heroes gain Frozen Breath for 15 sec. (Max: 20 stacks) ※ Frozen Breath: Increases Defense by 3%, Fire Defense by 5%, and Earth Defense by 5%."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 114% of Attack. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 50%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 111% of Attack. Decreases Special Attack and Normal Skill cooldowns by 50% if the hero has a Frozen Breath effect."}, {"name": "Ice Rock", "type": "Skill", "description": "Inflicts damage equal to 190% of Attack. Grants all allied heroes barriers equal to 50% of Max HP for 20 sec when the attack lands."}, {"name": "Frozen Slicer", "type": "Tag", "description": "Inflicts damage equal to 93% of Attack. Grants all allied heroes barriers equal to 30% of Max HP and 3 Frozen Breath effect(s) for 15 sec when the attack lands. ※ Frozen Breath: Increases Defense by 3%, Fire Defense by 5%, and Earth Defense by 5%."}, {"name": "Ice Field", "type": "Ultimate", "description": "Inflicts damage equal to 275% of Attack and inflicts Freeze. Increases damage dealt by 6% for every 1 Frozen Breath effect(s) on the hero. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 41% 4th hit: 70%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Slightly increases the range of the Special Attack, and increases damage dealt to enemies by 50% when the hero has a Frozen Breath effect."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Slightly increases the range of the Normal Skill. After the final strike, increases all allied heroes' Defense by 30% and decreases Cold Defense of enemies in range by 20% for 20 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Using the Ultimate Move creates ice projectiles which inflict damage equal to 50% of Attack."}], "costumes": ["Runaway Holy Knight", "Leisurely Moment", "Holy Knight With the Star-Shaped Visor", "Secretive Traveler", "Trace of Memories"]}, "Rapier": {"skills": [{"name": "Ice Field", "type": "Adventure", "description": ""}, {"name": "Glacier", "type": "Passive", "description": "30% chance to inflict Chill for 15 sec when landing an attack. Cold damage increases by 1% for 20 sec when an ally attacks a Chilled enemy. (Max: 50%) ※ Chill: Decreases Movement Speed by 5% and Cold Burst Resistance by 3% (Max: 10 times). Freezes at max stacks."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 114% of Attack. 25% chance to decrease Cold Defense by 20% for 15 sec. 1st hit: 17% 2nd hit: 18% 3rd hit: 29% 4th hit: 50%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 116% of Attack. If the enemy is affected by Chill or Freeze, the final strike results in a Critical Hit."}, {"name": "Ice Blade Dance", "type": "Skill", "description": "Inflicts damage equal to 182% of Attack and decreases Crit Defense by 40% for 20 sec. If the enemy is affected by Chill or Freeze, the final strike results in a Critical Hit."}, {"name": "Cold Strike", "type": "Tag", "description": "Inflicts damage equal to 92% of Attack."}, {"name": "Glacial Blitz", "type": "Ultimate", "description": "Inflicts damage equal to 315% of Attack. If the enemy is affected by Chill or Freeze, the final strike results in a Critical Hit."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 41% 4th hit: 70%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Using the Ultimate Move allows it to be used one more time for 10 sec. Using the Ultimate Move inflicts damage equal to 280% of Attack."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Using the Normal Skill allows it to be used one more time for 10 sec. Using the Normal Skill inflicts damage equal to 195% of Attack."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Using the Special Attack allows it to be used one more time for 10 sec. Using the Special Attack inflicts damage equal to 140% of Attack."}], "costumes": ["Runaway Holy Knight", "Leisurely Moment", "Holy Knight With the Star-Shaped Visor", "Secretive Traveler", "Trace of Memories"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Dual Swords', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

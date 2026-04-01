@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elaine - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Elaine</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Elaine.png" class="char-img" alt="Elaine">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">Elaine protects the Fairy King&#x27;s Forest in place of her brother who left 700 years ago. She is rumored to be the saint who guards the Fountain of Youth.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Book</span><span class="type-pill">Wand</span><span class="type-pill">Staff</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Book',this)" class="active">Book</button>
+        <button onclick="showWeapon('Wand',this)">Wand</button>
+        <button onclick="showWeapon('Staff',this)">Staff</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Book": {"skills": [{"name": "Gentle Breeze", "type": "Adventure", "description": ""}, {"name": "Saintess's Protection", "type": "Passive", "description": "Activating Earth Burst inflicts Petrify on the enemy for 6 sec. Increases all allied heroes' damage dealt to Petrified enemies by 100% when the hero is set to the team. ※ Petrify: Incapacitated. Increases Physical and Earth damage taken by 50%, and decreases damage taken from elements other than Physical and Earth by 75%."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 116% of Attack. 1st hit: 18% 2nd hit: 19% 3rd hit: 30% 4th hit: 49%"}, {"name": "Special Attack", "type": "Special", "description": "Applies Saintess's Mark to nearby allies and enemies for 20 sec. ※ Saintess's Mark: Effects differ based on the target. Allies: Decreases damage taken by 50% while they have a barrier. Enemies: Decreases Earth Burst Resistance by 30%."}, {"name": "Guardian's Blossom", "type": "Skill", "description": "Grants all allied heroes barriers equal to 300% of Defense for 20 sec. The damage taken by allies with barriers decreases by 20%."}, {"name": "Forest Savior", "type": "Tag", "description": "Inflicts damage equal to 86% of Attack. Additionally increases Burst Gauge by 200 when landing a Critical Hit."}, {"name": "Dust Seal", "type": "Ultimate", "description": "Inflicts damage equal to 268% of Attack and Binds for 3 sec. Inflicts Petrify for 6 sec when attacking an enemy affected by Saintess's Mark. ※ Petrify: Incapacitated. Increases Physical and Earth damage taken by 50%, and decreases damage taken from elements other than Physical and Earth by 75%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 26% 3rd hit: 42% 4th hit: 68%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases the duration of the Special Attack's Saintess's Mark by 10 sec."}, {"tier": 5, "description": "Increases the Earth damage of allies with Saintess's Mark by 50%."}, {"tier": 6, "description": "Increases the Normal Skill's barrier by 66%."}, {"tier": 7, "description": "Changes the Special Attack into a skill that can be used 2 time(s) and slightly increases its range."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Landing the Ultimate Move also inflicts Petrify on enemies without Saintess's Mark for 6 sec. Inflicts Petrify on enemies with Saintess's Mark for 12 sec."}], "costumes": ["Guardian Saint of the Fountain of Youth", "Temp Employee", "Guiding Light", "Cheerful Outing", "Saintess's Dignity"]}, "Wand": {"skills": [{"name": "Gentle Breeze", "type": "Adventure", "description": ""}, {"name": "Saintess's Protection", "type": "Passive", "description": "Increases Crit Chance by 30% for 5 sec when attacking an enemy with Wind Burst activated."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 127% of Attack. Decreases the Normal Skill cooldown by 1 sec if the final strike lands. 1st hit: 20% 2nd hit: 22% 3rd hit: 35% 4th hit: 50%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 66% of Attack and inflicts Stagger every 0.5 sec while the stance is maintained. Decreases the Normal Skill cooldown by 3 sec when the attack lands."}, {"name": "Razorwind", "type": "Skill", "description": "Inflicts damage equal to 235% of Attack. Increases the hero's Crit Damage by 20% for 5 sec when landing a Critical Hit. (Max: 60%)"}, {"name": "Forest Tornado", "type": "Tag", "description": "Inflicts damage equal to 112% of Attack. Each Critical Hit restores the Tag Gauge by 35."}, {"name": "Wind Blast", "type": "Ultimate", "description": "Inflicts damage equal to 325% of Attack. Increases Wind Burst duration by 10 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 28% 2nd hit: 31% 3rd hit: 49% 4th hit: 70%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Increases damage dealt with the Normal Skill by 50% for 20 sec when using the Special Attack."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Additionally inflicts damage equal to 260% of Attack when using the Ultimate Move."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Increases the number of projectiles by 2 when using the Normal Skill."}], "costumes": ["Guardian Saint of the Fountain of Youth", "Temp Employee", "Guiding Light", "Cheerful Outing", "Saintess's Dignity"]}, "Staff": {"skills": [{"name": "Gentle Breeze", "type": "Adventure", "description": ""}, {"name": "Saintess's Protection", "type": "Passive", "description": "Increases the hero's Burst Efficiency by 20%. Restores 2 Magic Point(s) if the hero activates a Burst."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 109% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 27% 4th hit: 48%"}, {"name": "Special Attack", "type": "Special", "description": "Increases All Elemental Burst Efficiency of allies in range by 30% for 10 sec."}, {"name": "Divine Forest Swarm", "type": "Skill", "description": "Summons a Divine Swarm to inflict damage equal to 183% of Attack for 8 sec. Each time the attack hits, the enemy's Burst Gauge increases by 42."}, {"name": "Holy Shine", "type": "Tag", "description": "Inflicts damage equal to 80% of Attack."}, {"name": "Forest's Protection", "type": "Ultimate", "description": "Decreases nearby allies' damage taken by 15% for 20 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 22% 2nd hit: 25% 3rd hit: 38% 4th hit: 68%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Landing the Normal Attack additionally increases the Burst Gauge by 5."}, {"tier": 5, "description": "Slightly increases the range of the Ultimate Move."}, {"tier": 6, "description": "Increases the hero's Burst Efficiency by 10%."}, {"tier": 7, "description": "Slightly increases the range of the Special Attack."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases the damage taken reduction from the Ultimate Move by 70%."}, {"tier": 10, "description": "Increases the Magic Charging Efficiency of allies in range of the Normal Skill by 35% and All Elemental Burst Efficiency by 20%."}], "costumes": ["Guardian Saint of the Fountain of Youth", "Temp Employee", "Guiding Light", "Cheerful Outing", "Saintess's Dignity"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Book', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

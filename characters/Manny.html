@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manny - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Manny</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Manny.png" class="char-img" alt="Manny">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">Priestess Mannie of the Dracos. She looks different from the other Dracos, but it gives her a look of virtuousness.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Longsword</span><span class="type-pill">Dual Swords</span><span class="type-pill">Staff</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Longsword',this)" class="active">Longsword</button>
+        <button onclick="showWeapon('Dual Swords',this)">Dual Swords</button>
+        <button onclick="showWeapon('Staff',this)">Staff</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Longsword": {"skills": [{"name": "Starlight Resonation", "type": "Adventure", "description": ""}, {"name": "Priestess's Prayer", "type": "Passive", "description": "Attacking an enemy with Cold Burst activated increases Crit Chance by 20% and Crit Damage by 50%."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 126% of Attack. 1st hit: 19% 2nd hit: 20% 3rd hit: 33% 4th hit: 54%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 128% of Attack."}, {"name": "Frost Release", "type": "Skill", "description": "Inflicts damage equal to 199% of Attack, then gains Frost for 20 sec. ※ Frost: Adds sword blasts to Normal Attacks, additionally inflicting damage equal to 30% of Attack. Landing Normal Attacks 4 times increases Frost Strike damage by 100%. ※ Frost Strike: Enhances the Normal Skill to allow the use of Frost Strike. Using Frost Strike inflicts damage equal to 200% of Attack and removes the Frost effect."}, {"name": "Frost Blade", "type": "Tag", "description": "Inflicts damage equal to 104% of Attack."}, {"name": "Priestess's Barrier", "type": "Ultimate", "description": "Inflicts damage equal to 331% of Attack, then Freezes enemies in range for 6 sec. If the hero is in range, Cold Attack increases by 15%. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with the Special Attack by 40%."}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Tag Skill by 60%."}, {"tier": 5, "description": "Slightly increases the Ultimate Move's range, and increases its duration by 10 sec. Increases the Cold damage of allies in range by 15%."}, {"tier": 6, "description": "Increases damage dealt with Normal Attacks by 110%. 1st hit: 40% 2nd hit: 42% 3rd hit: 69% 4th hit: 113%"}, {"tier": 7, "description": "Sword blasts from Frost Strike explode when disappearing, inflicting additional damage equal to 50% of Attack."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Increases the duration of Frost by 10 sec. Using a Normal Attack while Frost is active inflicts Chill on the enemy, and the hero gains the Crystallize effect for 15 sec. Using Frost Strike on a Chilled enemy inflicts Freeze for 6 sec. ※ Crystallize: Increases Cold Attack by 3% (Max: 60%)."}], "costumes": ["Exalted Priestess", "Heart of Prayer", "Arch Priestess's Prestige", "Exploration of the Unknown"]}, "Dual Swords": {"skills": [{"name": "Starlight Resonation", "type": "Adventure", "description": ""}, {"name": "Priestess's Prayer", "type": "Passive", "description": "When an allied hero attacks a Chilled enemy, damage dealt increases by 5% per every 1 Chill effect(s)."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 111% of Attack. Resets the Special Attack cooldown if the final strike lands. 1st hit: 17% 2nd hit: 18% 3rd hit: 28% 4th hit: 48%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 111% of Attack, and decreases Cold Defense by 10% for 20 sec. (Max: 3 times). Inflicts Chill for 15 sec if the enemy has 1 or more Cold Defense Decrease effects. ※ Chill: Decreases Movement Speed by 5% and Cold Burst Resistance by 3% (Max: 10 times). Freezes at max stacks."}, {"name": "Frozen Soul Shatter", "type": "Skill", "description": "Inflicts damage equal to 170% of Attack. Inflicts Frostbite for 20 sec if the enemy is Chilled. ※ Frostbite: Inflicts Cold damage equal to 20% of Attack every 2 sec, and decreases Attack by 10%."}, {"name": "White Snow", "type": "Tag", "description": "Inflicts damage equal to 92% of Attack."}, {"name": "Snowfield of the Void", "type": "Ultimate", "description": "Inflicts damage equal to 265% of Attack, increases damage dealt to Chilled enemies by 50%, and inflicts Freeze on enemies affected by Frostbite for 2 sec. ※ Freeze: Incapacitated. When hit with a skill, inflicts 20% of damage taken and removes Freeze."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 24% 2nd hit: 25% 3rd hit: 39% 4th hit: 67%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Landing the Special Attack additionally inflicts 1 Chill effects and increases Defense reduction by 50%."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Attacking an enemy with Cold Burst activated increases all allied heroes' Cold damage by 40% for 20 sec and inflicts Frostbite on the enemy for 20 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Changes the Normal Skill into a skill that can be used 2 time(s) and greatly increases its range. Additionally inflicts damage equal to 18% of Attack to enemies in range every 0.4 sec for 4 sec"}], "costumes": ["Exalted Priestess", "Heart of Prayer", "Arch Priestess's Prestige", "Exploration of the Unknown"]}, "Staff": {"skills": [{"name": "Starlight Resonation", "type": "Adventure", "description": ""}, {"name": "Priestess's Prayer", "type": "Passive", "description": "When an allied hero attacks an enemy affected by Punishment, their Ultimate Move damage increases by 30%."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 108% of Attack. 1st hit: 16% 2nd hit: 18% 3rd hit: 28% 4th hit: 46%"}, {"name": "Special Attack", "type": "Special", "description": "Grants allies in range the Draco Priestess effect for 15 sec. ※ Draco Priestess: Increases Crit Damage by 30%."}, {"name": "Holy Judgment", "type": "Skill", "description": "Inflicts damage equal to 135% of Attack and inflicts Punishment for 10 sec. Results in a Critical Hit when attacking enemies affected by Punishment. ※ Punishment: Inflicts Holy damage equal to 15% of damage dealt every 0.4 sec."}, {"name": "Holy Light", "type": "Tag", "description": "Inflicts damage equal to 87% of Attack."}, {"name": "Flash Explosion", "type": "Ultimate", "description": "Inflicts damage equal to 158% of Attack. Inflicts damage equal to 20% of Attack every 1 sec for 5 sec and inflicts Stigmata for 30 sec to enemies in range. Also resets Normal Skill cooldowns of all allied heroes. ※ Stigmata: Decreases All Element Defense by 20%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 23% 2nd hit: 25% 3rd hit: 39% 4th hit: 64%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Normal Skill by 30%."}, {"tier": 5, "description": "Increases the duration of the Special Attack by 5 sec, and increases the Crit Damage boost of Draco Priestess by 50%."}, {"tier": 6, "description": "Increases the duration of the Normal Skill's Punishment by 15 sec."}, {"tier": 7, "description": "Changes the Normal Skill into a skill that can be used 2 time(s)."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Slightly increases the range of the Ultimate Move and increases the duration by 5 sec."}], "costumes": ["Exalted Priestess", "Heart of Prayer", "Arch Priestess's Prestige", "Exploration of the Unknown"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Longsword', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

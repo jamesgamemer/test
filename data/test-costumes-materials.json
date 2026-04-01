@@ -1,0 +1,50 @@
+{
+  "test_character": {
+    "name_en": "Diane",
+    "slug": "diane",
+    "rarity": "SSR",
+    "tier": "A",
+    "description": "A member of The Seven Deadly Sins bearing the mark of Envy. As a member of the Giant Clan, she wields immense power with her sacred treasure Gideon.",
+    "types": ["Axe", "Greatsword", "Gauntlets"],
+    "costumes": [
+      {
+        "name": "Giant Girl in Love",
+        "image": "",
+        "description": ""
+      },
+      {
+        "name": "Tavern Hostess",
+        "image": "",
+        "description": "**Fortitude Shift** — Attacking an **Incapacitated** enemy restores the **Magic Gauge** by **300/400/500** and increases the hero's **Defense** by **20/25/30%** for **15 sec**. (Cooldown: **20 sec**)"
+      },
+      {
+        "name": "<The Serpent Sin of Envy>",
+        "image": "",
+        "description": "**Seismic Chain** — Each hit with the Special Attack on an enemy affected by **Breaker** decreases the Normal Skill cooldown by **14/17/20%** and increases **Earth** damage by **6/7/8%** for **10 sec**. (Max of each: **56/68/80%**, **24/28/32%**)"
+      },
+      {
+        "name": "Cheerful Girl",
+        "image": "",
+        "description": "**Earthbound Chain** — Using the Ultimate Move restores HP equal to **10/12.5/15%** of Max HP each time **Shatter Resistance** boost is gained within **15 sec**. Normal Skill damage increases by **25/30/35%** for **5 sec** when Burst is activated."
+      }
+    ],
+    "materials": [
+      { "name": "Vivid Wild Token", "image": "" },
+      { "name": "Evening Primrose", "image": "" },
+      { "name": "Screamer Flower", "image": "" },
+      { "name": "Premium Song Spirit Hat", "image": "" },
+      { "name": "Lightdrop Flower Essence", "image": "" },
+      { "name": "Life Clod", "image": "" },
+      { "name": "Golden Compass", "image": "" },
+      { "name": "Dragon Plant", "image": "" },
+      { "name": "Kalus's Curved Horn", "image": "" },
+      { "name": "Premium [Abyss] Servant's Horn", "image": "" },
+      { "name": "Blood Essence Herb", "image": "" }
+    ]
+  },
+  "notes": {
+    "costumes_format": "Array of objects: { name: string, image?: string (URL), description?: string (supports **bold** markdown) }",
+    "materials_format": "Array of objects: { name: string, image?: string (URL to icon) }",
+    "backward_compatibility": "Old format ['string1', 'string2'] is still supported for costumes — the code checks typeof and handles both string and object entries"
+  }
+}

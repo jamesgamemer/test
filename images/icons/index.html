@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weapon Icons Preview</title>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+        h1 { color: #FFD700; margin-bottom: 40px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .icon-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.2s;
+        }
+        .icon-card:hover {
+            transform: translateY(-5px);
+            border-color: #FFD700;
+        }
+        .icon-card img {
+            width: 48px;
+            height: 48px;
+        }
+        .icon-name {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            text-transform: capitalize;
+        }
+        pre {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            width: 100%;
+            max-width: 800px;
+            overflow-x: auto;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Seven Deadly Sins: Origin - Weapon Icons</h1>
+    <div class="grid" id="iconGrid"></div>
+
+    <pre id="jsCode"></pre>
+
+    <script>
+        const weaponTypes = [
+            "axe", "book", "cudgel", "dual-swords", "gauntlets", 
+            "greatsword", "grimoire", "lance", "longsword", 
+            "rapier", "staff", "sword-shield", "wand"
+        ];
+
+        const grid = document.getElementById('iconGrid');
+        const WEAPON_ICONS = {};
+
+        async function loadIcons() {
+            for (const type of weaponTypes) {
+                const response = await fetch(`${type}.svg`);
+                const svgText = await response.text();
+                
+                // Add to grid
+                const card = document.createElement('div');
+                card.className = 'icon-card';
+                card.innerHTML = `
+                    <img src="${type}.svg" alt="${type}">
+                    <div class="icon-name">${type.replace('-', ' ')}</div>
+                `;
+                grid.appendChild(card);
+
+                // Add to JS map (escaping quotes for string storage)
+                const cleanSvg = svgText.replace(/\r?\n|\r/g, "").replace(/"/g, "'");
+                WEAPON_ICONS[type.replace('-', ' ')] = cleanSvg;
+            }
+
+            // Generate JS code output
+            const jsOutput = `const WEAPON_ICONS = ${JSON.stringify(WEAPON_ICONS, null, 2)};`;
+            document.getElementById('jsCode').textContent = jsOutput;
+        }
+
+        loadIcons();
+    </script>
+</body>
+</html>

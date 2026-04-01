@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meliodas - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Meliodas</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Meliodas.png" class="char-img" alt="Meliodas">
+          <div><span class="char-rarity-badge ssr">SSR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">The owner of the mobile tavern, &lt;Boar Hat&gt;, and the leader of &lt;The Seven Deadly Sins&gt;, who were wanted for the crime of attempting to overthrow the kingdom. Currently, he is traveling with Elizabeth, the third princess of Liones, searching for the members of &lt;The Seven Deadly Sins&gt; who are scattered throughout the land.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Longsword</span><span class="type-pill">Axe</span><span class="type-pill">Dual Swords</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Longsword',this)" class="active">Longsword</button>
+        <button onclick="showWeapon('Axe',this)">Axe</button>
+        <button onclick="showWeapon('Dual Swords',this)">Dual Swords</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Longsword": {"skills": [{"name": "Captain's Acumen", "type": "Adventure", "description": ""}, {"name": "Speed Master", "type": "Passive", "description": "Decreases Darkness Burst duration by 3 sec and additionally inflicts damage equal to 100% of Attack when landing a skill on an enemy with Darkness Burst activated."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 132% of Attack. 1st hit: 20% 2nd hit: 21% 3rd hit: 35% 4th hit: 56%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 132% of Attack and increases the hero's Darkness Attack by 25% for 20 sec. (Max: 2 times) Additionally gains 1 effect(s) when landing the attack on an enemy with Darkness Burst activated."}, {"name": "Chain Attack", "type": "Chain", "description": "Inflicts damage equal to 231% of Attack. Restores the Magic Gauge by 100 when attacking an enemy with Darkness Burst activated."}, {"name": "Dark Force", "type": "Tag", "description": "Inflicts damage equal to 111% of Attack."}, {"name": "Blazing Cross", "type": "Ultimate", "description": "Inflicts damage equal to 342% of Attack and increases damage dealt to enemies with Darkness Burst activated by 100%, then removes the target's Darkness Burst."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 28% 2nd hit: 29% 3rd hit: 49% 4th hit: 78%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Inflicts damage equal to 100% of Attack to nearby enemies and additionally restores the Magic Gauge by 500 with the final strike of the Normal Skill."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Using the Special Attack increases the hero's Crit Chance by 20% for 20 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Additionally inflicts damage equal to 350% of Attack when using the Ultimate Move."}], "costumes": ["Ordinary Tavern Owner", "A New Adventure", "<The Dragon Sin of Wrath>"]}, "Axe": {"skills": [{"name": "Captain's Acumen", "type": "Adventure", "description": ""}, {"name": "Speed Master", "type": "Passive", "description": "Increases damage dealt with the Normal Skill by 20% for 20 sec when using the Normal Skill. Increases damage dealt by 100% at 3 stacks, then resets the effect."}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 146% of Attack. 1st hit: 22% 2nd hit: 24% 3rd hit: 38% 4th hit: 62%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 149% / 200% of Attack based on the charge level, then inflicts Demon Energy for 10 sec. ※ Demon Energy: Inflicts damage equal to 200% of Attack when the effect is removed."}, {"name": "Circle Slash", "type": "Skill", "description": "Teleports behind an enemy affected by Demon Energy within 30m and inflicts damage equal to 245% of Attack. Attacking an enemy affected by Demon Energy resets the hero's Normal Skill cooldown and removes the enemy's Demon Energy."}, {"name": "Power Arc", "type": "Tag", "description": "Inflicts damage equal to 123% of Attack."}, {"name": "Demon's Fighting Spirit", "type": "Ultimate", "description": "Inflicts damage equal to 370% of Attack and inflicts Demon Energy for 10 sec. If the number of targets is 5 or fewer, damage dealt increases by up to 100%, increasing even more as the number of targets shrinks. 1 enemy: 100% 2 enemies: 50% 3 enemies: 33% 4 enemies: 25% 5 enemies: 20% ※ Demon Energy: Inflicts damage equal to 200% of Attack when the effect is removed."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with the Special Attack by 40%."}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Normal Skill by 30%."}, {"tier": 5, "description": "Slightly increases the range of the Special Attack and increases the hero's Darkness Attack by 30% for 20 sec."}, {"tier": 6, "description": "Increases damage dealt with the Tag Skill by 130%."}, {"tier": 7, "description": "Additionally inflicts damage equal to 250% of Attack when using the Normal Skill."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Slightly increases the range of the Ultimate Move. Landing the attack resets all skill cooldowns, and the damage boost efficiency is multiplied by 2 according to the number of enemies hit."}], "costumes": ["Ordinary Tavern Owner", "A New Adventure", "<The Dragon Sin of Wrath>"]}, "Dual Swords": {"skills": [{"name": "Captain's Acumen", "type": "Adventure", "description": ""}, {"name": "Speed Master", "type": "Passive", "description": "Gains Demonic Power for 30 sec when landing attacks on an enemy with Darkness Burst activated 10 time(s). ※ Demonic Power: Inflicts damage equal to 10% of Attack in a(n) 5m area around the hero and restores 5% of Max HP every 2 sec. Struck enemies are inflicted with Hellfire for 5 sec. ※ Hellfire: Increases damage taken from the hero by 5%. (Max: 10 times)"}, {"name": "Normal Attack", "type": "Normal", "description": "Inflicts damage equal to 146% of Attack. 1st hit: 22% 2nd hit: 24% 3rd hit: 38% 4th hit: 62%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 146% of Attack. Decreases Special Attack cooldown by 50% when Demonic Power is active."}, {"name": "Burning Slash", "type": "Skill", "description": "Inflicts damage equal to 245% of Attack. Additionally inflicts damage equal to 100% of Attack on enemies within 5m with the final strike if Demonic Power is active."}, {"name": "X Slash", "type": "Tag", "description": "Inflicts damage equal to 120% of Attack."}, {"name": "X Slash - Flurry", "type": "Ultimate", "description": "Inflicts damage equal to 404% of Attack. Increases damage dealt by 50% and restores 5% of Max HP with each hit if Demonic Power is active."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 31% 2nd hit: 34% 3rd hit: 53% 4th hit: 87%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Slightly increases the range of the Special Attack. Increases the cooldown reduction effect by 90% while Demonic Power is active."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Landing the final strike of the Normal Skill triggers an extra explosion, inflicting damage equal to 150% of Attack. Attacking enemies affected by Hellfire decreases the cooldown by 50%."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Landing the final strike of the Ultimate Move triggers an extra explosion, inflicting damage equal to 200% of Attack. Increases the hero's Darkness Attack by 30% for 20 sec."}], "costumes": ["Ordinary Tavern Owner", "A New Adventure", "<The Dragon Sin of Wrath>"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Longsword', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>

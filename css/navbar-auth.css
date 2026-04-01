@@ -1,0 +1,371 @@
+/* ============================================================
+   NAVBAR - Language Switcher + Google-style Profile Menu + Login
+   ============================================================ */
+
+/* ── Language Switcher ── */
+.nav-lang-switcher {
+  margin-left: 4px;
+}
+
+.lang-switch-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.03);
+}
+
+.lang-btn {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-btn:hover {
+  color: var(--gold);
+}
+
+.lang-btn.active {
+  background: rgba(240,192,64,0.15);
+  color: var(--gold);
+}
+
+.lang-divider {
+  color: var(--border);
+  font-size: 12px;
+  user-select: none;
+}
+
+/* ── Login Button ── */
+.nav-auth-item {
+  margin-left: 4px;
+}
+
+.nav-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 18px;
+  color: var(--gold) !important;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1.5px solid var(--gold);
+  border-radius: 20px;
+  background: rgba(240,192,64,0.08);
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.nav-login-btn:hover {
+  background: rgba(240,192,64,0.2);
+  box-shadow: 0 0 12px rgba(240,192,64,0.3);
+  color: #fff !important;
+}
+
+.nav-login-btn::after {
+  display: none !important;
+}
+
+.nav-login-icon {
+  font-size: 14px;
+}
+
+/* ── Google-style Profile Avatar ── */
+.nav-profile-wrapper {
+  position: relative;
+}
+
+.nav-profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: linear-gradient(135deg, #1e3a5f, #0d1f4a);
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  box-shadow: 0 0 0 0 rgba(240,192,64,0);
+}
+
+.nav-profile-avatar:hover {
+  box-shadow: 0 0 16px rgba(240,192,64,0.35);
+  transform: scale(1.05);
+}
+
+/* ── Profile Dropdown Menu ── */
+.nav-profile-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 280px;
+  background: var(--dark2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(240,192,64,0.08);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.96);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.nav-profile-menu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* profile-menu-header styles moved below */
+
+.profile-menu-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c8960c, #f0c040);
+  color: #0b1020;
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-menu-info {
+  min-width: 0;
+}
+
+.profile-menu-role {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.5px;
+}
+
+.profile-menu-email {
+  font-size: 12px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+.profile-menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.profile-menu-item:hover {
+  background: rgba(240,192,64,0.06);
+  color: var(--gold);
+}
+
+.profile-menu-item .pmi-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.profile-menu-item.logout-item {
+  color: #f87171;
+}
+
+.profile-menu-item.logout-item:hover {
+  background: rgba(248,113,113,0.08);
+  color: #ef4444;
+}
+
+/* ── User Avatar (Google/Discord) ── */
+.nav-user-avatar {
+  border-color: #7c3aed;
+  background: linear-gradient(135deg, #2d1b69, #4c1d95);
+  color: #c4b5fd;
+  object-fit: cover;
+}
+
+.nav-user-avatar:hover {
+  box-shadow: 0 0 16px rgba(124,58,237,0.35);
+}
+
+img.nav-user-avatar {
+  padding: 0;
+}
+
+/* ── Admin Avatar ── */
+.nav-admin-avatar {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, #1e3a5f, #0d1f4a);
+  color: var(--gold);
+}
+
+/* ── Profile Menu Header (updated) ── */
+.profile-menu-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 20px 12px;
+}
+
+.profile-menu-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #c4b5fd;
+  letter-spacing: 0.5px;
+}
+
+/* ── Old admin button styles (kept for backward compat) ── */
+.nav-auth-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.nav-admin-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  color: #4ade80 !important;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1.5px solid #4ade80;
+  border-radius: 20px 0 0 20px;
+  background: rgba(74,222,128,0.08);
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.nav-admin-btn:hover {
+  background: rgba(74,222,128,0.2);
+  box-shadow: 0 0 12px rgba(74,222,128,0.3);
+  color: #fff !important;
+}
+
+.nav-admin-btn::after {
+  display: none !important;
+}
+
+.nav-admin-icon {
+  font-size: 14px;
+}
+
+.nav-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  color: #f87171;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1.5px solid #4ade80;
+  border-left: none;
+  border-radius: 0 20px 20px 0;
+  background: rgba(248,113,113,0.06);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.nav-logout-btn:hover {
+  background: rgba(248,113,113,0.2);
+  color: #fff;
+}
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+  .nav-auth-item {
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  .nav-lang-switcher {
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+  }
+
+  .nav-profile-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-profile-menu {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .nav-profile-menu.open {
+    transform: translateY(0);
+  }
+
+  .nav-auth-group {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .nav-login-btn {
+    justify-content: center;
+    margin: 0 20px;
+    border-radius: 8px;
+  }
+}

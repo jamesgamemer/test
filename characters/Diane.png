@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Daisy - 7DSOrigin</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+background:#0b1020;
+color:white;
+font-family:Segoe UI;
+margin:0;
+}
+
+/* HEADER */
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+background:#020617;
+flex-wrap:wrap;
+}
+
+nav{
+display:flex;
+flex-wrap:wrap;
+}
+
+nav a{
+margin-left:20px;
+color:white;
+text-decoration:none;
+}
+
+/* CONTAINER */
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:40px 20px;
+}
+
+/* CHARACTER LAYOUT */
+
+.character-layout{
+display:flex;
+gap:30px;
+margin-bottom:40px;
+flex-wrap:wrap;
+}
+
+/* CHARACTER CARD */
+
+.character-card{
+background:#1e293b;
+padding:30px;
+border-radius:14px;
+border:1px solid #334155;
+text-align:center;
+width:320px;
+transition:0.3s;
+}
+
+.character-card:hover{
+transform:translateY(-6px);
+}
+
+.character-image{
+width:100%;
+max-width:260px;
+margin-top:10px;
+filter:drop-shadow(0 0 15px rgba(96,165,250,0.7));
+}
+
+.title{
+color:#94a3b8;
+margin-top:10px;
+}
+
+/* STORY */
+
+.story-card{
+background:linear-gradient(180deg,#1e293b,#111827);
+padding:30px;
+border-radius:14px;
+border:1px solid #334155;
+flex:1;
+min-width:260px;
+}
+
+.story-card h2{
+margin-top:0;
+color:#60a5fa;
+border-bottom:1px solid #334155;
+padding-bottom:10px;
+}
+
+.story-card p{
+line-height:1.7;
+margin-bottom:15px;
+}
+
+/* WEAPON TABS */
+
+.weapon-tabs{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.weapon-tabs button{
+background:#1e293b;
+border:none;
+padding:10px 18px;
+color:white;
+border-radius:8px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.weapon-tabs button:hover{
+transform:translateY(-2px);
+}
+
+.weapon-tabs button.active{
+background:#2563eb;
+}
+
+/* SKILLS */
+
+.skills{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.skill-card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+border:1px solid #334155;
+}
+
+.skill-card h3{
+margin-top:0;
+color:#60a5fa;
+}
+
+.skill-card p{
+line-height:1.6;
+}
+
+/* TABLET */
+
+@media (max-width:900px){
+
+.character-layout{
+flex-direction:column;
+align-items:center;
+}
+
+.character-card{
+width:100%;
+max-width:350px;
+}
+
+.skills{
+grid-template-columns:1fr;
+}
+
+}
+
+/* MOBILE */
+
+@media (max-width:600px){
+
+header{
+padding:15px 20px;
+}
+
+nav a{
+margin-left:12px;
+}
+
+.container{
+padding:25px 15px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div>7DSOrigin</div>
+
+<nav>
+<a href="../index.html">Home</a>
+<a href="../characters.html">Characters</a>
+</nav>
+
+</header>
+
+<div class="container">
+
+<div class="character-layout">
+
+<div class="character-card">
+
+<h1>Daisy</h1>
+
+<img src="../images/Big_Daisy_001.webp" class="character-image">
+
+<p class="title">Captain of the Seven Deadly Sins</p>
+
+</div>
+
+<div class="story-card">
+
+<h2>Character Story</h2>
+
+<p>
+Daisy เป็นกัปตันของ Seven Deadly Sins ผู้มีบุคลิกสดใสแต่แฝงไปด้วยพลังมหาศาล
+เธอเป็นผู้นำที่คอยปกป้องเพื่อนร่วมทีมและมักจะเป็นคนที่พุ่งเข้าไปในสนามรบก่อนใคร
+</p>
+
+<p>
+พลังของ Daisy เกี่ยวข้องกับพลังไฟฟ้าและการควบคุมพลังงาน
+ทำให้เธอสามารถสนับสนุนทีมได้อย่างยอดเยี่ยม
+ทั้งการเพิ่ม Crit Damage และช่วยสร้าง Burst Damage ให้กับเพื่อนร่วมทีม
+</p>
+
+</div>
+
+</div>
+
+<div class="weapon-tabs">
+
+<button onclick="showWeapon('shield',this)" class="active">Shield</button>
+<button onclick="showWeapon('book',this)">Book</button>
+<button onclick="showWeapon('wand',this)">Wand</button>
+
+</div>
+
+<div id="weaponContent"></div>
+
+</div>
+
+<script>
+
+function showWeapon(type,btn){
+
+const box=document.getElementById("weaponContent")
+
+document.querySelectorAll(".weapon-tabs button").forEach(b=>{
+b.classList.remove("active")
+})
+
+btn.classList.add("active")
+
+
+if(type==="shield"){
+
+box.innerHTML=`
+
+<div class="skills">
+
+<div class="skill-card">
+
+<h3>Fruit Barrage</h3>
+
+<p><b>Cooldown:</b> 10 วินาที</p>
+<p><b>Magic Cost:</b> 3</p>
+
+<p>
+สร้างความเสียหาย <b>261%</b> ของค่า Attack และลดค่า Crit Defense ของศัตรูลง 30%
+</p>
+
+<p>
+สกิลนี้เหมาะใช้เปิดไฟต์ เพราะการลด Crit Defense จะทำให้ศัตรูโดนคริติคอลได้แรงขึ้น
+ช่วยให้ตัวทำดาเมจหลักของทีมใส่ Burst ได้แรงขึ้นมาก
+</p>
+
+</div>
+
+
+<div class="skill-card">
+
+<h3>Summon Shocking Streetlamp</h3>
+
+<p><b>Cooldown:</b> 27 วินาที</p>
+
+<p>
+เรียก Shocking Streetlamp ลงมาในสนามเป็นเวลา 15 วินาที
+Streetlamp จะโจมตีศัตรูต่อเนื่อง
+</p>
+
+<p>
+แต่ละครั้งสร้างความเสียหาย <b>13%</b> ของ Attack
+และเพิ่มดาเมจต่อศัตรูที่ติด Electromagnet อีก 15%
+</p>
+
+<p>
+ทุก 5 ครั้งที่ Streetlamp โจมตี จะมอบบัฟ Electric Charge ให้ทีม
+</p>
+
+<p>
+• Crit Damage 5%  
+• Crit Chance 2%
+</p>
+
+<p>
+สะสมได้สูงสุด 5 Stack
+</p>
+
+</div>
+
+
+<div class="skill-card">
+
+<h3>Special Attack</h3>
+
+<p><b>Cooldown:</b> 16 วินาที</p>
+
+<p>
+เพิ่ม Crit Damage ให้เพื่อนร่วมทีมในระยะ <b>15%</b>
+เป็นเวลา 20 วินาที
+</p>
+
+<p>
+ถ้าใช้กับ Streetlamp ที่อยู่ในสนาม
+จะทำให้มันโจมตีเร็วขึ้นชั่วคราว
+</p>
+
+</div>
+
+</div>
+
+`
+
+}
+
+if(type==="book"){
+
+box.innerHTML=`
+
+<div class="skills">
+
+<div class="skill-card">
+
+<h3>Offbeat Girl</h3>
+
+<p><b>Cooldown:</b> ยังไม่มีข้อมูล </p>
+<p><b>Magic Cost:</b> ยังไม่มีข้อมูล </p>
+
+<p>
+มอบ Static Shock เป็นเวลา 20 วินาทีเมื่อฮีโร่พันธมิตรได้รับสกิลแท็ก (สูงสุด: 3 ครั้ง)  Static Shock: เพิ่มความเสียหาย 
+Lightning 5% ทุกๆ 1 เอฟเฟกต์ สกิล Static Shock จะถูกลบออกเมื่อสแตคสูงสุด และมอบ High Voltage ให้กับฮีโร่พันธมิตรทุกตัวเป็นเวลา 20 วินาที  High Voltage: เพิ่มความเสียหาย Lightning 25% และโอกาสคริติคอล 15%
+</p>
+
+</div>
+
+
+<div class="skill-card">
+
+<h3>Normal Attack</h3>
+
+<p><b>Cooldown:</b> ยังไม่มีข้อมูล </p>
+
+<p>
+สร้างความเสียหายเท่ากับ 111% ของพลังโจมตี สร้างแม่เหล็กไฟฟ้าให้กับศัตรูเป็นเวลา 10 วินาที 
+หากการโจมตีครั้งสุดท้ายตกลงมา การโจมตีครั้งที่ 1: 16% การโจมตีครั้งที่ 2: 18% การโจมตีครั้งที่ 3: 28% การโจมตีครั้งที่ 4: 49%  แม่เหล็กไฟฟ้า: ลดความต้านทานคริติคอลลง 10%
+</p>
+
+</div>
+
+
+<div class="skill-card">
+
+<h3>Special Attack</h3>
+
+<p><b>Cooldown:</b> ยังไม่มีข้อมูล </p>
+
+<p>
+เพิ่มความเสียหายคริติคอลของพันธมิตรในระยะ 15% เป็นเวลา 20 วินาที การใช้สกิลนี้กับ Shocking Streetlamp ในระยะจะเพิ่มความเร็วในการโจมตีเล็กน้อยเป็นเวลา 10 วินาที
+</p>
+
+</div>
+
+
+<div class="skill-card">
+
+<h3>Summon Shocking Streetlamp</h3>
+
+<p><b>Cooldown:</b> ยังไม่มีข้อมูล </p>
+
+<p>
+เรียก Shocking Streetlamp เป็นเวลา 15 วินาที สร้างความเสียหายเท่ากับ 13% ของพลังโจมตีต่อการโจมตีแต่ละครั้ง เพิ่มความเสียหายที่ทําต่อศัตรูที่ได้รับผลกระทบจาก 
+Electromagnet ขึ้น 15% ทุกๆ 5 ครั้งที่ Shocking Streetlamp โจมตี จะมอบ Electric Charge ให้กับพันธมิตรในระยะเป็นเวลา 20 วินาที (สูงสุด: 5 ครั้ง) Electric Charge: เพิ่มความเสียหายคริติคอล 5% และโอกาสคริติคอล 2%
+</p>
+
+</div>
+
+
+<div class="skill-card">
+
+<h3>Here Comes Daisy</h3>
+
+<p><b>Cooldown:</b> ยังไม่มีข้อมูล </p>
+
+<p>
+เรียก Shocking Streetlamp เป็นเวลา 15 วินาที สร้างความเสียหายเท่ากับ 13% ของพลังโจมตีต่อการโจมตีแต่ละครั้ง เพิ่มความเสียหายที่ทําต่อศัตรูที่ได้รับผลกระทบจาก 
+Electromagnet ขึ้น 15% ทุกๆ 5 ครั้งที่ Shocking Streetlamp โจมตี จะมอบ Electric Charge ให้กับพันธมิตรในระยะเป็นเวลา 20 วินาที (สูงสุด: 5 ครั้ง) Electric Charge: เพิ่มความเสียหายคริติคอล 5% และโอกาสคริติคอล 2%
+</p>
+
+</div>
+
+
+<div class="skill-card">
+
+<h3> Fruit Barrage </h3>
+
+<p><b>Cooldown:</b> ยังไม่มีข้อมูล </p>
+
+<p>
+สร้างความเสียหายเท่ากับ 261% ของพลังโจมตี และลดพลังป้องกันคริติคอลลง 30%
+</p>
+
+</div>
+
+`
+
+}
+
+if(type==="wand"){
+
+box.innerHTML=`
+
+<div class="skills">
+
+<div class="skill-card">
+
+<h3>Arcane Beam</h3>
+
+<p>Magic beam attack dealing heavy damage.</p>
+
+</div>
+
+</div>
+
+`
+
+}
+
+}
+
+showWeapon("shield",document.querySelector(".weapon-tabs button"))
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hendrickson - 7DS Origin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/character-detail.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="navbar-logo">7DS<span>Origin</span></a>
+    <div class="navbar-hamburger" id="navHam"><span></span><span></span><span></span></div>
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="../index.html">&#127968; Home</a></li>
+      <li><a href="../characters.html" class="active">&#9876; Characters</a></li>
+      <li><a href="../tierlist.html">&#127942; Tier List</a></li>
+      <li><a href="../events.html">&#127881; Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-content">
+    <div class="container">
+      <a href="../characters.html" class="page-back-v2"><span class="arrow">&#8592;</span> Back to Characters</a>
+
+      <div class="char-detail-header">
+        <div class="char-detail-portrait">
+          <h1>Hendrickson</h1>
+          <img src="https://pub-4188d0f981804327a6bbe882b9c693dd.r2.dev/images/Hendrickson.png" class="char-img" alt="Hendrickson">
+          <div><span class="char-rarity-badge sr">SR</span></div>
+        </div>
+
+        <div class="char-detail-info">
+          <div class="section-label">Description</div>
+          <p class="desc-text">A Druid who now runs an apothecary. In the past, he served as a Grandmaster of the Holy Knights but was brainwashed by Fraudrin and acted to bring about the revival of the Demons. Since breaking free from that control, he has devoted himself tirelessly to atoning for his past mistakes.</p>
+          <div class="char-types">
+            <span class="label">Weapon Types:</span>
+            <span class="type-pill">Dual Swords</span><span class="type-pill">Longsword</span><span class="type-pill">Lance</span>
+          </div>
+        </div>
+      </div>
+      <div class="weapon-tabs-wrapper">
+        <div class="weapon-tabs">
+        <button onclick="showWeapon('Dual Swords',this)" class="active">Dual Swords</button>
+        <button onclick="showWeapon('Longsword',this)">Longsword</button>
+        <button onclick="showWeapon('Lance',this)">Lance</button>
+        </div>
+      </div>
+
+      <div id="weaponContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>7DS Origin Database &mdash; Fan-made site &mdash; Not affiliated with Netmarble</p>
+  </footer>
+
+  <script src="../js/navbar.js"></script>
+  <script>
+    var charData = {"Dual Swords": {"skills": [{"name": "Phytocommunication", "type": "Adventure", "description": ""}, {"name": "Veteran Grandmaster", "type": "Passive", "description": "Increases all allied heroes' Crit Chance by 10% when any ally attacks an enemy with reduced Movement Speed."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 142% of Attack. 15% chance to decrease the Special Attack cooldown by 1 sec. 1st hit: 21% 2nd hit: 23% 3rd hit: 37% 4th hit: 61%"}, {"name": "Special Attack", "type": "Special", "description": "Teleports behind the enemy and inflicts damage equal to 146% of Attack. Attacking an enemy with reduced Movement Speed Stuns them for 5 sec and increases the hero's Crit Chance by 10% for 10 sec."}, {"name": "Rapid Edge", "type": "Skill", "description": "Inflicts damage equal to 240% of Attack. Increases Crit Damage by 30% when hitting an enemy with a Back Attack."}, {"name": "Double Slash", "type": "Tag", "description": "Inflicts damage equal to 121% of Attack."}, {"name": "Knight's Sword", "type": "Ultimate", "description": "Inflicts damage equal to 357% of Attack and the hero gains Keen Eye for 5 sec. ※ Keen Eye: Consumes 100 from the Tag Gauge every 0.5 sec to increase Crit Damage by 20%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 29% 2nd hit: 31% 3rd hit: 51% 4th hit: 86%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Restores Magic by 100 and restores the Tag Gauge by 150 when landing a Critical Hit with the Special Attack."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Increases Crit Damage by 30% when landing a Back Attack with the Normal Skill. Landing a Critical Hit restores the Tag Gauge by 300."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 50%."}, {"tier": 10, "description": "Increases the duration of the Ultimate Move's Keen Eye by 5 sec and decreases the Tag Gauge consumption by 45."}], "costumes": ["Liones Apothecary", "Romantic Gray", "A Suit From Younger Days", "Apothecary's Workwear", "Returned Holy Knight"]}, "Longsword": {"skills": [{"name": "Phytocommunication", "type": "Adventure", "description": ""}, {"name": "Veteran Grandmaster", "type": "Passive", "description": "Increases all allied heroes' Defense by 15%."}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 101% of Attack. 1st hit: 15% 2nd hit: 16% 3rd hit: 26% 4th hit: 44%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 101% of Attack. Increases the hero's Healing Efficiency by 15% for 20 sec."}, {"name": "Defensive Spell", "type": "Skill", "description": "Increases all allied heroes' Shatter Resistance by 10% for 25 sec."}, {"name": "Thrusting Slash", "type": "Tag", "description": "Inflicts damage equal to 84% of Attack."}, {"name": "Magic Unleashed", "type": "Ultimate", "description": "Restores HP of allies in range by 268% of Attack for 10 sec."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 21% 2nd hit: 23% 3rd hit: 36% 4th hit: 62%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Changes the Special Attack into a skill that can be used 2 time(s), and changes the Healing Efficiency boost effect to be applied up to 3 times."}, {"tier": 6, "description": "Increases the Normal Skill's Shatter Resistance boost by 50%."}, {"tier": 7, "description": "The Shatter Resistance boost effect from the Normal Skill also applies to nearby allies."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases the Ultimate Move's HP Recovery by 20%."}, {"tier": 10, "description": "Slightly increases the range of the Ultimate Move."}], "costumes": ["Liones Apothecary", "Romantic Gray", "A Suit From Younger Days", "Apothecary's Workwear", "Returned Holy Knight"]}, "Lance": {"skills": [{"name": "Phytocommunication", "type": "Adventure", "description": ""}, {"name": "Veteran Grandmaster", "type": "Passive", "description": "Increases all allied heroes' Darkness damage by 5% for 15 sec when attacking an enemy with Darkness Burst activated. (Max: 20%)"}, {"name": "Normal Attack", "type": "Normal Attack", "description": "Inflicts damage equal to 75% of Attack. 1st hit: 18% 2nd hit: 21% 3rd hit: 36%"}, {"name": "Special Attack", "type": "Special", "description": "Inflicts damage equal to 109% of Attack and grants all allied heroes Berserk for 20 sec. ※ Berserk: Increases Darkness Attack by 20%."}, {"name": "Acid Tower", "type": "Skill", "description": "Inflicts damage equal to 185% of Attack. Increases damage by 50% when the hero has the Berserk effect."}, {"name": "Dark Stab", "type": "Tag", "description": "Inflicts damage equal to 88% of Attack."}, {"name": "Acid Down", "type": "Ultimate", "description": "Inflicts damage equal to 262% of Attack, then inflicts Curse for 10 sec. Increases the duration by 10 sec if the hero has the Berserk effect. ※ Curse: Inflicts Darkness damage equal to 15% of Attack every 3 sec and decreases Darkness Defense by 15%."}], "potentials": [{"tier": 1, "description": "Increases Attack by 10%, Defense by 8%, and Max HP by 3%."}, {"tier": 2, "description": "Increases damage dealt with Normal Attacks by 40%. 1st hit: 25% 2nd hit: 29% 3rd hit: 50%"}, {"tier": 3, "description": "Increases Attack by 15%, Defense by 12%, and Max HP by 5%."}, {"tier": 4, "description": "Increases damage dealt with the Special Attack by 50%."}, {"tier": 5, "description": "Slightly increases the range of the Normal Skill and changes it into a skill that can be used 2 time(s)."}, {"tier": 6, "description": "Increases damage dealt with the Normal Skill by 60%."}, {"tier": 7, "description": "Slightly increases the range of the Ultimate Move and inflicts damage equal to 25% of Attack to enemies in range every 1 sec for 10 sec."}, {"tier": 8, "description": "Increases Attack by 25%, Defense by 20%, and Max HP by 8%."}, {"tier": 9, "description": "Increases damage dealt with the Ultimate Move by 60%."}, {"tier": 10, "description": "Increases the duration of the Special Attack's Berserk by 10 sec and enhances the effect, increasing Darkness Attack by 40%."}], "costumes": ["Liones Apothecary", "Romantic Gray", "A Suit From Younger Days", "Apothecary's Workwear", "Returned Holy Knight"]}};
+
+    function getBadgeClass(type) {
+      var m = {
+        'adventure':'badge-adventure','passive':'badge-passive',
+        'normal':'badge-normal','normal attack':'badge-normal',
+        'special':'badge-special','skill':'badge-skill',
+        'tag':'badge-tag','ultimate':'badge-ultimate'
+      };
+      return m[(type||'').toLowerCase().trim()] || 'badge-normal';
+    }
+
+    function highlightNums(text) {
+      if (!text) return '';
+      var t = text;
+      t = t.replace(/(\d+(?:\.\d+)?%)/g, '<span class="hl-num">$1</span>');
+      t = t.replace(/(\d+)\s*(sec\b)/g, '<span class="hl-dur">$1 $2</span>');
+      return t;
+    }
+
+    function extractHits(desc) {
+      var hits = [];
+      var pattern = /(\d+(?:st|nd|rd|th)\s+hit:\s*\d+(?:\.\d+)?%)/gi;
+      var match;
+      var clean = desc;
+      while ((match = pattern.exec(desc)) !== null) {
+        hits.push(match[1]);
+        clean = clean.replace(match[1], '');
+      }
+      clean = clean.replace(/\s{2,}/g, ' ').trim();
+      return { clean: clean, hits: hits };
+    }
+
+    function renderSkillCard(sk) {
+      var stype = sk.type || 'Normal';
+      var badge = getBadgeClass(stype);
+      var isUlt = stype.toLowerCase() === 'ultimate';
+      var desc = sk.description || '';
+      var extracted = extractHits(desc);
+      var cleanDesc = extracted.clean;
+      var hits = extracted.hits;
+
+      var html = '<div class="skill-card-v2' + (isUlt ? ' ultimate-card' : '') + '">';
+      html += '<div class="skill-header">';
+      html += '<div class="skill-name">' + (sk.name || '') + '</div>';
+      html += '<span class="skill-type-badge ' + badge + '">' + stype + '</span>';
+      html += '</div>';
+      if (cleanDesc) {
+        html += '<div class="skill-desc">' + highlightNums(cleanDesc) + '</div>';
+      }
+      if (hits.length > 0) {
+        html += '<div class="dmg-breakdown">';
+        for (var i = 0; i < hits.length; i++) {
+          var parts = hits[i].split(':');
+          if (parts.length >= 2) {
+            html += '<div class="dmg-box"><span class="dmg-label">' + parts[0].trim() + '</span><span class="dmg-value">' + parts[1].trim() + '</span></div>';
+          }
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function renderPotentials(pots) {
+      if (!pots || pots.length === 0) return '';
+      var html = '<div class="potentials-section-v2">';
+      html += '<div class="detail-section-title">Potentials</div>';
+      html += '<div class="detail-section-sub">Unlock powerful upgrades as you progress</div>';
+      html += '<div class="potentials-grid-v2">';
+      for (var i = 0; i < pots.length; i++) {
+        var p = pots[i];
+        var tier = p.tier || '';
+        var num = (tier.toString().match(/\d+/) || ['?'])[0];
+        var milestone = (num === '5' || num === '7' || num === '10') ? ' tier-milestone' : '';
+        html += '<div class="potential-card-v2' + milestone + '">';
+        html += '<div class="tier-label"><span class="tier-num">' + num + '</span> Tier ' + num + '</div>';
+        html += '<div class="tier-desc">' + highlightNums(p.description || '') + '</div>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderCostumes(costumes) {
+      if (!costumes || costumes.length === 0) return '';
+      var html = '<div class="costumes-section-v2">';
+      html += '<div class="detail-section-title">Costumes</div>';
+      html += '<div class="detail-section-sub">Available skins and outfits</div>';
+      html += '<div class="costumes-grid-v2">';
+      for (var i = 0; i < costumes.length; i++) {
+        var c = typeof costumes[i] === 'string' ? costumes[i] : (costumes[i].name || '');
+        html += '<div class="costume-card-v2">';
+        html += '<div class="costume-icon">&#128090;</div>';
+        html += '<p>' + c + '</p>';
+        html += '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    function showWeapon(type, btn) {
+      document.querySelectorAll('.weapon-tabs button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var box = document.getElementById('weaponContent');
+      var d = charData[type];
+      if (!d) { box.innerHTML = '<div class="no-data-msg">No data available for this weapon.</div>'; return; }
+
+      var html = '<div class="detail-section-title">Skills</div>';
+      html += '<div class="detail-section-sub">Combat abilities and techniques</div>';
+      html += '<div class="skills-grid">';
+      for (var i = 0; i < d.skills.length; i++) {
+        html += renderSkillCard(d.skills[i]);
+      }
+      html += '</div>';
+      html += renderPotentials(d.potentials);
+      html += renderCostumes(d.costumes);
+      box.innerHTML = html;
+    }
+
+    showWeapon('Dual Swords', document.querySelector('.weapon-tabs button'));
+  </script>
+</body>
+</html>
