@@ -348,7 +348,7 @@ export class Sim {
   _killMob(m) {
     const def = MOBS[m.kind], rnd = this.rnd;
     m.dead = true; m.hp = 0; m.st = 'dead'; m.tgt = null; m.moving = false; m.diedAt = this.time;
-    m.respawnAt = this.time + (def.respawn || 13 + rnd() * 9);
+    m.respawnAt = this.time + (def.respawn || 10 + rnd() * 7);
     this.emit({ e: 'die', id: m.id, x: r2(m.x), z: r2(m.z), k: m.kind });
     let top = null, best = 0;
     for (const [pid, d] of m.threat) {
@@ -640,10 +640,10 @@ export class Sim {
       const d = dist(m, p), dx = (m.x - p.x) / (d || 1), dz = (m.z - p.z) / (d || 1);
       if (d - m.r > 2.3) go(m.x, m.z); else p.rot = Math.atan2(dx, dz);
       const can = (s) => p.lvl >= SKILLS[s].lvl && (p.cds[s] || 0) <= T && p.mp >= SKILLS[s].mp;
-      if (d - m.r < 2.9 && can('slash') && rnd() < 0.22) this.handle(p.id, { t: 'c', s: 'slash', dx, dz });
-      else if (d > 4 && d < 13 && can('wave') && rnd() < 0.05) this.handle(p.id, { t: 'c', s: 'wave', dx, dz });
-      else if (d < 4.5 && can('nova') && rnd() < 0.03) this.handle(p.id, { t: 'c', s: 'nova', dx, dz });
-      else if (d < 13 && can('starfall') && rnd() < 0.02) this.handle(p.id, { t: 'c', s: 'starfall', dx, dz, tx: m.x, tz: m.z });
+      if (d - m.r < 2.9 && can('slash') && rnd() < 0.1) this.handle(p.id, { t: 'c', s: 'slash', dx, dz });
+      else if (d > 4 && d < 13 && can('wave') && rnd() < 0.02) this.handle(p.id, { t: 'c', s: 'wave', dx, dz });
+      else if (d < 4.5 && can('nova') && rnd() < 0.012) this.handle(p.id, { t: 'c', s: 'nova', dx, dz });
+      else if (d < 13 && can('starfall') && rnd() < 0.006) this.handle(p.id, { t: 'c', s: 'starfall', dx, dz, tx: m.x, tz: m.z });
       return true;
     };
     if (ai.st === 'rest') {

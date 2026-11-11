@@ -102,6 +102,10 @@ export class FX {
     this.waves = new Pool(mk(arcGeometry(0.9, 1.75, 2.0), ARC_FRAG));
     this.discs = new Pool(mk(new THREE.PlaneGeometry(2, 2).rotateX(-Math.PI / 2), DISC_FRAG));
     this.beams = new Pool(mk(new THREE.CylinderGeometry(1, 1, 1, 14, 1, true).translate(0, 0.5, 0), BEAM_FRAG, BEAM_VERT));
+    // ring under the enemy being aimed at
+    this.targetRing = new THREE.Mesh(new THREE.RingGeometry(0.86, 1, 40).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.2, 0.5, 0.3), ...ADD, opacity: 0.8 }));
+    this.targetRing.visible = false; this.targetRing.renderOrder = 6;
+    scene.add(this.targetRing);
     this.projs = new Map();
     this.lights = world.fxLights.map((l) => ({ l, t: 1, dur: 1, i: 0 }));
 
@@ -146,6 +150,15 @@ export class FX {
   }
 
   y(x, z) { return heightAt(x, z); }
+
+  target(e, time) {
+    const r = this.targetRing;
+    r.visible = !!e;
+    if (!e) return;
+    const s = (e.actor && e.actor.radius ? e.actor.radius : 0.5) * 1.7 * (1 + Math.sin(time * 5) * 0.04);
+    r.position.set(e.x, heightAt(e.x, e.z) + 0.12, e.z);
+    r.scale.setScalar(s); r.rotation.y = time * 0.8;
+  }
 
   slash(x, z, dx, dz, color, combo = 0) {
     const o = this.arcs.get();

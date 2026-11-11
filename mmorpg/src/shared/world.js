@@ -61,7 +61,7 @@ export const POIS = {
   gate: { x: -92, z: 0, r: 13 },
 };
 export const POND = { x: -29, z: 67, r: 9 };
-export const SPAWN = { x: 21, z: 6.5 };
+export const SPAWN = { x: 24, z: 5.6 };
 export const nearPond = (x, z) => Math.hypot(x - POND.x, z - POND.z) < POND.r * 1.7;
 
 export function zoneAt(x, z) {
@@ -207,7 +207,7 @@ export const GATE = {
   boss: { x: G.x - 1.5, z: G.z },
 };
 export const WAYLIGHTS = [
-  { x: 14.2, z: 9.6 }, { x: -12.4, z: 5.8 }, { x: 13.4, z: -26.5 }, { x: -15.6, z: 34.2 },
+  { x: 17.6, z: 3.2 }, { x: -12.4, z: 5.8 }, { x: 13.4, z: -26.5 }, { x: -15.6, z: 34.2 },
   { x: -45.5, z: 4.8 }, { x: -74, z: 2.8 }, { x: 52, z: 13.6 }, { x: 9.2, z: -52 },
 ];
 
@@ -295,7 +295,7 @@ export function buildLayout(seed = 20261111) {
   }
   // a hero log beside the spawn, like in the key art
   {
-    const x = SPAWN.x - 9.5, z = SPAWN.z + 9, len = 6.4, r = 0.5, rot = 0.42;
+    const x = SPAWN.x - 10.4, z = SPAWN.z + 5.2, len = 6.4, r = 0.5, rot = 0.3;
     logs.push({ x, z, r: len / 2, len, rad: r, rot });
     const dx = Math.cos(rot) * len * 0.5, dz = -Math.sin(rot) * len * 0.5;
     colliders.push({ x1: x - dx, z1: z - dz, x2: x + dx, z2: z + dz, r: r * 0.9 });

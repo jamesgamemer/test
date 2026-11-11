@@ -68,7 +68,13 @@ export class UI {
     $('#set-lang').addEventListener('change', (e) => this.g.setLanguage(e.target.value));
     $('#set-quality').addEventListener('change', (e) => this.g.setQuality(e.target.value));
     $('#set-fps').addEventListener('change', (e) => { $('#fps').classList.toggle('hidden', !e.target.checked); this.g.prefs.fps = e.target.checked; this.g.savePrefs(); });
-    $('#set-reset').addEventListener('click', () => { if (confirm(t('reset_confirm'))) this.g.resetSave(); });
+    // two-step confirm built into the button (native dialogs are not available everywhere)
+    const reset = $('#set-reset');
+    reset.addEventListener('click', () => {
+      if (reset.dataset.armed) { this.g.resetSave(); return; }
+      reset.dataset.armed = '1'; reset.textContent = t('reset_confirm');
+      setTimeout(() => { delete reset.dataset.armed; reset.textContent = t('reset_save'); }, 4000);
+    });
     $('#prompt').addEventListener('pointerdown', () => this.g.interact());
     this.mm = $('#minimap').getContext('2d');
     this.north = $('#minimap-wrap .north');
@@ -86,10 +92,10 @@ export class UI {
       return b;
     };
     mk('big', ICONS.slash, '', () => { this.g.input.attack = true; }, () => { this.g.input.attack = false; });
-    mk('', ICONS.wave, 'right:96px;bottom:0', () => this.g.cast('wave'));
-    mk('', ICONS.dash, 'right:88px;bottom:68px', () => this.g.cast('dash'));
-    mk('', ICONS.nova, 'right:30px;bottom:110px', () => this.g.cast('nova'));
-    mk('', ICONS.starfall, 'right:152px;bottom:40px', () => this.g.cast('starfall'));
+    mk('', ICONS.wave, 'right:94px;bottom:2px', () => this.g.cast('wave'));
+    mk('', ICONS.dash, 'right:80px;bottom:66px', () => this.g.cast('dash'));
+    mk('', ICONS.nova, 'right:16px;bottom:94px', () => this.g.cast('nova'));
+    mk('', ICONS.starfall, 'right:154px;bottom:22px', () => this.g.cast('starfall'));
     const stick = $('#stick'), nub = stick.firstElementChild;
     let pid = null;
     const move = (e) => {
@@ -105,7 +111,12 @@ export class UI {
     stick.addEventListener('pointerup', end); stick.addEventListener('pointercancel', end);
   }
 
-  setTouch(on) { $('#touch').classList.toggle('hidden', !on); document.body.classList.toggle('touch', on); }
+  setTouch(on) {
+    $('#touch').classList.toggle('hidden', !on);
+    document.body.classList.toggle('touch', on);
+    const fit = () => document.body.classList.toggle('compact', on || window.innerWidth < 900 || window.innerHeight < 560);
+    fit(); window.addEventListener('resize', fit);
+  }
 
   applyLang() {
     document.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });

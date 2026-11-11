@@ -122,9 +122,9 @@ export function createTerrain(T) {
         vec3 cMoss = texture2D(uMossTex, vWPos.xz * 0.17).rgb;
         vec3 albedo = mix(cMoss, cDirt, dirtK) * (0.7 + macro * 0.6);
         float wetK = smoothstep(0.35, 0.8, wd.a + (tn - 0.5) * 0.25);
-        albedo = mix(albedo, albedo * vec3(0.46, 0.52, 0.62), wetK);
+        albedo = mix(albedo, albedo * vec3(0.6, 0.66, 0.78), wetK);
         diffuseColor.rgb *= albedo;`)
-      .replace('#include <roughnessmap_fragment>', 'float roughnessFactor = mix(roughness, 0.16, wetK);')
+      .replace('#include <roughnessmap_fragment>', 'float roughnessFactor = mix(roughness, 0.24, wetK);')
       .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n totalEmissiveRadiance += vec3(0.002, 0.006, 0.015) * wetK;')
       .replace('#include <normal_fragment_maps>', `
         vec3 flatN = normal;

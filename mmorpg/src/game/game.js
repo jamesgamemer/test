@@ -30,7 +30,7 @@ export class Game {
     this.ents = new Map();
     this.npcs = [];
     this.me = { id: null, x: SPAWN.x, z: SPAWN.z, y: 0, rot: 1.2, hp: 1, mp: 1, xp: 0, dead: false, moving: false, speed: 0, faceLock: 0, aimRot: 0, dash: null, full: null };
-    this.cam = { yaw: 0.5, pitch: 0.74, dist: 24, tYaw: 0.5, tPitch: 0.74, tDist: 24, target: new THREE.Vector3(SPAWN.x, 1, SPAWN.z) };
+    this.cam = { yaw: 0.2, pitch: 0.74, dist: 24, tYaw: 0.2, tPitch: 0.74, tDist: 24, target: new THREE.Vector3(SPAWN.x, 1, SPAWN.z) };
     this.input = { keys: new Set(), mx: 0, my: 0, attack: false, joy: { x: 0, y: 0 }, hasMouse: false, drag: null };
     this.aim = { x: 0, z: 0, dx: 0, dz: 1 };
     this.cd = {}; this.castAt = {};
@@ -488,6 +488,7 @@ export class Game {
     // --- target frame
     const tg = this.hover || (this.clock - this.lastTargetAt < 5 && this.lastTarget && !this.lastTarget.dead ? this.lastTarget : null);
     ui.setTarget(tg && tg.label ? tg : null);
+    this.fx.target(this.hover && !this.hover.dead ? this.hover : null, this.clock);
     // --- zone & ambience
     const z = zoneAt(me.x, me.z);
     if (z !== this.zone) { this.zone = z; ui.zone(z); this.audio.setZone(z); }
@@ -505,7 +506,7 @@ export class Game {
 
   _updateTitle(dt) {
     const cam = this.cam;
-    cam.tYaw = 0.42 + Math.sin(this.clock * 0.07) * 0.4;
+    cam.tYaw = 0.2 + Math.sin(this.clock * 0.07) * 0.35;
     cam.tDist = 23; cam.tPitch = 0.68;
     this.meActor.update(dt, 0);
   }

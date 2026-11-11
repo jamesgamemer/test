@@ -139,18 +139,18 @@ function buildShroomCluster(rnd, glow) {
     const a = rnd() * 6.283, d = i === 0 ? 0 : 0.08 + rnd() * 0.24, h = 0.12 + rnd() * 0.3 * (i === 0 ? 1.5 : 1), r = 0.05 + h * 0.34;
     const x = Math.cos(a) * d, z = Math.sin(a) * d, tilt = (rnd() - 0.5) * 0.5;
     const stem = new THREE.CylinderGeometry(r * 0.22, r * 0.3, h, 5, 1, true);
-    tint(stem, glow ? 0x58b4e6 : 0xb7a48c);
+    tint(stem, glow ? 0x3f8fd8 : 0xb7a48c);
     xform(stem, { x, y: h / 2, z });
     const cap = new THREE.SphereGeometry(r, 9, 4, 0, Math.PI * 2, 0, Math.PI / 2);
     cap.scale(1, 0.62, 1);
     tint(cap, 0xffffff, (c, px, py) => {
       const k = py / (r * 0.62);
-      if (glow) c.setRGB(0.04 + 0.16 * k, 0.28 + 0.4 * k, 0.95); else c.setRGB(0.5 - 0.2 * k, 0.26 - 0.1 * k, 0.16 - 0.06 * k);
+      if (glow) c.setRGB(0.02 + 0.08 * k, 0.13 + 0.25 * k, 0.78 + 0.3 * k); else c.setRGB(0.5 - 0.2 * k, 0.26 - 0.1 * k, 0.16 - 0.06 * k);
     });
     xform(cap, { x: x + tilt * 0.03, y: h - 0.01, z, rz: tilt });
     // glowing gills / dark underside disc
     const under = new THREE.CircleGeometry(r * 0.98, 9).rotateX(Math.PI / 2);
-    tint(under, glow ? 0x86d2ff : 0x2a1c14);
+    tint(under, glow ? 0x5fb8ff : 0x2a1c14);
     xform(under, { x: x + tilt * 0.03, y: h - 0.012, z, rz: tilt });
     parts.push(stem, cap, under);
   }
@@ -256,7 +256,7 @@ export function createVegetation(layout, maps, T, quality) {
   const canopyMat = new THREE.MeshBasicMaterial({ map: T.leaf, alphaTest: 0.42, side: THREE.DoubleSide, colorWrite: false, depthWrite: false });
   const leafGeo = [buildLeafCluster(rnd), buildLeafCluster(rnd, 13)];
   const leafItems = [[], []], canopyItems = [[], []];
-  const leafTones = [0x47763f, 0x3b6a44, 0x55803f, 0x356454, 0x628846];
+  const leafTones = [0x38623a, 0x2f5a40, 0x446a38, 0x2c5650, 0x4c7040];
   for (let type = 0; type < 3; type++) {
     for (let v = 0; v < 2; v++) {
       const tree = buildTree(type, rnd);
@@ -309,7 +309,7 @@ export function createVegetation(layout, maps, T, quality) {
   }
 
   // ---------------- mushrooms
-  const glowMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: new THREE.Color(0.62, 0.62, 0.62), side: THREE.DoubleSide });
+  const glowMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: new THREE.Color(1.1, 1.1, 1.1), side: THREE.DoubleSide });
   const dullMat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
   for (const glow of [true, false]) for (let v = 0; v < 2; v++) {
     const items = layout.shrooms.filter((s, i) => s.glow === glow && i % 2 === v).map((s) => ({ x: s.x, y: heightAt(s.x, s.z) + s.lift - 0.02, z: s.z, ry: s.rot, s: s.s * 1.5 }));

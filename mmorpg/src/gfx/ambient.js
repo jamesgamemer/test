@@ -1,5 +1,5 @@
 import { THREE, U } from './common.js';
-import { WORLD_SIZE, mulberry32, heightAt, pathDist, PLAY_R } from '../shared/world.js';
+import { WORLD_SIZE, mulberry32, heightAt, pathDist, PLAY_R, SPAWN } from '../shared/world.js';
 
 // Direction the moonlight travels (down, toward +x/+z): gives back-lit rims from the default camera.
 export const MOON_DIR = new THREE.Vector3(0.52, -1.0, 0.3).normalize();
@@ -246,9 +246,10 @@ export function createMist(count, softTex) {
 }
 
 // Volumetric moon shafts: additive cylinders aligned with the light, soft at the silhouette.
-export function createGodRays(maps, count) {
+export function createGodRays(maps, count, softTex) {
   const rnd = mulberry32(2718);
-  const spots = [];
+  // a few hand-placed shafts frame the first view of the glade
+  const spots = [{ x: SPAWN.x - 9, z: SPAWN.z - 9, r: 2.6 }, { x: SPAWN.x - 15, z: SPAWN.z - 3, r: 3.1 }, { x: SPAWN.x - 3, z: SPAWN.z - 13, r: 2.2 }];
   let guard = 0;
   while (spots.length < count && guard++ < 6000) {
     const x = (rnd() * 2 - 1) * PLAY_R, z = (rnd() * 2 - 1) * PLAY_R;
@@ -260,7 +261,7 @@ export function createGodRays(maps, count) {
   }
   const geo = new THREE.CylinderGeometry(1, 1, 1, 18, 1, true).translate(0, -0.5, 0);
   const mat = new THREE.ShaderMaterial({
-    uniforms: { uTime: U.uTime, uNoiseTex: U.uNoiseTex, uColor: { value: new THREE.Color(0.32, 0.5, 1.0) }, uStrength: { value: 0.075 } },
+    uniforms: { uTime: U.uTime, uNoiseTex: U.uNoiseTex, uColor: { value: new THREE.Color(0.32, 0.5, 1.0) }, uStrength: { value: 0.19 } },
     vertexShader: `
       varying vec3 vN; varying vec3 vV; varying vec2 vUv; varying float vSeed; varying float vDepth;
       void main() {
@@ -295,5 +296,14 @@ export function createGodRays(maps, count) {
   mesh.instanceMatrix.needsUpdate = true;
   mesh.frustumCulled = false;
   mesh.renderOrder = 3;
-  return mesh;
+  // soft pool of moonlight where each shaft meets the ground
+  const pools = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: softTex, color: new THREE.Color(0.055, 0.1, 0.22), blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, fog: false }), spots.length);
+  const flat = new THREE.Quaternion();
+  spots.forEach((sp, i) => pools.setMatrixAt(i, m.compose(p.set(sp.x, heightAt(sp.x, sp.z) + 0.25, sp.z), flat, s.set(sp.r * 4.2, 1, sp.r * 3.2))));
+  pools.instanceMatrix.needsUpdate = true;
+  pools.frustumCulled = false;
+  pools.renderOrder = 2;
+  const g = new THREE.Group();
+  g.add(mesh, pools);
+  return g;
 }

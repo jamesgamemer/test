@@ -93,7 +93,7 @@ export class World3D {
     scene.add(createFires(ruins.fires));
     scene.add(createFireflies(q.fireflies));
     scene.add(createMist(q.mist, T.soft));
-    scene.add(createGodRays(maps, q.rays));
+    scene.add(createGodRays(maps, q.rays, T.soft));
 
     this.post = new PostFX(this.renderer, { msaa: q.msaa, dof: q.dof, bloomLevels: q.bloom });
     this.resize();
