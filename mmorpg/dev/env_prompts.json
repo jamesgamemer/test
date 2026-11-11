@@ -1,9 +1,10 @@
 {
-  "about": "How the environment art in assets/env/ was made. Props: a concept image per prop (Higgsfield, model gpt_image_2_6, quality high, opaque background; each prompt is the description below followed by the 'prop' style text), then lifted to a textured 3D model with Higgsfield image-to-3D (model tripo_h3_1_image_to_3d, texture and pbr on, face_limit as listed). Ground textures: the description followed by the 'tile' style text; dev/build_env.py makes them seamless and derives the normal maps. Foliage cards: generated with background 'transparent'; the description is followed by the 'card' style text. The models are packed by dev/build_env.py and can be inspected in dev/env.html.",
+  "about": "How the environment art in assets/env/ was made. Props: a concept image per prop (Higgsfield, model gpt_image_2_6, quality high, opaque background; each prompt is the description below followed by the 'prop' style text), then lifted to a textured 3D model with Higgsfield image-to-3D (model tripo_h3_1_image_to_3d, texture and pbr on, face_limit as listed). Ground textures: the description followed by the 'tile' style text; dev/build_env.py makes them seamless and derives the normal maps. Foliage cards: generated with background 'transparent'; the description is followed by the 'card' style text. The models are packed by dev/build_env.py and can be inspected in dev/env.html. The Old Palisade props use the 'prop_painterly' style text.",
   "style": {
     "prop": "Stylized-realistic dark fantasy game asset with hand-painted texture detail like a high-end action RPG. Single isolated object, the whole object fully visible and centered with space around it, three-quarter view from slightly above, plain flat light-grey studio background, soft even neutral diffuse lighting from all sides, no strong shadows, no cast shadow on the floor, no text.",
     "tile": "Completely flat even diffuse lighting with no directional shadows and no highlights. Hand-painted stylized-realistic texture for a dark fantasy action RPG. No border, no vignette, no text.",
-    "card": "hand-painted stylized-realistic foliage for a dark fantasy action RPG, flat even lighting. No ground, no soil, no shadow, no text."
+    "card": "hand-painted stylized-realistic foliage for a dark fantasy action RPG, flat even lighting. No ground, no soil, no shadow, no text.",
+    "prop_painterly": "Stylized painterly dark fantasy game asset with chunky exaggerated shapes and hand-painted texture detail like a high-end action RPG. Single isolated object, the whole object fully visible and centered with space around it, three-quarter view from slightly above, plain flat light-grey studio background, soft even neutral diffuse lighting from all sides, no strong shadows, no cast shadow on the floor, no text."
   },
   "models": {
     "tree_a": {
@@ -61,10 +62,65 @@
       "size": "1024x1024",
       "face_limit": 3000,
       "prompt": "Game environment asset concept: a medieval wall torch, unlit. A wrought-iron wall bracket with a small back plate and a ring holding a wooden torch shaft tilted outward, its head a blackened iron basket wrapped in charred cloth. No flame, no fire, no smoke, no wall."
+    },
+    "palisade": {
+      "size": "1024x1024",
+      "face_limit": 9000,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: a section of an old wooden palisade wall. Seven thick upright logs of slightly different heights standing tightly side by side, each roughly sharpened to a point at the top, lashed together by two horizontal rows of thick rope and one nailed cross plank, weathered grey-brown wood with cracks, moss and dirt at the base. About three metres wide and three and a half metres tall, straight wall. No ground, no grass."
+    },
+    "gateway": {
+      "size": "1024x1024",
+      "face_limit": 8000,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: a rustic wooden gateway for a forest outpost. Two massive upright log posts joined at the top by one heavy crossbeam lashed on with thick rope, two short diagonal braces under the beam, a few iron nails, and a tattered strip of faded cloth hanging from the beam. An open passage between the posts. About four metres wide and five metres tall, weathered grey-brown wood with moss at the feet of the posts. No door, no ground, no grass."
+    },
+    "barrel": {
+      "size": "1024x1024",
+      "face_limit": 4000,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: an old wooden storage barrel standing upright. Weathered oak staves bulging in the middle, three dark iron hoops with rivets, a round wooden lid with a small bung, scuffs and stains, slightly battered. No ground, no grass."
+    },
+    "crate": {
+      "size": "1024x1024",
+      "face_limit": 2500,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: a sturdy old wooden supply crate. A cube-shaped box of thick planks with reinforced corner braces, two diagonal boards on each side, iron nails, a short rope handle, weathered and scuffed wood. Closed lid. No ground, no grass."
+    },
+    "planks": {
+      "size": "1024x1024",
+      "face_limit": 4000,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: a small heap of broken wooden planks. Six rough weathered boards and two splintered square beams lying flat on top of each other at odd angles, cracked ends, a few bent iron nails, some moss on the lowest board. Low and wide, about two metres across. No ground, no grass."
+    },
+    "cart": {
+      "size": "1024x1024",
+      "face_limit": 9000,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: an abandoned medieval wooden handcart standing level. A flat cargo bed of thick planks with low side boards, two large spoked wooden wheels with iron rims, two long pull shafts resting on the ground, one side board splintered, three stuffed burlap sacks and a coil of rope in the bed, weathered wood. No ground, no grass."
+    },
+    "leanto": {
+      "size": "1024x1024",
+      "face_limit": 7000,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: a simple lean-to shelter for a forest camp. A slanted roof of patched, stained waxed canvas stretched over a frame of thick wooden poles lashed with rope: two tall poles at the front, two short poles at the back, open at the front and at both sides, with a rolled bedroll and a small wooden stool underneath. About three metres wide and two and a half metres tall. No ground, no grass."
+    },
+    "logpile": {
+      "size": "1024x1024",
+      "face_limit": 6000,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: a stack of split firewood. Short split logs piled neatly in five rows between two upright wooden stakes, bark on some pieces and pale cut wood on the ends, an old hatchet stuck into the top log, about two metres wide and one metre tall. No ground, no grass."
+    },
+    "shrooms_tan": {
+      "size": "1024x1024",
+      "face_limit": 4000,
+      "style": "prop_painterly",
+      "prompt": "Game environment asset concept: a cluster of nine wild forest mushrooms of different sizes growing from a small rounded clump of moss and dead leaves. Thick pale cream stems and broad rounded caps in warm tan and ochre brown with lighter rims, a few small ones tucked at the base. No ground, no grass.",
+      "note": "mid-grey background instead of light-grey"
     }
   },
   "ground": {
-    "ground_path": "Seamless tileable game ground texture, strictly top-down orthographic view, filling the whole image edge to edge: a damp dirt forest path. Packed dark earth-brown mud with fine grit, small half-buried pebbles of varied sizes, a few flat stones, tiny roots and scattered decayed leaf fragments, subtle footprints-free natural unevenness. Uniform distribution of detail with no large distinctive feature, no puddles, no grass.",
+    "ground_mud": "Seamless tileable game ground texture, strictly top-down orthographic view, filling the whole image edge to edge: a well-trodden wet mud track in a forest. Soft dark grey-brown mud churned by many boot prints and a few hoof prints pressed in at different angles, shallow ruts, small stones, twigs and a few fallen leaves pressed into the mud, slightly glossy damp patches. Clear raised and sunken relief with lighter rims around each print. Uniform distribution of detail with no single large distinctive feature, no puddles of open water, no grass. (lit from directly above)",
     "ground_forest": "Seamless tileable game ground texture, strictly top-down orthographic view, filling the whole image edge to edge: a dark forest floor. Dark humus soil densely covered with soft green moss patches, tiny clover and low creeping leaves, fallen twigs, decayed brown leaves and small pine-needle litter. Uniform distribution of detail with no large distinctive feature, no tall grass, no stones larger than a coin.",
     "stone": "Seamless tileable game surface texture, strictly flat front-on orthographic view, filling the whole image edge to edge: the weathered face of old sandstone masonry. Continuous warm grey-brown sandstone with fine grain, small pits, hairline cracks, faint mineral streaks and a few lichen and moss stains. One continuous stone surface with no block joints, no mortar lines, no bricks, no large distinctive feature.",
     "bark": "Seamless tileable game surface texture, strictly flat front-on orthographic view, filling the whole image edge to edge: old tree bark. Dark brown deeply furrowed bark with long vertical ridges and cracks running top to bottom, small knots, flecks of pale lichen and a few patches of green moss. Uniform distribution of detail with no large distinctive feature."

@@ -33,6 +33,7 @@ export const SPAWNS = [
   { kind: 'thorn', n: 9, x: POIS.rot.x, z: POIS.rot.z, r: 24, lvl: [5, 6] },
   { kind: 'wisp', n: 5, x: POIS.rot.x, z: POIS.rot.z, r: 26, lvl: [5, 5] },
   { kind: 'wolf', n: 3, x: -60, z: -24, r: 11, lvl: [6, 6] },
+  { kind: 'wolf', n: 3, x: POIS.outpost.x + 7, z: POIS.outpost.z + 4, r: 9, lvl: [2, 3] }, // strays that took over the Old Palisade
   { kind: 'sentinel', n: 1, x: GATE.boss.x, z: GATE.boss.z, r: 0, lvl: [8, 8] },
 ];
 

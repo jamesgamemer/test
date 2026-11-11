@@ -2,7 +2,7 @@ import { THREE } from '../gfx/common.js';
 import { World3D, QUALITY } from '../gfx/world3d.js';
 import { createActor, setActorTextures, LOOKS } from '../gfx/actors.js';
 import { FX, FIRE, makeLoot, makeGatherNode } from '../gfx/fx.js';
-import { heightAt, zoneAt, SPAWN, POIS, CAMP, GATE } from '../shared/world.js';
+import { heightAt, zoneAt, SPAWN, POIS, CAMP, GATE, OUTPOST, outpostAt } from '../shared/world.js';
 import { SKILLS, SKILL_ORDER, PLAYER_SPEED } from '../shared/data.js';
 import { dashDest } from '../shared/sim.js';
 import { UI } from '../ui/ui.js';
@@ -13,7 +13,7 @@ import { LocalTransport, WsTransport, clearSave } from './transport.js';
 const PREFS_KEY = 'nightglade.prefs.v2';
 const lerp = (a, b, k) => a + (b - a) * k;
 const angLerp = (a, b, k) => { let d = (b - a) % 6.2831853; if (d > Math.PI) d -= 6.2831853; if (d < -Math.PI) d += 6.2831853; return a + d * k; };
-const FIRES = [...CAMP.torches, CAMP.fire, ...GATE.braziers];
+const FIRES = [...CAMP.torches, CAMP.fire, ...GATE.braziers, ...OUTPOST.torches.map((t) => outpostAt(t.u, t.v))];
 const FOV = 30; // a long lens from far back: flat, composed, little perspective distortion
 const MOONLIGHT = new THREE.Color(0x9cc4ff);
 

@@ -4,16 +4,17 @@ import { bakeWorldMaps, createTerrain } from './terrain.js';
 import { createGrass } from './grass.js';
 import { createVegetation } from './vegetation.js';
 import { createRuins } from './ruins.js';
+import { createOutpost } from './outpost.js';
 import { LightPool, createFires, createFireflies, createMist, createGodRays, MOON_DIR } from './ambient.js';
 import { PostFX } from './post.js';
 import { loadEnv } from './assets.js';
 import { buildLayout, heightGrid, heightAt } from '../shared/world.js';
 
 export const QUALITY = {
-  low: { grass: 8000, undergrowth: 0.4, msaa: 0, dof: false, shadow: 1024, pixelRatio: 1, fireflies: 110, mist: 20, rays: 36, lights: 5, bloom: 5, torchShadow: 0 },
-  medium: { grass: 18000, undergrowth: 0.7, msaa: 2, dof: false, shadow: 2048, pixelRatio: 1.25, fireflies: 200, mist: 34, rays: 60, lights: 7, bloom: 6, torchShadow: 0 },
-  high: { grass: 32000, undergrowth: 1, msaa: 4, dof: true, shadow: 2048, pixelRatio: 1.5, fireflies: 300, mist: 46, rays: 80, lights: 8, bloom: 6, torchShadow: 1024 },
-  ultra: { grass: 52000, undergrowth: 1.25, msaa: 4, dof: true, shadow: 4096, pixelRatio: 2, fireflies: 420, mist: 56, rays: 90, lights: 9, bloom: 7, torchShadow: 2048 },
+  low: { grass: 8000, undergrowth: 0.4, msaa: 0, dof: false, shadow: 1024, pixelRatio: 1, fireflies: 110, mist: 20, rays: 36, lights: 5, bloom: 5, torchShadow: 0, ao: 0 },
+  medium: { grass: 18000, undergrowth: 0.7, msaa: 2, dof: false, shadow: 2048, pixelRatio: 1.25, fireflies: 200, mist: 34, rays: 60, lights: 7, bloom: 6, torchShadow: 0, ao: 8 },
+  high: { grass: 38000, undergrowth: 1, msaa: 4, dof: true, shadow: 2048, pixelRatio: 1.5, fireflies: 300, mist: 46, rays: 80, lights: 8, bloom: 6, torchShadow: 1024, ao: 12 },
+  ultra: { grass: 62000, undergrowth: 1.25, msaa: 4, dof: true, shadow: 4096, pixelRatio: 2, fireflies: 420, mist: 56, rays: 90, lights: 9, bloom: 7, torchShadow: 2048, ao: 16 },
 };
 
 const tick = () => new Promise((r) => setTimeout(r, 0));
@@ -24,7 +25,8 @@ export class World3D {
     this.qualityName = qualityName;
     this.q = QUALITY[qualityName] || QUALITY.high;
     // multisampled float targets are unreliable on some phone GPUs; phones render without MSAA
-    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) this.q = { ...this.q, msaa: 0 };
+    this.coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    if (this.coarse) this.q = { ...this.q, msaa: 0 };
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', stencil: false });
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
@@ -50,7 +52,7 @@ export class World3D {
     U.uNoiseTex.value = T.noise;
     // generated art: prop models, ground textures and foliage cards replace the code-drawn ones
     const A = this.assets = await loadEnv((k) => progress(0.05 + k * 0.13, 'textures'));
-    T.dirt = A.ground.ground_path.map; T.groundN = A.ground.ground_path.normalMap;
+    T.dirt = A.ground.ground_mud.map; T.groundN = A.ground.ground_mud.normalMap;
     T.moss = A.ground.ground_forest.map; T.mossN = A.ground.ground_forest.normalMap;
     T.stone = A.ground.stone.map; T.stoneN = A.ground.stone.normalMap;
     T.bark = A.ground.bark.map; T.barkN = A.ground.bark.normalMap;
@@ -70,6 +72,9 @@ export class World3D {
     progress(0.7, 'ruins'); await tick();
     const ruins = createRuins(T, A);
     scene.add(ruins.group);
+    const outpost = createOutpost(T, A);
+    scene.add(outpost.group);
+    const fires = [...ruins.fires, ...outpost.fires];
     progress(0.8, 'grass'); await tick();
     scene.add(createGrass(q.grass, A.cards.grass));
     progress(0.88, 'lights'); await tick();
@@ -77,7 +82,7 @@ export class World3D {
     // --- lighting
     this.hemi = new THREE.HemisphereLight(0x5a84d8, 0x1a2c38, 3.4);
     scene.add(this.hemi);
-    const moon = this.moon = new THREE.DirectionalLight(0xa3beff, 4.2);
+    const moon = this.moon = new THREE.DirectionalLight(0xa3beff, 3.4);
     moon.castShadow = true;
     moon.shadow.mapSize.set(q.shadow, q.shadow);
     const S = 48;
@@ -91,17 +96,16 @@ export class World3D {
 
     this.pool = new LightPool(scene, q.lights);
     this.pool.setSources([
-      ...ruins.fires.map((f) => ({ ...f, flicker: 0.16, priority: 500 })),
+      ...fires.map((f) => ({ ...f, flicker: 0.16, priority: 500 })),
       ...ruins.lamps.map((l) => ({ ...l, priority: 200 })),
       ...veg.glowLights,
     ]);
     // The camp's first wall torch also throws real shadows across the court (one extra shadow pass):
     // a wide spot aimed out from the wall and down, on top of the pooled glow every fire has.
-    const torch = q.torchShadow && ruins.fires.find((f) => f.kind === 'torch');
-    if (torch) {
-      const spot = this.torchSpot = new THREE.SpotLight(torch.color, 150, 26, 1.2, 0.75, 1.5);
-      spot.position.set(torch.x, torch.y + 0.1, torch.z);
-      spot.target.position.set(torch.x + Math.sin(torch.face) * 5, torch.y - 4.2, torch.z + Math.cos(torch.face) * 5);
+    this.torches = q.torchShadow ? fires.filter((f) => f.kind === 'torch') : [];
+    if (this.torches.length) {
+      const spot = this.torchSpot = new THREE.SpotLight(0xff8a3a, 0, 26, 1.2, 0.75, 1.5);
+      this.torchNow = null; this.torchFade = 0;
       spot.castShadow = true;
       spot.shadow.mapSize.set(q.torchShadow, q.torchShadow);
       spot.shadow.camera.near = 0.4; spot.shadow.camera.far = 26;
@@ -113,12 +117,12 @@ export class World3D {
     this.fxLights = [new THREE.PointLight(0xffffff, 0, 14, 1.6), new THREE.PointLight(0xffffff, 0, 14, 1.6)];
     scene.add(...this.fxLights);
 
-    scene.add(createFires(ruins.fires));
+    scene.add(createFires(fires));
     scene.add(createFireflies(q.fireflies));
     scene.add(createMist(q.mist, T.soft));
     scene.add(createGodRays(maps, q.rays, T.soft));
 
-    this.post = new PostFX(this.renderer, { msaa: q.msaa, dof: q.dof, bloomLevels: q.bloom });
+    this.post = new PostFX(this.renderer, { msaa: q.msaa, dof: q.dof, bloomLevels: q.bloom, ao: this.coarse ? 0 : q.ao });
     this.resize();
     progress(1, 'ready'); await tick();
   }
@@ -168,13 +172,31 @@ export class World3D {
     this.moon.position.set(tx - MOON_DIR.x * 95, ty - MOON_DIR.y * 95, tz - MOON_DIR.z * 95);
 
     this.pool.update(hero, this.time);
-    if (this.torchSpot) { const t = this.time; this.torchSpot.intensity = 150 * (1 + 0.1 * Math.sin(t * 9.1) + 0.06 * Math.sin(t * 23.7)); }
+    if (this.torchSpot) {
+      // one torch at a time throws real shadows: whichever is nearest the hero. It fades out, moves, fades in.
+      let best = null, bd = 1e9;
+      for (const f of this.torches) { const d = (f.x - hero.x) ** 2 + (f.z - hero.z) ** 2; if (d < bd) { bd = d; best = f; } }
+      const spot = this.torchSpot, want = bd < 34 * 34 ? best : null;
+      if (want !== this.torchNow) { this.torchFade -= dt * 3.5; if (this.torchFade <= 0) { this.torchFade = 0; this.torchNow = want; if (want) this._aimTorch(want); } }
+      else this.torchFade = Math.min(1, this.torchFade + dt * 3.5);
+      const t = this.time, base = this.torchNow && this.torchNow.post ? 85 : 150;
+      spot.intensity = this.torchNow ? base * this.torchFade * (1 + 0.1 * Math.sin(t * 9.1) + 0.06 * Math.sin(t * 23.7)) : 0;
+    }
     this.heroLight.position.set(hero.x, hero.y + 2.5, hero.z);
     this.terrain.update(this.time);
   }
 
   render() {
     this.post.render(this.scene, this.camera, this.focusDist || 25);
+  }
+
+  // a wall torch lights out from its wall and down; a torch on a post or a tree lights the ground all round it
+  _aimTorch(f) {
+    const spot = this.torchSpot;
+    spot.position.set(f.x, f.y + 0.15, f.z);
+    if (f.post) { spot.angle = 1.32; spot.target.position.set(f.x + 0.01, f.y - 4, f.z); }
+    else { spot.angle = 1.2; spot.target.position.set(f.x + Math.sin(f.face) * 5, f.y - 4.2, f.z + Math.cos(f.face) * 5); }
+    spot.target.updateMatrixWorld();
   }
 
   heightAt(x, z) { return heightAt(x, z); }

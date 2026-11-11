@@ -1,6 +1,6 @@
 import { THREE, U, patch } from './common.js';
 import {
-  WORLD_SIZE, HALF, GRID, PLAY_R, heightAt, pathDist, fbm, smoothstep, POIS, POND, POND_LEVEL, nearPond,
+  WORLD_SIZE, HALF, GRID, PLAY_R, heightAt, pathDist, fbm, smoothstep, POIS, POND, POND_LEVEL, nearPond, outpostAt,
 } from '../shared/world.js';
 
 // Bakes the per-texel world masks used by the terrain, the grass and the minimap.
@@ -23,8 +23,10 @@ export function bakeWorldMaps(layout) {
   for (const r of layout.rocks) if (r.r > 0.7) splat(r.x, r.z, r.r * 0.7, r.r * 1.3, 0.8);
   for (const g of layout.giants) splat(g.x, g.z, 0.6, 2.2, 0.9);
 
-  const C = POIS.camp, G = POIS.gate;
+  const C = POIS.camp, G = POIS.gate, O = POIS.outpost;
   const puddles = [[C.x - 2.4, C.z + 7.6, 1.7], [C.x + 2.2, C.z + 8.6, 1.0], [C.x + 0.4, C.z + 5.6, 0.75], [C.x - 6.2, C.z + 9.6, 1.1]];
+  // standing water in the ruts of the Old Palisade's yard
+  for (const [u, v, r] of [[-1.8, -1.2, 1.15], [6.4, 1.2, 0.85], [-7.2, 0.8, 0.9]]) { const p = outpostAt(u, v); puddles.push([p.x, p.z, r]); }
   for (let j = 0; j < n; j++) {
     const z = -HALF + (j + 0.5) * step;
     for (let i = 0; i < n; i++) {
@@ -35,8 +37,9 @@ export function bakeWorldMaps(layout) {
       const dCamp = Math.hypot(x - C.x, z - C.z) + rag * 5;
       const dGate = Math.hypot(x - G.x, z - G.z) + rag * 4;
       const camp = 1 - smoothstep(6.5, 11.5, dCamp), gate = 1 - smoothstep(9.5, 14, dGate);
+      const yard = 1 - smoothstep(6, 11, Math.hypot(x - O.x, z - O.z) + rag * 6);
       const bald = smoothstep(0.7, 0.82, fbm(x * 0.07, z * 0.07, 3, 13)) * 0.7;
-      const d = Math.max(path, camp * 0.92, gate, stamp[k], bald);
+      const d = Math.max(path, camp * 0.92, gate, yard * 0.9, stamp[k], bald);
       const h = heightAt(x, z);
       const shore = nearPond(x, z) ? 1 - smoothstep(POND_LEVEL + 0.05, POND_LEVEL + 0.55, h) : 0;
       let w = shore;
@@ -107,7 +110,7 @@ export function createTerrain(T) {
   // The ground textures are sampled in world space (gUv); the mesh uv only gives the normal map its tangent
   // frame, so it has to run the same way: u along +x, v along -z.
   T.groundN.repeat.set(74, 74);
-  const mat = new THREE.MeshStandardMaterial({ map: T.dirt, normalMap: T.groundN, roughness: 0.95, metalness: 0, normalScale: new THREE.Vector2(0.75, 0.75) });
+  const mat = new THREE.MeshStandardMaterial({ map: T.dirt, normalMap: T.groundN, roughness: 0.95, metalness: 0, normalScale: new THREE.Vector2(0.95, 0.95) });
   patch(mat, (s) => {
     s.vertexShader = 'varying vec3 vWPos;\n' + s.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\n vWPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     s.fragmentShader = `
@@ -125,24 +128,40 @@ export function createTerrain(T) {
         float mixK = smoothstep(0.38, 0.62, texture2D(uNoiseTex, vWPos.xz * 0.027 + 0.5).r);
         float dirtK = smoothstep(0.32, 0.62, wd.b + (tn - 0.5) * 0.4);
         vec3 cDirt = untile(map, gUv * 0.23125, mixK);
+        cDirt = mix(vec3(dot(cDirt, vec3(0.3333))), cDirt, 0.5); // churned mud is nearly grey: it takes its colour from the light
         vec3 cMoss = untile(uMossTex, gUv * 0.185, mixK);
         // the painted textures are lit for daylight: pull them down into the cool, dark range of a moonlit floor
-        vec3 albedo = mix(cMoss * vec3(0.5, 0.7, 0.66), cDirt * vec3(0.5, 0.5, 0.58), dirtK) * (0.62 + macro * 0.55);
+        vec3 albedo = mix(cMoss * vec3(0.5, 0.7, 0.66), cDirt * vec3(0.5, 0.52, 0.62), dirtK) * (0.62 + macro * 0.55);
         float wetK = smoothstep(0.35, 0.8, wd.a + (tn - 0.5) * 0.25);
         albedo = mix(albedo, albedo * vec3(0.5, 0.57, 0.72), wetK);
         diffuseColor.rgb *= albedo;`)
-      .replace('#include <roughnessmap_fragment>', 'float roughnessFactor = mix(roughness, 0.13, wetK);')
+      .replace('#include <roughnessmap_fragment>', 'float roughnessFactor = mix(mix(roughness, 0.66, dirtK), 0.2, smoothstep(0.86, 1.0, wetK)); // trodden mud is damp and catches the torchlight; only open water is mirror-smooth')
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
         // standing water mirrors the night sky: brighter at a glancing angle, broken up by slow ripples
-        float wFres = pow(1.0 - clamp(dot(normalize(vViewPosition), normal), 0.0, 1.0), 3.0);
+        float wK = smoothstep(0.8, 1.0, wetK); // open water only: the damp rim around it stays matt
+        float wFres = pow(1.0 - clamp(dot(normalize(vViewPosition), flatN), 0.0, 1.0), 3.0);
         float wRip = texture2D(uNoiseTex, vWPos.xz * 0.21 + uTime * vec2(0.012, 0.008)).g;
-        totalEmissiveRadiance += vec3(0.018, 0.045, 0.1) * wetK * (0.3 + 1.6 * wFres) * (0.55 + 0.9 * wRip);`)
+        totalEmissiveRadiance += vec3(0.024, 0.058, 0.125) * wK * (0.35 + 1.6 * wFres) * (0.55 + 0.9 * wRip);
+        // ...and every nearby flame: a soft glow where the mirrored view ray passes close to a light
+        #if NUM_POINT_LIGHTS > 0
+        {
+          vec3 wN = normalize(flatN + vec3(wRip - 0.5, 0.0, texture2D(uNoiseTex, vWPos.xz * 0.21 + 0.4 - uTime * vec2(0.01, 0.013)).g - 0.5) * 0.07);
+          vec3 wR = reflect(-normalize(vViewPosition), wN);
+          for (int i = 0; i < NUM_POINT_LIGHTS; i++) {
+            vec3 wL = pointLights[i].position + vViewPosition;
+            float wT = max(dot(wL, wR), 0.0);
+            vec3 wC = wL - wR * wT;
+            totalEmissiveRadiance += pointLights[i].color * wK * 0.006 * exp(-dot(wC, wC) / 0.7) / (1.0 + wT * wT * 0.012);
+          }
+        }
+        #endif`)
       .replace('#include <normal_fragment_maps>', `
         vec3 flatN = normal;
         vec3 mapN = mix(texture2D(uMossN, gUv * 0.185).xyz, texture2D(normalMap, gUv * 0.23125).xyz, dirtK) * 2.0 - 1.0;
         mapN.xy *= normalScale;
         normal = normalize(tbn * mapN);
-        normal = normalize(mix(normal, flatN, wetK * 0.97));`);
+        // the bumps flatten out before the surface turns glossy, so a puddle's edge never glints
+        normal = normalize(mix(normal, flatN, smoothstep(0.25, 0.8, wetK) * 0.98));`);
   }, { uMossTex: { value: T.moss }, uMossN: { value: T.mossN } });
 
   const mesh = new THREE.Mesh(geo, mat);

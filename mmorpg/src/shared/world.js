@@ -59,6 +59,7 @@ export const POIS = {
   den: { x: 11, z: -68, r: 22 },
   rot: { x: -56, z: 0, r: 24 },
   gate: { x: -92, z: 0, r: 13 },
+  outpost: { x: 63, z: 17, r: 12 },
 };
 export const POND = { x: -29, z: 67, r: 9 };
 export const SPAWN = { x: 24, z: 5.6 };
@@ -70,12 +71,13 @@ export function zoneAt(x, z) {
   if (d(POIS.gate) < POIS.gate.r + 3) return 'gate';
   if (d(POIS.hollow) < POIS.hollow.r + 4) return 'hollow';
   if (d(POIS.den) < POIS.den.r + 4) return 'den';
+  if (d(POIS.outpost) < POIS.outpost.r + 3) return 'outpost';
   if (x < -32 && Math.abs(z) < 40) return 'rot';
   return 'whisper';
 }
 
 const PATH_DEFS = [
-  { w: 2.5, pts: [[70, 20], [56, 13], [44, 8], [30, 5], [16, 7], [2, 0], [-14, 3], [-30, -3], [-46, 2], [-62, -2], [-78, 0], [-92, 0]] },
+  { w: 2.5, pts: [[86, 29], [70, 20], [56, 13], [44, 8], [30, 5], [16, 7], [2, 0], [-14, 3], [-30, -3], [-46, 2], [-62, -2], [-78, 0], [-92, 0]] },
   { w: 1.9, pts: [[16, 7], [9, -9], [15, -27], [7, -43], [11, -58], [11, -68]] },
   { w: 1.9, pts: [[-14, 3], [-21, 19], [-14, 35], [-22, 49], [-22, 60]] },
   { w: 1.7, pts: [[30, 5], [32, 1], [34, -1]] },
@@ -135,7 +137,7 @@ function rawHeight(x, z) {
   for (const k in POIS) {
     const p = POIS[k];
     const d = Math.hypot(x - p.x, z - p.z);
-    const rr = k === 'camp' || k === 'gate' ? p.r : p.r * 0.5;
+    const rr = k === 'camp' || k === 'gate' || k === 'outpost' ? p.r : p.r * 0.5;
     flat = Math.max(flat, 1 - smoothstep(rr * 0.75, rr * 1.5, d));
   }
   let h = broad + detail * (1 - flat * 0.92);
@@ -211,6 +213,37 @@ export const WAYLIGHTS = [
   { x: -45.5, z: 4.8 }, { x: -74, z: 2.8 }, { x: 52, z: 13.6 }, { x: 9.2, z: -52 },
 ];
 
+// The Old Palisade: an abandoned checkpoint where the east road leaves the wood. Everything in it is placed
+// along the road (u, metres toward the north-east) and across it (v, to the left of someone walking out).
+// The server uses these for collision; src/gfx/outpost.js stands the generated models on the same spots.
+const O = POIS.outpost;
+const OU = [0.894, 0.447], OV = [-0.447, 0.894];
+export const outpostAt = (u, v) => ({ x: O.x + OU[0] * u + OV[0] * v, z: O.z + OU[1] * u + OV[1] * v });
+export const OUTPOST = {
+  yaw: Math.atan2(OU[0], OU[1]), // rotation.y that turns a model's +z along the road
+  gate: { u: 4, v: 0, half: 2.2 },
+  // palisade sections, each about 3 m wide and standing across the road; turn: radians away from that line
+  walls: [
+    { u: 4.0, v: 3.9 }, { u: 4.1, v: 6.9, lean: 0.05 }, { u: 3.9, v: 9.9, lean: -0.07 }, { u: 2.5, v: 12.1, turn: 1.3 },
+    { u: 4.0, v: -3.9 }, { u: 4.15, v: -6.9, lean: -0.08 }, { u: 3.0, v: -10.6, turn: -0.55, lean: 0.2 },
+  ],
+  torches: [{ u: 2.9, v: 3.1 }, { u: 2.9, v: -3.1 }, { u: -4.8, v: -5.4 }, { u: 9.6, v: 3.8 }],
+  // lying: tipped over, rolling axis turned by rot
+  barrels: [
+    { u: -1.0, v: -5.6 }, { u: -2.1, v: -6.3 }, { u: -1.3, v: -6.9, s: 0.9 }, { u: -3.4, v: -5.2, lying: true, rot: 0.7 },
+    { u: -5.6, v: 7.6 }, { u: -6.5, v: 7.0, s: 0.92 }, { u: 7.2, v: -3.6 }, { u: 8.3, v: -4.4, lying: true, rot: 2.2 }, { u: 2.6, v: 5.6 },
+  ],
+  crates: [{ u: 0.2, v: -7.2, rot: 0.2 }, { u: 0.3, v: -7.1, rot: 0.9, up: 1, s: 0.8 }, { u: -4.6, v: 5.6, rot: 0.5 }, { u: 6.4, v: 4.6, rot: 1.2, s: 0.9 }],
+  planks: [{ u: 0.6, v: 2.0, rot: 0.4 }, { u: 6.4, v: -1.3, rot: 1.9 }, { u: -4.2, v: -1.9, rot: 2.6 }, { u: 10.8, v: -0.6, rot: 0.9 }],
+  cart: { u: -7.6, v: -4.2, rot: 0.5 },
+  leanto: { u: -3.6, v: 7.2, rot: Math.PI },
+  logpile: { u: -8.4, v: 6.2, rot: 0.3 },
+  block: { u: -6.4, v: 3.7 },
+  shrooms: [{ u: -3.9, v: -7.4, s: 1.1 }, { u: -9.3, v: 5.0, s: 0.9 }, { u: 5.6, v: 7.8, s: 1.2 }, { u: 1.2, v: -9.6, s: 1.0 }, { u: 11.5, v: 5.4, s: 0.9 }, { u: -11.2, v: -3.4, s: 1.1 }],
+  // old trees left standing around the yard; two of them carry a torch
+  trees: [{ u: 0.8, v: 14.2, r: 1.15 }, { u: -11.5, v: -8.6, r: 1.05 }, { u: 11.2, v: -8.2, r: 1.2 }, { u: -12.6, v: 9.4, r: 1.0 }, { u: 13.0, v: 8.8, r: 0.95 }],
+};
+
 let _layout = null;
 // Static world contents. Deterministic for a given seed so client and server agree.
 export function buildLayout(seed = 20261111) {
@@ -234,6 +267,7 @@ export function buildLayout(seed = 20261111) {
     if (Math.hypot(x - G.x, z - G.z) < G.r) return true;
     if (Math.hypot(x - POND.x, z - POND.z) < POND.r + 2.5) return true;
     if (Math.hypot(x - SPAWN.x, z - SPAWN.z) < 7.5) return true;
+    if (Math.hypot(x - O.x, z - O.z) < O.r + 2.5) return true;
     return false;
   };
 
@@ -343,6 +377,27 @@ export function buildLayout(seed = 20261111) {
   for (const p of GATE.pillars) colliders.push({ x: p.x, z: p.z, r: 0.85 });
   for (const b of GATE.braziers) colliders.push({ x: b.x, z: b.z, r: 0.5 });
   for (const w of WAYLIGHTS) colliders.push({ x: w.x, z: w.z, r: 0.25 });
+  // the Old Palisade
+  {
+    const P = OUTPOST, circle = (it, r) => { const p = outpostAt(it.u, it.v); colliders.push({ x: p.x, z: p.z, r }); };
+    // a line across (or, with turn, along) the road: half-length h around (u, v)
+    const line = (it, h, r, turn = 0) => {
+      const c = Math.cos(turn), s = Math.sin(turn), a = outpostAt(it.u - s * h, it.v - c * h), b = outpostAt(it.u + s * h, it.v + c * h);
+      colliders.push({ x1: a.x, z1: a.z, x2: b.x, z2: b.z, r });
+    };
+    for (const w of P.walls) line(w, 1.45, 0.42, w.turn || 0);
+    circle({ u: P.gate.u, v: P.gate.half }, 0.5); circle({ u: P.gate.u, v: -P.gate.half }, 0.5);
+    for (const b of P.barrels) circle(b, 0.45 * (b.s || 1));
+    for (const c of P.crates) if (!c.up) circle(c, 0.62 * (c.s || 1));
+    for (const t of P.torches) circle(t, 0.22);
+    circle(P.cart, 1.25); circle(P.block, 0.5);
+    line(P.leanto, 1.3, 0.35); line(P.logpile, 1.1, 0.55, P.logpile.rot);
+    for (const t of P.trees) {
+      const p = outpostAt(t.u, t.v), o = { x: p.x, z: p.z, r: t.r, type: 0, rot: t.u * 1.7, s: 1, lean: 0.5 };
+      trees.push(o); put(o);
+      colliders.push({ x: p.x, z: p.z, r: t.r * 1.15 });
+    }
+  }
 
   // --- collider grid
   const cgCell = 6, cg = new Map();

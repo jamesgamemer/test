@@ -157,7 +157,7 @@ function buildGiantShroom(rnd) {
 }
 
 // Two upright painted cards crossed at right angles: one cell of the plants atlas, standing on its bottom edge.
-function buildPlantCards(cell, cells, size) {
+export function buildPlantCards(cell, cells, size) {
   const pos = [], nor = [], uv = [], idx = [];
   for (let k = 0; k < 2; k++) {
     const a = k * Math.PI / 2 + 0.4, cx = Math.cos(a), cz = Math.sin(a), b = pos.length / 3;

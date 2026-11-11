@@ -45,9 +45,21 @@ MODELS = {
     'log': dict(tex=512),
     'mushrooms': dict(tex=512),
     'torch': dict(tex=256),
+    # the Old Palisade
+    #   palisade, logpile  run along x          gateway  posts on the x axis, walked through along z
+    #   cart               shafts point to +z   leanto   open, tall front faces +z
+    'palisade': dict(tex=1024, yaw=90),
+    'gateway': dict(tex=1024, yaw=90),
+    'barrel': dict(tex=512),
+    'crate': dict(tex=512),
+    'planks': dict(tex=512),
+    'cart': dict(tex=1024, yaw=-90),
+    'leanto': dict(tex=1024, yaw=-90),
+    'logpile': dict(tex=512, yaw=90),
+    'shrooms_tan': dict(tex=512),
 }
 GROUND = {
-    'ground_path': dict(size=1024, bump=2.2),
+    'ground_mud': dict(size=1024, bump=3.4),
     'ground_forest': dict(size=1024, bump=2.6),
     'stone': dict(size=512, bump=2.0),
     'bark': dict(size=512, bump=3.0),

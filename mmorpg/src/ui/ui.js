@@ -467,7 +467,7 @@ export class UI {
     ctx.font = '600 13px Sarabun, sans-serif'; ctx.textAlign = 'center';
     const label = (x, z, text, col = '#e6c888') => { ctx.fillStyle = 'rgba(0,0,0,0.75)'; ctx.fillText(text, (x + HALF) * k + 1, (z + HALF) * k + 1); ctx.fillStyle = col; ctx.fillText(text, (x + HALF) * k, (z + HALF) * k); };
     label(POIS.camp.x, POIS.camp.z - 9, t('zone_camp')); label(POIS.hollow.x, POIS.hollow.z - 14, t('zone_hollow')); label(POIS.den.x, POIS.den.z + 20, t('zone_den'));
-    label(POIS.rot.x, POIS.rot.z - 20, t('zone_rot')); label(POIS.gate.x + 6, POIS.gate.z + 20, t('zone_gate'), '#ffb080'); label(-2, 22, t('zone_whisper'));
+    label(POIS.rot.x, POIS.rot.z - 20, t('zone_rot')); label(POIS.gate.x + 6, POIS.gate.z + 20, t('zone_gate'), '#ffb080'); label(-2, 22, t('zone_whisper')); label(POIS.outpost.x, POIS.outpost.z + 17, t('zone_outpost'));
     const me = this.g.me;
     for (const e of this.g.ents.values()) if (e.type === 'p') { ctx.fillStyle = '#7fc4ff'; ctx.beginPath(); ctx.arc((e.x + HALF) * k, (e.z + HALF) * k, 3, 0, 6.283); ctx.fill(); }
     const qt = this.questTarget();
