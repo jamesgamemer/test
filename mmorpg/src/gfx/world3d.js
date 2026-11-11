@@ -22,6 +22,8 @@ export class World3D {
     this.canvas = canvas;
     this.qualityName = qualityName;
     this.q = QUALITY[qualityName] || QUALITY.high;
+    // multisampled float targets are unreliable on some phone GPUs; phones render without MSAA
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) this.q = { ...this.q, msaa: 0 };
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', stencil: false });
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;

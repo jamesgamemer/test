@@ -5,6 +5,8 @@
 
 An action MMORPG that runs in the browser: a moonlit forest built entirely from code (no art, model or audio files).
 
+![Nightglade Online](docs/screenshot.jpg)
+
 ## เล่นอย่างไร / How to run
 
 **เล่นคนเดียว (ไม่ต้องติดตั้งอะไร)** — เปิด `mmorpg/index.html` ผ่านเว็บเซิร์ฟเวอร์ใดก็ได้ เช่น
