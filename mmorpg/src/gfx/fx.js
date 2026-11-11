@@ -5,6 +5,7 @@
 import { THREE, U } from './common.js';
 import { heightAt } from '../shared/world.js';
 import { Flipbooks } from './flipbook.js';
+import { VFX } from './vfx-manifest.js';
 
 const ADD = { blending: THREE.AdditiveBlending, depthWrite: false, transparent: true };
 const UV_VERT = `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
@@ -17,6 +18,7 @@ const rand = (a, b) => a + Math.random() * (b - a);
 const rampOf = (hex) => [mixHex(hex, 0x000000, 0.55), hex, mixHex(hex, 0xffffff, 0.85)];
 const GOLD = [0xa85a08, 0xffcc55, 0xfffbe0];
 export const FIRE = { blade: 0xff9a3c, ramp: null };
+const DASH_ART = VFX.dash.box; // where the streak starts and ends inside its frame
 
 // ---------------------------------------------------------------- embers
 // Tiny instanced sprites: 0 soft ember, 1 spark streak (stretches along its velocity), 3 smoke puff.
@@ -300,15 +302,15 @@ export class FX {
   slash(x, z, dx, dz, look, combo = 0) {
     const yaw = Math.atan2(dx, dz), y = this.y(x, z), ramp = look.ramp;
     if (combo < 2) {
-      this.fb.play(combo ? 'slash_b' : 'slash_a', { x, z, y: y + 1.0, size: 7.6, yaw, flip: combo === 1, ramp, gain: 1.4 });
+      this.fb.play(combo ? 'slash_b' : 'slash_a', { x, z, y: y + 1.0, reach: 3.3, yaw, flip: combo === 1, ramp, gain: 1.4 });
       const side = combo === 1 ? -1 : 1;
       for (let i = 0; i < 5; i++) { const a = yaw + side * rand(-0.9, 0.9), r = rand(2.3, 3.0); this.embers(x + Math.sin(a) * r, y + 1.0, z + Math.cos(a) * r, look, 1, { mode: 'cone', dir: [Math.sin(a - side * 1.2), 0.3, Math.cos(a - side * 1.2)], cone: 0.4, speed: 7, life: 0.35 }); }
       this.flash(x + dx * 1.6, y + 1.2, z + dz * 1.6, look.blade, 30, 0.2, 9);
     } else {
       const fx = x + dx * 2.6, fz = z + dz * 2.6;
-      this.fb.play('slam', { x, z, y: y + 0.6, size: 10.5, yaw, ramp, gain: 1.8 });
+      this.fb.play('slam', { x, z, y: y + 0.6, reach: 2.6, yaw, ramp, gain: 1.8 });
       this.later(0.09, () => {
-        this.fb.play('burst', { x: fx, z: fz, y: this.y(fx, fz) + 1.1, size: 3.6, board: true, ramp, gain: 1.4, speed: 1.3 });
+        this.fb.play('burst', { x: fx, z: fz, y: this.y(fx, fz) + 1.1, reach: 1.9, board: true, ramp, gain: 1.4, speed: 1.3 });
         this.scorch(fx, fz, 3.4, look, 2.0);
         this.embers(fx, this.y(fx, fz) + 0.4, fz, look, 16, { spread: 0.5, speed: 7.5 });
         this.flash(fx, this.y(fx, fz) + 1.2, fz, look.blade, 90, 0.3, 13);
@@ -322,7 +324,7 @@ export class FX {
   // Moonblade Wave: a painted crescent of flame that flies out and sets the grass swaying
   wave(id, x, z, dx, dz, look, spd, ttl) {
     const yaw = Math.atan2(dx, dz);
-    const h = this.fb.play('wave', { x, z, y: this.y(x, z) + 0.9, size: 5.2, yaw, ramp: look.ramp, gain: 1.7, dur: ttl + 0.1, fadeIn: 0.05, fadeOut: 0.14 });
+    const h = this.fb.play('wave', { x, z, y: this.y(x, z) + 0.9, reach: 1.9, yaw, ramp: look.ramp, gain: 1.7, dur: ttl + 0.1, fadeIn: 0.05, fadeOut: 0.14 });
     this.projs.set(id, { h, k: 'wave', x, z, dx, dz, spd, ttl, look });
     this.push(x, z, 2.2, 1.0, ttl).follow = id;
     this.flash(x, this.y(x, z) + 1, z, look.blade, 55, 0.25, 12);
@@ -331,13 +333,13 @@ export class FX {
 
   bolt(id, x, z, dx, dz, spd, ttl, color = 0x7fdcff) {
     const look = { blade: color, ramp: rampOf(color) };
-    const h = this.fb.play('meteor', { x, z, y: this.y(x, z) + 1.15, size: 0.75, board: true, anchor: [0.5, 0.16], ramp: look.ramp, gain: 1.0, dur: ttl + 0.1, fadeIn: 0.04, fadeOut: 0.1 });
+    const h = this.fb.play('meteor', { x, z, y: this.y(x, z) + 1.15, reach: 0.24, board: true, ramp: look.ramp, gain: 1.0, dur: ttl + 0.1, fadeIn: 0.04, fadeOut: 0.1 });
     this.projs.set(id, { h, k: 'bolt', x, z, dx, dz, spd, ttl, look });
   }
   endProj(id, x, z) {
     const p = this.projs.get(id);
     if (!p) return;
-    this.fb.play('hit', { x, z, y: this.y(x, z) + 1.1, size: 2.2, board: true, rot: Math.random() * 6.283, ramp: p.look.ramp, gain: 1.5 });
+    this.fb.play('hit', { x, z, y: this.y(x, z) + 1.1, reach: 1.1, board: true, rot: Math.random() * 6.283, ramp: p.look.ramp, gain: 1.5 });
     this._dropProj(id, p);
   }
   _dropProj(id, p) { this.fb.stop(p.h, 0.12); this.projs.delete(id); }
@@ -345,12 +347,13 @@ export class FX {
   // Shadowstep: a painted streak of fire along the path, afterimages hanging behind
   dash(actor, x0, z0, x1, z1, look) {
     const y0 = this.y(x0, z0), y1 = this.y(x1, z1), dx = x1 - x0, dz = z1 - z0, len = Math.hypot(dx, dz) || 1, yaw = Math.atan2(dx, dz);
-    this.fb.play('dash', { x: x0 - dx / len * 0.6, z: z0 - dz / len * 0.6, y: (y0 + y1) / 2 + 0.7, size: 3.8, h: len + 2.2, yaw, anchor: [0.5, 0], ramp: look.ramp, gain: 1.7 });
+    // the streak starts a little behind the swordsman and ends a little past where he stops; the sheet is stretched to that length
+    this.fb.play('dash', { x: x0 - dx / len * 0.7, z: z0 - dz / len * 0.7, y: (y0 + y1) / 2 + 0.7, size: 5, h: (len + 1.7) / (DASH_ART[3] - DASH_ART[1]), yaw, anchor: [0.5, DASH_ART[1]], ramp: look.ramp, gain: 1.7 });
     this.emit(x0, y0 + 0.9, z0, { n: 8, color: 0x241018, color2: 0x070304, smoke: true, speed: 1.4, life: 0.7, size: 0.8, size2: 1.7, alpha: 0.5, up: 0.5, drag: 2.5, gain: 1 });
     for (let i = 0; i < 12; i++) { const t = Math.random(), x = x0 + dx * t, z = z0 + dz * t; this.embers(x, this.y(x, z) + rand(0.4, 1.4), z, look, 1, { mode: 'cone', dir: [dx / len, 0.1, dz / len], cone: 0.3, speed: 5, life: 0.45, gravity: 2 }); }
     if (actor) for (let i = 0; i < 4; i++) this.later(0.03 + i * 0.045, () => this.ghost(actor, look.blade, 0.34));
     this.later(0.2, () => {
-      this.fb.play('burst', { x: x1, z: z1, y: y1 + 1.0, size: 2.8, board: true, ramp: look.ramp, gain: 1.2, speed: 1.5 });
+      this.fb.play('burst', { x: x1, z: z1, y: y1 + 1.0, reach: 1.5, board: true, ramp: look.ramp, gain: 1.2, speed: 1.5 });
       this.flash(x1, y1 + 1.2, z1, look.blade, 70, 0.25, 12);
       this.push(x1, z1, 2.6, 1.1, 0.4);
     });
@@ -370,8 +373,8 @@ export class FX {
     const y = this.y(x, z);
     this.emit(x, y + 1, z, { n: 22, color: mixHex(look.blade, 0xffffff, 0.5), mode: 'in', radius: radius * 0.8, life: 0.12, size: 0.06, shape: 1, stretch: 0.5, drag: 0, up: 0.6 });
     this.later(0.07, () => {
-      this.fb.play('nova', { x, z, size: radius * 2.5, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 1.7, lift: 0.4 });
-      this.fb.play('burst', { x, z, y: y + 1.3, size: 4.6, board: true, ramp: look.ramp, gain: 1.0, speed: 1.2 });
+      this.fb.play('nova', { x, z, reach: radius * 1.15, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 1.7, lift: 0.4 });
+      this.fb.play('burst', { x, z, y: y + 1.3, reach: 2.4, board: true, ramp: look.ramp, gain: 1.0, speed: 1.2 });
       this.scorch(x, z, radius * 1.5, look, 2.6);
       this.embers(x, y + 0.5, z, look, 36, { mode: 'ring', radius: 0.8, speed: radius * 2.6, life: 0.55, up: 1.0, gravity: 5 });
       this.emit(x, y + 0.3, z, { n: 26, color: look.blade, radius: radius * 0.9, speed: 0.5, life: 1.5, size: 0.065, up: 3.2, gravity: -1.3, drag: 0.6 });
@@ -385,7 +388,7 @@ export class FX {
 
   // Starfall: a fire whirl marks the ground while comets rain in ahead of the main strike
   starCharge(x, z, radius, delay, look) {
-    this.fb.play('vortex', { x, z, size: radius * 2.25, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 0.9, dur: delay + 0.3, fadeIn: 0.25, fadeOut: 0.3, lift: 0.3 });
+    this.fb.play('vortex', { x, z, reach: radius * 1.05, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 0.9, dur: delay + 0.3, fadeIn: 0.25, fadeOut: 0.3, lift: 0.3 });
     const n = 7, fall = 0.36;
     for (let i = 0; i < n; i++) {
       const a = (i / n) * 6.283 + rand(0, 0.8), d = radius * rand(0.25, 0.85);
@@ -396,12 +399,12 @@ export class FX {
   meteor(tx, tz, fall, look, size = 1) {
     const ty = this.y(tx, tz);
     const m = { tx, ty, tz, x: tx - 5.5, y: ty + 17, z: tz - 3.2, t: 0, dur: fall, look, size };
-    m.h = this.fb.play('meteor', { x: m.x, z: m.z, y: m.y, size: 1.5 * size, board: true, anchor: [0.5, 0.16], ramp: look.ramp, gain: 1.8, dur: fall + 0.05, fadeIn: 0.03, fadeOut: 0.04 });
+    m.h = this.fb.play('meteor', { x: m.x, z: m.z, y: m.y, reach: 0.45 * size, board: true, ramp: look.ramp, gain: 1.8, dur: fall + 0.05, fadeIn: 0.03, fadeOut: 0.04 });
     this.meteors.push(m);
   }
   _meteorLand(m) {
     const { tx, ty, tz, look, size } = m;
-    this.fb.play('burst', { x: tx, z: tz, y: ty + 1.0, size: 3.4 * size, board: true, ramp: look.ramp, gain: 1.4, speed: 1.35 });
+    this.fb.play('burst', { x: tx, z: tz, y: ty + 1.0, reach: 1.8 * size, board: true, ramp: look.ramp, gain: 1.4, speed: 1.35 });
     this.scorch(tx, tz, 2.6 * size, look, 1.8);
     this.embers(tx, ty + 0.3, tz, look, 10, { speed: 7, up: 1.7, gravity: 13 });
     this.flash(tx, ty + 1, tz, look.blade, 50, 0.2, 9);
@@ -410,9 +413,9 @@ export class FX {
   }
   starfall(x, z, radius, look) {
     const y = this.y(x, z);
-    this.fb.play('pillar', { x, z, y: y - 0.2, size: 5.6, board: true, anchor: [0.5, 0], ramp: look.ramp, gain: 1.3 });
-    this.fb.play('nova', { x, z, size: radius * 2.9, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 1.6, lift: 0.4 });
-    this.fb.play('burst', { x, z, y: y + 1.6, size: 6, board: true, ramp: look.ramp, gain: 0.9, delay: 0.05 });
+    this.fb.play('pillar', { x, z, y: y - 0.1, reach: 11, board: true, ramp: look.ramp, gain: 1.3 });
+    this.fb.play('nova', { x, z, reach: radius * 1.3, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 1.6, lift: 0.4 });
+    this.fb.play('burst', { x, z, y: y + 1.6, reach: 3.1, board: true, ramp: look.ramp, gain: 0.9, delay: 0.05 });
     this.scorch(x, z, radius * 2.0, look, 3.2, 1.3);
     this.embers(x, y + 0.5, z, look, 50, { mode: 'ring', radius: 0.6, speed: radius * 2.8, life: 0.6, up: 1.4, gravity: 9 });
     this.embers(x, y + 0.5, z, look, 22, { mode: 'cone', dir: [0, 1, 0], cone: 0.5, speed: 12, life: 0.7, gravity: 11 });
@@ -427,9 +430,9 @@ export class FX {
   // cuts land again and again, then everything comes down at once
   eclipse(x, z, radius, look, s) {
     const y = this.y(x, z), cam = this.world.camera;
-    this.fb.play('vortex', { x, z, size: radius * 2.35, ramp: look.ramp, gain: 0.75, dur: s.finalAt + 0.15, fadeIn: 0.3, fadeOut: 0.2, lift: 0.3, speed: 1.4 });
+    this.fb.play('vortex', { x, z, reach: radius * 1.05, ramp: look.ramp, gain: 0.75, dur: s.finalAt + 0.15, fadeIn: 0.3, fadeOut: 0.2, lift: 0.3, speed: 1.4 });
     cam.getWorldDirection(this._v); this._v.y = 0; this._v.normalize();
-    this.fb.play('eclipse', { x: x + this._v.x * 1.2, z: z + this._v.z * 1.2, y: y + 4.3, size: 4.6, board: true, ramp: look.ramp, gain: 1.5, dur: s.finalAt + 0.1, fadeIn: 0.3, fadeOut: 0.15, grow: 0.12 });
+    this.fb.play('eclipse', { x: x + this._v.x * 1.2, z: z + this._v.z * 1.2, y: y + 4.3, reach: 2.4, board: true, ramp: look.ramp, gain: 1.5, dur: s.finalAt + 0.1, fadeIn: 0.3, fadeOut: 0.15, grow: 0.12 });
     this.emit(x, y + 1, z, { n: 36, color: mixHex(look.blade, 0xffffff, 0.5), mode: 'in', radius, life: 0.35, size: 0.06, shape: 1, stretch: 0.5, drag: 0, up: 0.8 });
     this.eclipses++;
     this.darkTarget = 1;
@@ -441,7 +444,7 @@ export class FX {
     const y = this.y(x, z);
     for (let i = 0; i < 3; i++) {
       const a = Math.random() * 6.283, d = rand(0.3, radius * 0.35), px = x + Math.cos(a) * d, pz = z + Math.sin(a) * d;
-      this.fb.play(i % 2 ? 'slash_b' : 'slash_a', { x: px, z: pz, y: y + rand(0.7, 1.6), size: rand(9, 12.5), yaw: Math.random() * 6.283, flip: Math.random() < 0.5, ramp: look.ramp, gain: 1.2, speed: 1.25, delay: i * 0.03 });
+      this.fb.play(i % 2 ? 'slash_b' : 'slash_a', { x: px, z: pz, y: y + rand(0.7, 1.6), reach: rand(4.2, 5.6), yaw: Math.random() * 6.283, flip: Math.random() < 0.5, ramp: look.ramp, gain: 1.2, speed: 1.25, delay: i * 0.03 });
     }
     this.embers(x, y + 1, z, look, 16, { mode: 'ring', radius: 1, speed: 12, life: 0.3, up: 0.5 });
     this.flash(x, y + 1.5, z, look.blade, 80, 0.14, 16);
@@ -450,13 +453,13 @@ export class FX {
   eclipseEnd(x, z, radius, look) {
     const y = this.y(x, z);
     this.darkTarget = 0;
-    this.fb.play('pillar', { x, z, y: y - 0.3, size: 8, board: true, anchor: [0.5, 0], ramp: look.ramp, gain: 1.3 });
-    this.fb.play('nova', { x, z, size: radius * 3.0, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 1.35, lift: 0.4 });
-    this.fb.play('nova', { x, z, size: radius * 2.0, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 1.0, lift: 0.5, delay: 0.14 });
-    this.fb.play('burst', { x, z, y: y + 2, size: 6.5, board: true, ramp: look.ramp, gain: 0.8, delay: 0.04 });
+    this.fb.play('pillar', { x, z, y: y - 0.1, reach: 15, board: true, ramp: look.ramp, gain: 1.3 });
+    this.fb.play('nova', { x, z, reach: radius * 1.3, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 1.35, lift: 0.4 });
+    this.fb.play('nova', { x, z, reach: radius * 0.9, yaw: Math.random() * 6.283, ramp: look.ramp, gain: 1.0, lift: 0.5, delay: 0.14 });
+    this.fb.play('burst', { x, z, y: y + 2, reach: 3.4, board: true, ramp: look.ramp, gain: 0.8, delay: 0.04 });
     for (let i = 0; i < 6; i++) {
       const a = (i / 6) * 6.283 + 0.3, bx = x + Math.cos(a) * radius * 0.62, bz = z + Math.sin(a) * radius * 0.62;
-      this.fb.play('burst', { x: bx, z: bz, y: this.y(bx, bz) + 1.1, size: 4.2, board: true, ramp: look.ramp, gain: 0.9, delay: 0.06 + i * 0.035, speed: 1.2 });
+      this.fb.play('burst', { x: bx, z: bz, y: this.y(bx, bz) + 1.1, reach: 2.2, board: true, ramp: look.ramp, gain: 0.9, delay: 0.06 + i * 0.035, speed: 1.2 });
     }
     this.scorch(x, z, radius * 2.3, look, 3.8, 1.4);
     this.embers(x, y + 0.5, z, look, 70, { mode: 'ring', radius: 0.8, speed: radius * 2.7, life: 0.65, up: 1.3, gravity: 8 });
@@ -473,7 +476,7 @@ export class FX {
   hitMark(x, z, h, dx, dz, skill, look, crit) {
     const y = this.y(x, z) + h;
     const go = () => {
-      this.fb.play('hit', { x, z, y, size: crit || skill === 'slash3' ? 3.6 : 2.5, board: true, rot: Math.random() * 6.283, ramp: look.ramp, gain: crit ? 1.9 : 1.5 });
+      this.fb.play('hit', { x, z, y, reach: crit || skill === 'slash3' ? 1.8 : 1.25, board: true, rot: Math.random() * 6.283, ramp: look.ramp, gain: crit ? 1.9 : 1.5 });
       this.embers(x, y, z, look, crit ? 9 : 5, { mode: 'cone', dir: [dx, 0.3, dz], cone: 0.8, speed: 6.5, life: 0.3 });
       if (crit) this.impact(0.2, 0.7, 0.35);
     };
@@ -484,12 +487,12 @@ export class FX {
   // ------------------------------------------------------------ world events
   telegraph(x, z, radius, delay) {
     // a ring of fire closing in on the moment of impact
-    this.fb.play('vortex', { x, z, size: radius * 2.3, gain: 0.5, dur: delay, fadeIn: 0.2, fadeOut: 0.08, lift: 0.3, speed: 1.6, follow: (h) => { h.gain = 0.4 + 0.9 * Math.min(1, h.t / delay); } });
+    this.fb.play('vortex', { x, z, reach: radius, gain: 0.5, dur: delay, fadeIn: 0.2, fadeOut: 0.08, lift: 0.3, speed: 1.6, follow: (h) => { h.gain = 0.4 + 0.9 * Math.min(1, h.t / delay); } });
   }
   quake(x, z, radius, big) {
     const y = this.y(x, z);
-    this.fb.play('nova', { x, z, size: radius * 2.5, yaw: Math.random() * 6.283, gain: 1.6, lift: 0.4 });
-    this.fb.play('burst', { x, z, y: y + 1.4, size: radius * (big ? 1.2 : 1.5), board: true, gain: 1.3 });
+    this.fb.play('nova', { x, z, reach: radius * 1.15, yaw: Math.random() * 6.283, gain: 1.6, lift: 0.4 });
+    this.fb.play('burst', { x, z, y: y + 1.4, reach: radius * (big ? 0.6 : 0.75), board: true, gain: 1.3 });
     this.scorch(x, z, radius * 1.7, FIRE, big ? 3.2 : 2.0);
     this.embers(x, y + 0.3, z, FIRE, big ? 40 : 18, { mode: 'ring', radius: radius * 0.3, speed: radius * 2.0, life: 0.6, up: 1.6, gravity: 12 });
     this.emit(x, y + 0.3, z, { n: big ? 18 : 8, color: 0x3a2e28, color2: 0x120e0c, smoke: true, mode: 'ring', radius: radius * 0.4, speed: radius * 0.9, life: 1.3, size: 1.2, size2: 3, alpha: 0.45, up: 0.4, drag: 2.2, gain: 1 });
@@ -499,8 +502,8 @@ export class FX {
   }
   levelUp(x, z) {
     const y = this.y(x, z), look = { blade: 0xffd866, ramp: GOLD };
-    this.fb.play('pillar', { x, z, y: y - 0.2, size: 4.5, board: true, anchor: [0.5, 0], ramp: GOLD, gain: 1.5, speed: 0.8 });
-    this.fb.play('nova', { x, z, size: 9, ramp: GOLD, gain: 1.2, lift: 0.35 });
+    this.fb.play('pillar', { x, z, y: y - 0.1, reach: 9, board: true, ramp: GOLD, gain: 1.5, speed: 0.8 });
+    this.fb.play('nova', { x, z, reach: 4.2, ramp: GOLD, gain: 1.2, lift: 0.35 });
     this.emit(x, y + 0.3, z, { n: 40, color: 0xfff0b8, color2: 0xffc24a, radius: 1.3, speed: 0.6, life: 1.5, size: 0.065, shape: 1, stretch: 0.6, up: 9, gravity: -2, drag: 0.5 });
     this.flash(x, y + 2, z, 0xffdf90, 150, 0.8, 22);
     this.shock(x, z, 6, 0.012, 0.6);
@@ -508,17 +511,17 @@ export class FX {
   }
   // arrival / departure flourish in a given colour
   ring(x, z, radius, color, dur = 0.6) {
-    this.fb.play('nova', { x, z, size: radius * 2.4, ramp: rampOf(color), gain: 1.1, lift: 0.35, speed: 0.53 / Math.max(0.3, dur) });
+    this.fb.play('nova', { x, z, reach: radius * 1.1, ramp: rampOf(color), gain: 1.1, lift: 0.35, speed: 0.53 / Math.max(0.3, dur) });
   }
   beam(x, z, radius, height, color) {
-    this.fb.play('pillar', { x, z, y: this.y(x, z) - 0.2, size: height / 2, board: true, anchor: [0.5, 0], ramp: rampOf(color), gain: 1.3 });
+    this.fb.play('pillar', { x, z, y: this.y(x, z) - 0.1, reach: height, board: true, ramp: rampOf(color), gain: 1.3 });
   }
   hit(x, z, color = 0xffffff, h = 1.0) {
-    this.fb.play('hit', { x, z, y: this.y(x, z) + h, size: 2.0, board: true, rot: Math.random() * 6.283, ramp: rampOf(color), gain: 1.4 });
+    this.fb.play('hit', { x, z, y: this.y(x, z) + h, reach: 1.0, board: true, rot: Math.random() * 6.283, ramp: rampOf(color), gain: 1.4 });
   }
   puff(x, z, color, n = 26, h = 0.8) {
     const y = this.y(x, z) + h, big = n > 60;
-    this.fb.play('burst', { x, z, y: y + (big ? 1.4 : 0.2), size: big ? 9 : 2.9, board: true, ramp: rampOf(color), gain: 1.3 });
+    this.fb.play('burst', { x, z, y: y + (big ? 1.4 : 0.2), reach: big ? 4.6 : 1.5, board: true, ramp: rampOf(color), gain: 1.3 });
     this.emit(x, y, z, { n: Math.min(30, n), color, color2: mixHex(color, 0x202040, 0.6), speed: 3, life: 0.9, size: 0.1, up: 1.6, gravity: -0.8, spread: 0.5, drag: 1.4 });
   }
 
@@ -533,7 +536,7 @@ export class FX {
       const y = this.y(p.x, p.z);
       if (p.k === 'wave') {
         p.h.fixedY = y + 0.9;
-        this.fb.place(p.h, p.x - p.dx * 0.9, p.z - p.dz * 0.9);
+        this.fb.place(p.h, p.x, p.z);
         if (Math.random() < dt * 50) this.embers(p.x + (-p.dz) * rand(-1.4, 1.4), y + rand(0.5, 1.2), p.z + p.dx * rand(-1.4, 1.4), p.look, 1, { mode: 'cone', dir: [-p.dx, 0.2, -p.dz], cone: 0.4, speed: 4, life: 0.4, gravity: 2 });
       } else {
         const by = y + 1.15 + Math.sin(p.ttl * 9) * 0.1;

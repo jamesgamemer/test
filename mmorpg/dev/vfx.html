@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightglade VFX sheets</title>
+<style>
+  html, body { margin: 0; background: #05070c; color: #cfd8ea; font: 13px/1.4 system-ui, sans-serif; }
+  #grid { display: grid; align-items: start; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; padding: 14px; }
+  figure { margin: 0; background: #000; border: 1px solid #1c2538; border-radius: 8px; overflow: hidden; }
+  figure canvas { display: block; width: 100%; height: auto; background: #000; }
+  figcaption { padding: 6px 9px; display: flex; justify-content: space-between; gap: 8px; }
+  figcaption b { color: #ffd08a; } .bad { color: #ff8d7d; } .ok { color: #7be08f; }
+  header { padding: 14px 14px 0; } h1 { margin: 0 0 4px; font-size: 17px; } p { margin: 0; color: #8e9bb4; }
+  label { margin-right: 14px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Nightglade — VFX sprite sheets</h1>
+  <p>Every effect is played here by the game's own flipbook code and shader. The blue frame is the edge of one cell: no part of an effect may be cut by it.
+     The dashed box is the area the art occupies, the cross is its pivot (the point placed on the effect's origin in the world) and the circle its reach.</p>
+  <p><label><input type="checkbox" id="edges" checked> guides</label><label><input type="checkbox" id="slow"> slow motion</label><span id="report"></span></p>
+</header>
+<div id="grid"></div>
+<script type="module">
+import { THREE } from '../src/gfx/common.js';
+import { Flipbooks } from '../src/gfx/flipbook.js';
+import { VFX } from '../src/gfx/vfx-manifest.js';
+
+const grid = document.getElementById('grid');
+const S = 256;
+const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
+renderer.setClearColor(0x000000, 1);
+const scene = new THREE.Scene();
+const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+cam.position.z = 5;
+const fb = new Flipbooks(scene);
+const views = [];
+for (const name in VFX) {
+  const d = VFX[name], w = d.aspect >= 1 ? S : Math.round(S * d.aspect), h = d.aspect >= 1 ? Math.round(S / d.aspect) : S;
+  const fig = document.createElement('figure'), cv = document.createElement('canvas'), cap = document.createElement('figcaption');
+  cv.width = w; cv.height = h;
+  cap.innerHTML = `<span><b>${name}</b> · ${d.n} frames${d.loop ? ' · loop' : ''}</span><span class="st"></span>`;
+  fig.append(cv, cap); grid.append(fig);
+  views.push({ name, d, cv, ctx: cv.getContext('2d'), w, h, t: 0, st: cap.querySelector('.st') });
+}
+
+// draw one frame of one effect, exactly as the game does, and return its pixels
+function draw(v, frame) {
+  renderer.setSize(v.w, v.h, false);
+  for (const h of fb.live.splice(0)) { h.mesh.visible = false; fb.free.push(h); }
+  const h = fb.play(v.name, { x: 0, z: 0, y: 0, size: 2, h: 2, board: true, anchor: [0.5, 0.5], gain: 1.6, dur: 1e9, fadeIn: 0, fadeOut: 0 });
+  h.mesh.position.set(0, 0, 0);
+  fb.frame(h, frame); h.u.uAlpha.value = 1; h.u.uGain.value = 1.6;
+  renderer.render(scene, cam);
+  v.ctx.drawImage(renderer.domElement, 0, 0, v.w, v.h);
+  if (!guides || !document.getElementById('edges').checked) return;
+  const c = v.ctx, d = v.d;
+  c.lineWidth = 1; c.strokeStyle = 'rgba(120,160,255,0.7)'; c.strokeRect(0.5, 0.5, v.w - 1, v.h - 1);
+  c.setLineDash([3, 3]); c.strokeStyle = 'rgba(255,255,255,0.35)';
+  c.strokeRect(d.box[0] * v.w, (1 - d.box[3]) * v.h, (d.box[2] - d.box[0]) * v.w, (d.box[3] - d.box[1]) * v.h);
+  c.setLineDash([]);
+  if (!d.pivot) return;
+  const px = d.pivot[0] * v.w, py = (1 - d.pivot[1]) * v.h;
+  c.strokeStyle = 'rgba(110,255,170,0.9)'; c.beginPath(); c.moveTo(px - 7, py); c.lineTo(px + 7, py); c.moveTo(px, py - 7); c.lineTo(px, py + 7); c.stroke();
+  c.strokeStyle = 'rgba(110,255,170,0.4)'; c.beginPath(); c.arc(px, py, d.reach * v.w, 0, 6.2832); c.stroke();
+}
+let guides = true;
+
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000) * (document.getElementById('slow').checked ? 0.2 : 1); last = now;
+  for (const v of views) {
+    v.t += dt;
+    const total = v.d.n > 1 ? v.d.n / v.d.fps : 1;
+    if (!v.d.loop && v.t > total + 0.35) v.t = 0;
+    draw(v, v.d.n > 1 ? (v.d.loop ? v.t * v.d.fps : Math.min(v.d.n - 1, v.t * v.d.fps)) : 0);
+  }
+  requestAnimationFrame(loop);
+}
+
+// --- self-test: does the shader show cell i when asked for frame i, and does any frame reach the cell edge?
+const lum = (data, w, h, n = 32) => {
+  const out = new Float32Array(n * n);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = (y * w + x) * 4; out[Math.floor(y * n / h) * n + Math.floor(x * n / w)] += Math.max(data[i], data[i + 1], data[i + 2]); }
+  return out;
+};
+const corr = (a, b) => { let sa = 0, sb = 0, sab = 0, saa = 0, sbb = 0; const n = a.length; for (let i = 0; i < n; i++) { sa += a[i]; sb += b[i]; sab += a[i] * b[i]; saa += a[i] * a[i]; sbb += b[i] * b[i]; } const c = sab - sa * sb / n, va = saa - sa * sa / n, vb = sbb - sb * sb / n; return va > 1e-6 && vb > 1e-6 ? c / Math.sqrt(va * vb) : 0; };
+window.vfxTest = () => {
+  const report = {};
+  for (const v of views) {
+    const img = fb.tex[v.name].image, d = v.d;
+    const cw = img.width / d.cols, ch = img.height / d.rows;
+    const tmp = document.createElement('canvas'); tmp.width = img.width; tmp.height = img.height;
+    const tc = tmp.getContext('2d', { willReadFrequently: true }); tc.drawImage(img, 0, 0);
+    const cells = [], edge = [];
+    for (let i = 0; i < d.n; i++) {
+      const px = tc.getImageData((i % d.cols) * cw, Math.floor(i / d.cols) * ch, cw, ch).data;
+      cells.push(lum(px, cw, ch));
+      // brightest pixel within 1.5% of the cell edge
+      let m = 0; const b = Math.max(2, Math.round(Math.min(cw, ch) * 0.015));
+      for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) if (x < b || y < b || x >= cw - b || y >= ch - b) { const k = (y * cw + x) * 4; m = Math.max(m, px[k], px[k + 1], px[k + 2]); }
+      edge.push(m);
+    }
+    const wrong = [];
+    guides = false;
+    for (let i = 0; i < d.n; i++) {
+      draw(v, i);
+      const shown = lum(v.ctx.getImageData(0, 0, v.w, v.h).data, v.w, v.h);
+      let best = -1, bc = -2, own = 0;
+      for (let j = 0; j < d.n; j++) { const c = corr(shown, cells[j]); if (j === i) own = c; if (c > bc) { bc = c; best = j; } }
+      const energy = cells[i].reduce((a, b) => a + b, 0) / cells[i].length;
+      if (energy > 30 && best !== i && bc - own > 0.03) wrong.push({ frame: i, shows: best, own: +own.toFixed(3), best: +bc.toFixed(3) });
+    }
+    guides = true;
+    const cut = d.file === 'ribbon.webp' ? [] : edge.map((m, i) => (m > 28 ? i + 1 : 0)).filter(Boolean); // the sword-trail strip runs edge to edge by design
+    report[v.name] = { frames: d.n, wrongCell: wrong, cutAtEdge: cut, maxEdge: Math.max(...edge) };
+    v.st.textContent = wrong.length || cut.length ? `${wrong.length ? 'wrong cell ' : ''}${cut.length ? 'cut: ' + cut.join(',') : ''}` : 'ok';
+    v.st.className = 'st ' + (wrong.length || cut.length ? 'bad' : 'ok');
+  }
+  return report;
+};
+
+const ready = () => Object.values(fb.tex).every((t) => t.image && t.image.width > 0);
+const wait = () => { if (!ready()) return setTimeout(wait, 100); window.vfxReport = window.vfxTest(); document.getElementById('report').textContent = ' checked.'; requestAnimationFrame(loop); };
+wait();
+</script>
+</body>
+</html>

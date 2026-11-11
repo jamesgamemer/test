@@ -1,20 +1,89 @@
 {
-  "about": "How the effect animations in assets/vfx/ were made. Each was generated with Higgsfield (model gpt_image_2_6, quality high, opaque background) as an animated GIF, then packed into a sprite sheet by dev/build_vfx.py. Every prompt is the effect description below followed by the shared style text.",
+  "about": "How the effect animations in assets/vfx/ were made. Each was generated with Higgsfield (model gpt_image_2_6, quality high, opaque background) as an animated GIF, then checked by dev/check_vfx.py and packed into a sprite sheet by dev/build_vfx.py. Every prompt is the effect description below, then the framing rule, then the shared style text. The generator returns at most 16 frames, so every one-shot effect is scripted to burn out by frame 16; frame_ms must be a multiple of 10. If check_vfx.py reports a cut frame, generate that effect again.",
   "style": "Style: hand-painted 2D traditional frame-by-frame effects animation, organic turbulent flame shapes with torn licking tongues and curling wisps, white-hot yellow core, saturated orange body, deep crimson and dark red smoky edges, scattered glowing embers and sparks, soft glow. Pure solid black background, nothing else: no character, no weapon, no ground, no text, no border.",
   "effects": {
-    "slash_a": { "size": "512x512", "frames": 20, "frame_ms": 40, "prompt": "Top-down view game VFX flipbook. A sword-swing arc of fire: one wide crescent of flame sweeping CLOCKWISE through the upper half of the frame around the exact image center (the swordsman stands at the center and is NOT drawn), from the left side, over the top, to the right side: a 170-degree crescent with radius about 40 percent of the frame width. Frames 1-2 a thin bright streak begins at the left; 3-7 the blazing crescent whips across, thickest and white-hot at its leading tip with flame tongues trailing behind; 8-14 the arc tears into curling flame tongues that drift outward and darken to crimson; 15-20 only embers remain. The lower half of the frame stays empty." },
-    "slash_b": { "size": "512x512", "frames": 20, "frame_ms": 40, "prompt": "Top-down view game VFX flipbook. A fast double sword-swing of fire: two thin overlapping crescents of flame, one slightly larger, sweeping CLOCKWISE through the upper half of the frame around the exact image center (swordsman not drawn), radius about 40 percent of the frame width, throwing off many small sparks. Frames 1-2 two bright needle streaks begin at the left; 3-6 both razor crescents flash across; 7-13 they fray into ragged ribbons of flame and flying sparks; 14-20 thin crimson wisps and embers fade out. The lower half of the frame stays empty." },
-    "slam": { "size": "512x512", "frames": 22, "frame_ms": 40, "prompt": "Top-down view game VFX flipbook. A heavy overhead sword strike of fire aimed from the exact image center straight toward the top edge (swordsman not drawn). Frames 1-3 a long straight white-hot blade of fire shoots from the center up the vertical axis; 4-9 where it lands at three quarters of the frame height a fierce burst of flame erupts and splashes forward and sideways in a fan; 10-17 the line and the fan break into rolling flame tongues and dark red smoke; 18-22 only embers remain. The lower half of the frame stays empty." },
-    "wave": { "size": "512x512", "frames": 12, "frame_ms": 50, "prompt": "Top-down view game VFX flipbook, seamless loop. A flying crescent blade of fire travelling toward the top of the frame: a thick curved crescent with its convex cutting edge facing UP and its two tips pointing down-left and down-right, spanning about 70 percent of the frame width in the upper-middle area. It stays in the same place and at the same size in every frame while flames stream off its edge and tips and trail DOWN behind it in long tongues." },
-    "dash": { "size": "256x512", "frames": 18, "frame_ms": 40, "prompt": "Top-down view game VFX flipbook in a tall frame. The fiery trail of a lightning-fast dash running in one straight vertical line from the bottom center to the top center. Frames 1-3 a razor-thin white-yellow line streaks from bottom to top; 4-8 it swells into a ribbon of flame with tongues licking out to both sides; 9-15 the ribbon tears apart from the bottom upward into separate flames, crimson wisps and embers; 16-18 fades away." },
-    "nova": { "size": "512x512", "frames": 24, "frame_ms": 40, "prompt": "Top-down view game VFX flipbook. A circular shockwave of fire bursting outward from the exact center. Frames 1-2 a white-hot flash at the center; 3-9 a thick ring of flame expands rapidly until it nearly fills the frame, the inside hollow and dark, flame tongues leaning outward; 10-18 the ring thins and breaks into separate burning tongues and embers; 19-24 fades to scattered sparks. Perfectly centered and circular." },
-    "burst": { "size": "512x512", "frames": 22, "frame_ms": 40, "prompt": "Side view game VFX flipbook. A fierce fiery explosion blooming from the center. Frames 1-2 a small white flash; 3-8 a ball of rolling flame swells with jagged tongues while sparks shoot outward; 9-16 it turns into crimson flame and dark red smoke curling upward; 17-22 dissipates into drifting embers. Centered, with margin around it." },
-    "pillar": { "size": "384x768", "frames": 22, "frame_ms": 40, "prompt": "Side view game VFX flipbook in a tall frame. A towering pillar of fire erupting straight up from the bottom center. Frames 1-3 a narrow white-hot column shoots from the bottom edge to the top; 4-10 it widens into a roaring column of twisting flame with a wide flaring base; 11-18 the column thins from the bottom upward and tears into rising flame wisps; 19-22 gone except rising embers. The base sits exactly at the bottom edge center." },
-    "hit": { "size": "256x256", "frames": 10, "frame_ms": 40, "prompt": "Game VFX flipbook of a sharp sword-hit impact, centered. Frame 1 a tiny white point; 2-3 a bright four-pointed white-yellow star flash with one long diagonal slashing streak through it; 4-7 a spray of orange sparks and small flame flecks flying outward; 8-10 fades." },
-    "meteor": { "size": "256x512", "frames": 10, "frame_ms": 50, "prompt": "Side view game VFX flipbook in a tall frame, seamless loop. A blazing fireball comet falling straight DOWN: its round white-hot head sits near the bottom center and a long tail of flame streams straight UP behind it to the top of the frame. The head stays in the same place and at the same size in every frame while the tail flickers and sheds embers." },
-    "vortex": { "size": "512x512", "frames": 16, "frame_ms": 50, "prompt": "Top-down view game VFX flipbook, seamless loop. A whirling vortex of fire centered in the frame: five long curved arms of flame spiralling CLOCKWISE around the center like spinning sword slashes, forming a fiery whirlwind ring that fills about 85 percent of the frame, with a darker empty eye in the middle. Over 16 frames the arms rotate clockwise by exactly one fifth of a turn so the loop is seamless." },
-    "scorch": { "size": "1024x1024", "still": true, "prompt": "Top-down view game VFX texture: a scorched impact mark on the ground glowing with heat, centered. A network of jagged cracks radiating from the center, filled with molten orange-yellow light that is brightest at the center and cools to deep crimson toward the tips, with a few scattered glowing embers around." },
-    "ribbon": { "aspect_ratio": "21:9", "still": true, "prompt": "Game VFX texture strip: one long horizontal ribbon of fire flowing across the whole width like the trail left by a swung burning sword. The right end is the bright head: thick, white-hot yellow. Moving left it becomes saturated orange flame with licking tongues along its top and bottom edges, then thins into deep crimson wisps and dark red smoke at the far left end. The ribbon runs straight through the vertical middle and touches the left and right image edges." },
-    "eclipse": { "size": "1024x1024", "still": true, "prompt": "Game VFX sprite: a total solar eclipse made of fire, centered. A perfectly round pitch-black disc in the middle, surrounded by a thin blinding white-yellow ring and a blazing corona of long flame tongues and streamers reaching outward in all directions, orange near the ring and deep crimson at the tips, with one extra bright bead of light on the ring at the upper left." }
-  }
+    "slash_a": {
+      "size": "512x512",
+      "frames": 16,
+      "frame_ms": 40,
+      "prompt": "Top-down view game VFX flipbook, 16 frames, plays once. A sword-swing arc of fire: one wide crescent of flame sweeping CLOCKWISE through the upper half of the frame around the exact image center (the swordsman stands at the center and is NOT drawn), from the left side, over the top, to the right side: a 170-degree crescent whose outer edge is at 34 percent of the frame width from the center. Frames 1-2 a thin bright streak begins at the left; 3-6 the blazing crescent whips across, thickest and white-hot at its leading tip with flame tongues trailing behind; 7-12 the arc tears into curling flame tongues that drift slightly outward and darken to crimson; 13-15 only a few embers remain; frame 16 is completely black. The lower half of the frame stays empty."
+    },
+    "slash_b": {
+      "size": "512x512",
+      "frames": 16,
+      "frame_ms": 40,
+      "prompt": "Top-down view game VFX flipbook, 16 frames, plays once. A fast double sword-swing of fire: two thin overlapping crescents of flame, one slightly larger, sweeping CLOCKWISE through the upper half of the frame around the exact image center (swordsman not drawn), outer edge at 34 percent of the frame width from the center, throwing off many small sparks. Frames 1-2 two bright needle streaks begin at the left; 3-6 both razor crescents flash across; 7-11 they fray into ragged ribbons of flame and flying sparks; 12-15 thin crimson wisps and embers fade out; frame 16 is completely black. The lower half of the frame stays empty."
+    },
+    "slam": {
+      "size": "512x512",
+      "frames": 16,
+      "frame_ms": 40,
+      "prompt": "Top-down view game VFX flipbook, 16 frames, plays once. A heavy overhead sword strike of fire aimed straight up the vertical axis (swordsman not drawn). Frames 1-3 a long straight white-hot blade of fire shoots from a point at 25 percent of the frame height up the center line; 4-8 where it lands at 80 percent of the frame height a fierce burst of flame erupts and splashes forward and sideways in a fan no wider than 55 percent of the frame; 9-13 the line and the fan break into rolling flame tongues and dark red smoke; 14-15 only embers remain; frame 16 is completely black."
+    },
+    "wave": {
+      "size": "512x512",
+      "frames": 12,
+      "frame_ms": 50,
+      "prompt": "Top-down view game VFX flipbook, seamless loop of 12 frames. A flying crescent blade of fire, like a thrown sword wave travelling toward the top of the frame: a thick curved crescent with its convex cutting edge facing UP and its two tips pointing down-left and down-right. The crescent spans 56 percent of the frame width and its top edge sits at 78 percent of the frame height. It stays in exactly the same place and at the same size in every frame while flames stream off its edge and tips and trail DOWN behind it in tongues that end by 20 percent above the bottom edge. Flickering motion that loops seamlessly."
+    },
+    "dash": {
+      "size": "256x512",
+      "frames": 16,
+      "frame_ms": 40,
+      "prompt": "Top-down view game VFX flipbook in a tall frame, 16 frames, plays once. The fiery trail of a lightning-fast dash running in one straight vertical line up the center, from 8 percent above the bottom edge to 8 percent below the top edge. Frames 1-3 a razor-thin white-yellow line streaks from bottom to top; 4-8 it swells into a ribbon of flame with tongues licking out to both sides, never wider than half the frame; 9-14 the ribbon tears apart from the bottom upward into separate flames, crimson wisps and embers; 15 a few embers; frame 16 is completely black."
+    },
+    "nova": {
+      "size": "512x512",
+      "frames": 16,
+      "frame_ms": 40,
+      "prompt": "Top-down view game VFX flipbook, 16 frames, plays once. A circular shockwave of fire bursting outward from the exact center. Frames 1-2 a white-hot flash at the center; 3-8 a thick ring of flame expands rapidly until its outer edge reaches 38 percent of the frame width from the center and stops there, flame tongues leaning outward; 9-13 the ring thins and breaks into separate burning tongues and embers; 14-15 scattered sparks; frame 16 is completely black. Perfectly centered and circular."
+    },
+    "burst": {
+      "size": "512x512",
+      "frames": 16,
+      "frame_ms": 40,
+      "prompt": "Side view game VFX flipbook, 16 frames, plays once. A fierce fiery explosion blooming from the center. Frames 1-2 a small white flash; 3-7 a ball of rolling flame swells with jagged tongues while sparks shoot outward, never larger than 34 percent of the frame width from the center; 8-13 it turns into crimson flame and dark red smoke curling upward; 14-15 drifting embers; frame 16 is completely black."
+    },
+    "pillar": {
+      "size": "384x768",
+      "frames": 16,
+      "frame_ms": 40,
+      "prompt": "Side view game VFX flipbook in a tall frame, 16 frames, plays once. A towering pillar of fire erupting straight up. Its base sits on the center line at 8 percent above the bottom edge and its top ends 10 percent below the top edge. Frames 1-3 a narrow white-hot column shoots up from the base; 4-9 it widens into a roaring column of twisting flame with a flaring base, never wider than 70 percent of the frame; 10-14 the column thins from the bottom upward and tears into rising flame wisps; 15 rising embers; frame 16 is completely black."
+    },
+    "hit": {
+      "size": "512x512",
+      "frames": 10,
+      "frame_ms": 40,
+      "prompt": "Game VFX flipbook, 10 frames, plays once. A sword hit impact spark made of fire, centered in the frame. Frame 1: a small white-hot star flash at the exact center. Frames 2-4: it bursts into a sharp four-pointed slash-shaped star of flame with short jagged tongues of fire and a few bright sparks flying outward. Frames 5-8: the star breaks apart into thin curling wisps of orange flame and crimson smoke, sparks slowing down. Frames 9-10: only a few fading embers remain, then almost empty black. At its largest the whole effect, including every spark, fits inside a circle whose radius is 34 percent of the frame width."
+    },
+    "meteor": {
+      "size": "256x512",
+      "frames": 10,
+      "frame_ms": 50,
+      "prompt": "Side view game VFX flipbook in a tall frame, seamless loop of 10 frames. A blazing fireball comet falling straight DOWN: its round white-hot head sits on the center line with its lowest point 10 percent above the bottom edge, and a tail of flame streams straight UP behind it, ending 18 percent below the top edge. The head stays in the same place and at the same size in every frame while the tail flickers and sheds embers."
+    },
+    "vortex": {
+      "size": "512x512",
+      "frames": 16,
+      "frame_ms": 50,
+      "prompt": "Top-down view game VFX flipbook, seamless loop of 16 frames. A whirling vortex of fire centered in the frame: five long curved arms of flame spiralling CLOCKWISE around the center like spinning sword slashes, forming a fiery whirlwind ring with a darker empty eye in the middle. The whole whirl, including the tips of its arms and its embers, fits inside a circle whose radius is 36 percent of the frame width. Over the 16 frames the arms rotate clockwise by exactly one fifth of a turn so the loop is seamless, flames flickering as they spin. Constant size, perfectly centered."
+    },
+    "scorch": {
+      "size": "1024x1024",
+      "still": true,
+      "prompt": "Top-down view game VFX texture: a scorched impact mark on the ground glowing with heat, centered. A network of jagged cracks radiating from the center, filled with molten orange-yellow light that is brightest at the center and cools to deep crimson toward the tips, with a few scattered glowing embers around."
+    },
+    "ribbon": {
+      "aspect_ratio": "21:9",
+      "still": true,
+      "prompt": "Game VFX texture strip: one long horizontal ribbon of fire flowing across the whole width like the trail left by a swung burning sword. The right end is the bright head: thick, white-hot yellow. Moving left it becomes saturated orange flame with licking tongues along its top and bottom edges, then thins into deep crimson wisps and dark red smoke at the far left end. The ribbon runs straight through the vertical middle and touches the left and right image edges.",
+      "framing": false
+    },
+    "eclipse": {
+      "size": "1024x1024",
+      "still": true,
+      "prompt": "Game VFX sprite: a total solar eclipse made of fire, perfectly centered. A perfectly round pitch-black disc in the middle whose radius is 15 percent of the frame width, surrounded by a thin blinding white-yellow ring and a blazing corona of flame tongues and streamers reaching outward in all directions, orange near the ring and deep crimson at the tips, with one extra bright bead of light on the ring at the upper left. The longest streamers end at 36 percent of the frame width from the center."
+    }
+  },
+  "framing": "Framing rule, very important: in every frame the whole effect stays well inside the picture with a clear empty black margin of at least 12 percent of the frame on all four sides. No flame, spark, ember or glow may touch or cross any edge of the frame at any time."
 }
