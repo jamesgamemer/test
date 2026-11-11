@@ -1,0 +1,14 @@
+{
+  "name": "nightglade-online",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Nightglade Online — a browser MMORPG set in a moonlit forest",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node dev/simtest.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

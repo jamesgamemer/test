@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Nightglade Online</title>
+<meta name="description" content="Nightglade Online — MMORPG ในป่ายามค่ำคืน เล่นได้บนเบราว์เซอร์">
+<meta name="theme-color" content="#060c18">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Sarabun:wght@400;500;600&family=Trirong:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+<canvas id="view"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="plates"></div>
+  <div id="floaters"></div>
+
+  <div id="unit-me" class="unit">
+    <div class="orb"><span id="me-lvl">1</span></div>
+    <div class="bars">
+      <div class="uname" id="me-name"></div>
+      <div class="bar hp"><i id="me-hp"></i><b id="me-hp-t"></b></div>
+      <div class="bar mp"><i id="me-mp"></i><b id="me-mp-t"></b></div>
+    </div>
+  </div>
+
+  <div id="unit-target" class="unit target hidden">
+    <div class="uname"><span id="tg-name"></span><em id="tg-lvl"></em></div>
+    <div class="bar hp"><i id="tg-hp"></i><b id="tg-hp-t"></b></div>
+  </div>
+
+  <div id="topright">
+    <div id="minimap-wrap"><canvas id="minimap" width="184" height="184"></canvas><div class="ring"></div><div class="north">N</div></div>
+    <div id="zone-label"></div>
+    <div id="menu">
+      <button data-open="bag" title="I"><svg viewBox="0 0 24 24"><path d="M6 8h12l1.5 12h-15zM9 8V6a3 3 0 0 1 6 0v2"/></svg></button>
+      <button data-open="quests" title="J"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/></svg></button>
+      <button data-open="map" title="M"><svg viewBox="0 0 24 24"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14"/></svg></button>
+      <button data-open="settings" title="Esc"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></button>
+    </div>
+    <div id="tracker"></div>
+  </div>
+
+  <div id="zone-banner"><div class="zt"></div><div class="zs"></div></div>
+  <div id="banner"><div class="bt"></div><div class="bs"></div></div>
+  <div id="toasts"></div>
+  <div id="prompt" class="hidden"><kbd>F</kbd><span></span></div>
+
+  <div id="chat">
+    <div id="chat-log"></div>
+    <input id="chat-in" maxlength="140" autocomplete="off">
+  </div>
+
+  <div id="bottom">
+    <div id="skillbar"></div>
+    <div id="xp"><i id="xp-fill"></i><span id="xp-t"></span></div>
+  </div>
+
+  <div id="fps" class="hidden"></div>
+
+  <div id="touch" class="hidden">
+    <div id="stick"><i></i></div>
+    <div id="tbtns"></div>
+  </div>
+
+  <div id="death" class="hidden">
+    <h2 data-t="you_died"></h2>
+    <button id="btn-respawn"></button>
+  </div>
+
+  <div id="panel-bag" class="panel hidden">
+    <header><h3 data-t="bag"></h3><span class="gold"><i></i><b id="bag-gold">0</b></span><button class="x">×</button></header>
+    <div class="cols">
+      <div class="col char">
+        <div id="equip"></div>
+        <div id="stats"></div>
+      </div>
+      <div class="col">
+        <div id="bag-grid"></div>
+        <div id="bag-count"></div>
+      </div>
+      <div class="col detail" id="item-detail"></div>
+    </div>
+  </div>
+
+  <div id="panel-quests" class="panel hidden">
+    <header><h3 data-t="quests"></h3><button class="x">×</button></header>
+    <div id="quest-body"></div>
+  </div>
+
+  <div id="panel-npc" class="panel hidden">
+    <header><h3 id="npc-name"></h3><em id="npc-title"></em><button class="x">×</button></header>
+    <div id="npc-body"></div>
+  </div>
+
+  <div id="panel-map" class="panel hidden">
+    <header><h3 data-t="map"></h3><button class="x">×</button></header>
+    <canvas id="bigmap" width="560" height="560"></canvas>
+  </div>
+
+  <div id="panel-settings" class="panel hidden">
+    <header><h3 data-t="settings"></h3><button class="x">×</button></header>
+    <div class="form">
+      <label><span data-t="sound"></span><input type="range" id="set-vol" min="0" max="100" value="70"></label>
+      <label><span data-t="language"></span><select id="set-lang"><option value="th">ไทย</option><option value="en">English</option></select></label>
+      <label><span data-t="quality"></span><select id="set-quality"><option value="low" data-t="q_low"></option><option value="medium" data-t="q_medium"></option><option value="high" data-t="q_high"></option><option value="ultra" data-t="q_ultra"></option></select></label>
+      <p class="note" data-t="quality_note"></p>
+      <label class="check"><input type="checkbox" id="set-fps"><span data-t="fps"></span></label>
+      <p class="note" id="set-controls"></p>
+      <button id="set-reset" class="danger" data-t="reset_save"></button>
+    </div>
+  </div>
+
+  <div id="tip" class="hidden"></div>
+</div>
+
+<div id="title">
+  <div class="veil"></div>
+  <div class="inner">
+    <div class="logo"><span class="moon"></span><h1>NIGHTGLADE</h1><h2>ONLINE</h2><p id="title-sub"></p></div>
+    <div id="loader"><div class="track"><i id="load-fill"></i></div><div id="load-text"></div></div>
+    <form id="create" class="hidden" autocomplete="off">
+      <label><span data-t="name_label"></span><input id="in-name" maxlength="16" spellcheck="false"></label>
+      <label><span data-t="look_label"></span><div id="looks"></div></label>
+      <button type="submit" id="btn-enter" data-t="enter"></button>
+      <div id="mode"></div>
+      <div class="row">
+        <select id="t-lang"><option value="th">ไทย</option><option value="en">English</option></select>
+        <select id="t-quality"><option value="low" data-t="q_low"></option><option value="medium" data-t="q_medium"></option><option value="high" data-t="q_high"></option><option value="ultra" data-t="q_ultra"></option></select>
+      </div>
+      <p class="hint" id="title-controls"></p>
+    </form>
+    <div id="fatal" class="hidden"></div>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

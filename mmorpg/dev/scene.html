@@ -1,0 +1,36 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>scene test</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{width:100%;height:100%;display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script type="module">
+import { World3D } from '../src/gfx/world3d.js';
+import { THREE } from '../src/gfx/common.js';
+import { heightAt } from '../src/shared/world.js';
+const P = new URLSearchParams(location.search);
+const w = new World3D(document.getElementById('c'), P.get('q') || 'high');
+window.__err = [];
+window.addEventListener('error', (e) => window.__err.push(String(e.message)));
+try {
+  await w.build((p, s) => console.log('progress', p, s));
+  const hx = +(P.get('x') ?? 21), hz = +(P.get('z') ?? 6.5);
+  const hero = new THREE.Vector3(hx, heightAt(hx, hz), hz);
+  const m = new THREE.Mesh(new THREE.CapsuleGeometry(0.35, 1.1, 4, 10), new THREE.MeshStandardMaterial({ color: 0x8090b0 }));
+  m.position.copy(hero); m.position.y += 0.9; m.castShadow = true; w.scene.add(m);
+  const yaw = +(P.get('yaw') ?? 0.5), pitch = +(P.get('pitch') ?? 0.72), dist = +(P.get('dist') ?? 24);
+  const place = () => {
+    const cp = Math.cos(pitch), sp = Math.sin(pitch);
+    w.camera.position.set(hero.x + Math.sin(yaw) * cp * dist, hero.y + 1.2 + sp * dist, hero.z + Math.cos(yaw) * cp * dist);
+    w.camera.lookAt(hero.x, hero.y + 1.2, hero.z);
+  };
+  place();
+  if (P.get('exp')) w.post.mFinal.uniforms.uExposure.value = +P.get('exp');
+  if (P.get('fog')) w.scene.fog.density = +P.get('fog');
+  if (P.get('nocanopy')) w.scene.traverse((o) => { if (o.material && o.material.colorWrite === false) o.visible = false; });
+  if (P.get('hide')) w.scene.traverse((o) => { if (o.name === P.get('hide')) o.visible = false; });
+  let n = 0;
+  const maxF = +(P.get('stop') ?? 3);
+  const loop = () => { w.update(1 / 30, hero, [{ x: hero.x, z: hero.z, r: 1.2, k: 0.8 }]); w.render(); n++; window.__frames = n; if (n < maxF) requestAnimationFrame(loop); };
+  loop();
+  window.__w = w;
+} catch (e) { window.__err.push(String(e.stack || e)); console.error(e); }
+</script></body></html>
