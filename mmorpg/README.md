@@ -1,10 +1,10 @@
 # Nightglade Online
 
 เกม MMORPG แนวแอ็กชันบนเบราว์เซอร์ ฉากป่ายามค่ำคืนใต้แสงจันทร์ — เขียนด้วย JavaScript ล้วนและ Three.js
-โลกทั้งใบ (ภูมิประเทศ ต้นไม้ หญ้า ซากปรักหักพัง ตัวละคร มอนสเตอร์ ดนตรี) ถูกสร้างด้วยโค้ดตอนโหลดเกม
-ส่วน **VFX ของสกิลไม่ได้วาดด้วยโค้ด** — เป็นแอนิเมชันเปลวไฟสไตล์วาดมือที่สร้างด้วย Higgsfield แล้วเล่นในเกมแบบ sprite sheet
+งานภาพหลักไม่ได้วาดด้วยโค้ด: **โมเดลฉาก** (ลำต้นและรากไม้ ซากกำแพงซุ้มหน้าต่าง เสา กองอิฐ หิน ขอนไม้ ตอไม้ เห็ดเรืองแสง คบเพลิง), **texture พื้น/หิน/เปลือกไม้**, **แผ่นหญ้า เฟิร์น ใบไม้** และ **VFX ของสกิล** สร้างด้วย Higgsfield ทั้งหมด
+ส่วนที่ยังสร้างจากโค้ดคือรูปทรงภูมิประเทศ การจัดวางแผนที่ ตัวละครและมอนสเตอร์ แสง หมอก และดนตรี
 
-An action MMORPG that runs in the browser. The moonlit forest is built from code; the skill VFX are hand-painted-style fire animations generated with Higgsfield and played back as sprite sheets.
+An action MMORPG that runs in the browser. The environment art (prop models, ground textures, foliage cards) and the skill VFX are generated with Higgsfield; the terrain shape, world layout, characters, lighting and music are built in code.
 
 ![Nightglade Online](docs/screenshot.jpg)
 
@@ -70,7 +70,9 @@ mmorpg/
     data.js                    สกิล มอนสเตอร์ เควสต์ ไอเทม
     sim.js                     ตัวจำลองโลก (authoritative): AI, การต่อสู้, ดรอป, เควสต์, ผู้เล่นบอท
   assets/vfx/                  sprite sheet ของ VFX (สร้างด้วย Higgsfield)
+  assets/env/                  โมเดลฉาก (.mesh + แผนที่สี/normal), texture พื้น, แผ่นพืช (สร้างด้วย Higgsfield)
   src/gfx/                     เรนเดอร์: ภูมิประเทศ หญ้า ต้นไม้ ซาก ตัวละคร post-processing
+    assets.js                  ตัวโหลดโมเดล/texture/แผ่นพืชใน assets/env
     flipbook.js                ตัวเล่น sprite sheet (วางบนพื้นหรือหันหากล้อง, เปลี่ยนสีตามดาบ)
     fx.js                      กำกับเอฟเฟกต์ของแต่ละสกิล: ใช้ชีตไหน ที่ไหน เมื่อไร
   src/game/                    ตัวเกมฝั่งผู้เล่น: อินพุต กล้อง เครือข่าย เสียง
@@ -81,6 +83,9 @@ mmorpg/
   dev/build_vfx.py             แปลงแอนิเมชัน GIF เป็น sprite sheet + manifest
   dev/vfx.html                 หน้าดูเอฟเฟกต์ทุกชิ้น + ทดสอบการตัดช่องเฟรม
   dev/vfx_prompts.json         prompt ที่ใช้สร้างเอฟเฟกต์แต่ละชิ้น
+  dev/build_env.py             แปลงโมเดล GLB, texture พื้น และแผ่นพืช เป็นไฟล์ที่เกมโหลด + manifest
+  dev/env.html                 หน้าดูโมเดล texture และแผ่นพืชทุกชิ้น (มีมุมมองจากด้านบนไว้ดูทิศของโมเดล)
+  dev/env_prompts.json         prompt ที่ใช้สร้างโมเดล texture และแผ่นพืชแต่ละชิ้น
   vendor/three.min.js          Three.js r187 (MIT)
 ```
 
@@ -97,6 +102,21 @@ mmorpg/
 เปิด `dev/vfx.html` ผ่านเซิร์ฟเวอร์ไฟล์ธรรมดา (เช่น `python3 -m http.server` ในโฟลเดอร์ `mmorpg/`) เพื่อดูทุกเอฟเฟกต์เล่นด้วยโค้ดชุดเดียวกับในเกม พร้อมเส้นกรอบช่อง จุดยึด และระยะ หน้านี้ทดสอบตัวเองด้วย: เทียบทุกเฟรมที่ shader แสดงกับช่องในชีต ว่าไม่มีเฟรมไหนหยิบผิดช่องหรือโดนขอบช่องตัด และเรนเดอร์ซ้ำแบบเปลี่ยนสี (ดาบสีฟ้า/เขียว/ม่วง) ที่ความสว่างสูง เพื่อยืนยันว่าขอบของแผ่นภาพยังดำสนิท ไม่เห็นเป็นกรอบสี่เหลี่ยม
 
 อยากเพิ่มหรือเปลี่ยนเอฟเฟกต์: สร้าง GIF ใหม่ ตั้งชื่อไฟล์ตามคีย์ใน `SPEC` ของ `build_vfx.py` (ใส่ `pivot` กับ `reach` ของภาพนั้น) แล้วรันสคริปต์ซ้ำ
+
+## ฉากทำอย่างไร / How the environment is made
+
+1. วาดภาพต้นแบบของแต่ละชิ้นด้วย Higgsfield (GPT Image 2.6) — ชิ้นเดียว พื้นหลังเรียบ แสงนุ่มรอบด้าน เพื่อให้แปลงเป็น 3D ได้ดีและไม่มีเงาติดไปกับ texture
+2. แปลงภาพเป็นโมเดล 3D พร้อม texture ด้วย Higgsfield image-to-3D (Tripo) ได้ไฟล์ GLB
+3. Texture พื้น หิน เปลือกไม้ และแผ่นหญ้า/เฟิร์น/ใบไม้ (พื้นหลังโปร่งใส) ก็สร้างเป็นภาพเช่นกัน — prompt ทั้งหมดอยู่ใน `dev/env_prompts.json`
+4. `python3 dev/build_env.py <โฟลเดอร์>` (ในนั้นมี `models/*.glb`, `tex/*.png`, `cards/*.png`) แปลงทุกอย่างลง `assets/env/` และเขียน `src/gfx/env-manifest.js`:
+   - โมเดล: รวม mesh เป็นไฟล์ `.mesh` ขนาดเล็ก (ตำแหน่ง/uv 16 บิต, normal 8 บิต) วางฐานที่ y = 0 และย่อให้ด้านยาวสุดเป็น 1 หน่วย พร้อมแผนที่สีและ normal แบบ WebP — เกมจึงไม่ต้องมีตัวโหลด glTF
+   - Texture พื้น: ทำให้ต่อกันได้ไร้รอยต่อ แล้วสร้าง normal map จากความสว่าง
+   - แผ่นพืช: แยกแต่ละต้นออกจากภาพ จัดลงช่อง และเกลี่ยสีใบเข้าไปในส่วนโปร่งใสกันขอบดำ
+5. ในเกม: `vegetation.js` วางลำต้น หิน ตอไม้ ขอนไม้ เห็ด และพืชคลุมดินทั่วแผนที่, `ruins.js` ประกอบซากโบสถ์ที่ลานเริ่มเกมจากชิ้นกำแพง เสา กองอิฐ และคบเพลิง, `grass.js` ปูกอหญ้าแบบแผ่นภาพที่หันตามกล้องและไหวตามลม, `terrain.js` ผสม texture ทางเดินกับพื้นป่า
+
+เปิด `dev/env.html` ผ่านเซิร์ฟเวอร์ไฟล์ธรรมดาเพื่อดูทุกชิ้นผ่านตัวโหลดของเกม
+
+มุมกล้องใช้เลนส์ยาวจากระยะไกล (FOV 30°) แบบเกมแอ็กชัน RPG มุมสูง ภาพจึงแบนและจัดองค์ประกอบง่าย คบเพลิงดวงแรกของลานเริ่มเกมทอดเงาจริงในระดับคุณภาพสูงขึ้นไป
 
 ## ปรับแต่ง / Tuning
 

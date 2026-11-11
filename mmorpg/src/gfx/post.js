@@ -104,7 +104,7 @@ export class PostFX {
         c *= mix(1.0, 0.32 + 0.68 * smoothstep(0.5, 2.5, max(c.r, max(c.g, c.b))), uDark);
         c += bloom * uBloom;
         float vig = smoothstep(0.95, 0.2, length(d * vec2(1.0, 0.92)) * (1.25 + uDark * 0.35));
-        c *= mix(0.42 - uDark * 0.25, 1.0, vig);
+        c *= mix(0.36 - uDark * 0.22, 1.0, vig);
         c *= uExposure;
         c = aces(c);
         float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
@@ -118,7 +118,7 @@ export class PostFX {
         float g = fract(sin(dot(gl_FragCoord.xy + fract(uTime) * 61.0, vec2(12.9898, 78.233))) * 43758.5453);
         c += (g - 0.5) * 0.022;
         gl_FragColor = vec4(c, 1.0);
-      }`, { tScene: { value: null }, tBloom: { value: null }, uBloom: { value: 0.8 }, uExposure: { value: 1.35 }, uTime: U.uTime, uRes: { value: new THREE.Vector2() }, uFlash: { value: 0 }, uDanger: { value: 0 }, uShock: { value: [0, 1, 2, 3].map(() => new THREE.Vector4(0.5, 0.5, 0, 0)) }, uSquash: { value: 0.7 }, uAberr: { value: 0 }, uDark: { value: 0 } });
+      }`, { tScene: { value: null }, tBloom: { value: null }, uBloom: { value: 0.8 }, uExposure: { value: 1.34 }, uTime: U.uTime, uRes: { value: new THREE.Vector2() }, uFlash: { value: 0 }, uDanger: { value: 0 }, uShock: { value: [0, 1, 2, 3].map(() => new THREE.Vector4(0.5, 0.5, 0, 0)) }, uSquash: { value: 0.7 }, uAberr: { value: 0 }, uDark: { value: 0 } });
 
     this.rtScene = null;
     this.setSize(2, 2);

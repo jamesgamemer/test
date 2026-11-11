@@ -1,4 +1,5 @@
 import { THREE, foliage, chunked, mergeGeos, tint, xform } from './common.js';
+import { propMaterial } from './assets.js';
 import { mulberry32, heightAt, vnoise, PLAY_R, POND_LEVEL, nearPond, smoothstep } from '../shared/world.js';
 
 // Generic tube along a spine. spine(t) -> [x,y,z], radius(t, angle) -> r, color(t, angle, y, out)
@@ -69,18 +70,19 @@ function buildTree(type, rnd) {
     }
   }
   // limbs
+  const limbs = [];
   const nb = type === 0 ? 4 : type === 1 ? 3 : 2;
   for (let i = 0; i < nb; i++) {
     const y0 = (type === 2 ? 3.6 : 4.4) + i * (type === 2 ? 2.4 : 1.7) + rnd() * 1.2;
     const a = rnd() * 6.283 + i * 1.9, len = (type === 2 ? 2.2 : 3.6) + rnd() * 2.2, rise = 0.8 + rnd() * 2.2;
     const s0 = spine(y0 / H), cx = Math.cos(a), cz = Math.sin(a), r0 = R0 * (type === 2 ? 0.45 : 0.24);
-    parts.push(tube({
+    limbs.push(tube({
       spine: (t) => [s0[0] + cx * (R0 * 0.4 + len * t), y0 + rise * Math.sqrt(t), s0[2] + cz * (R0 * 0.4 + len * t)],
       radius: (t) => r0 * (1 - t * 0.7), segH: 5, segR: 5, uRep: 1, vRep: 1.5, color: null, ref: [0, 1, 0],
     }));
     anchors.push({ x: s0[0] + cx * (R0 * 0.4 + len), y: y0 + rise, z: s0[2] + cz * (R0 * 0.4 + len), size: (type === 2 ? 1.5 : 2.3) + rnd() * 1.1 });
   }
-  return { geo: mergeGeos(parts), anchors, R0, H };
+  return { geo: mergeGeos(parts.concat(limbs)), limbs: mergeGeos(limbs), anchors, R0, H };
 }
 
 function buildLeafCluster(rnd, n = 11) {
@@ -105,30 +107,6 @@ function buildLeafCluster(rnd, n = 11) {
   g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
   g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
   g.setIndex(idx);
-  return g;
-}
-
-function buildRock(seed) {
-  const g = new THREE.IcosahedronGeometry(1, 3);
-  const p = g.attributes.position, v = new THREE.Vector3();
-  for (let i = 0; i < p.count; i++) {
-    v.fromBufferAttribute(p, i);
-    const n = vnoise(v.x * 1.4 + seed * 9, v.y * 1.4 + v.z * 1.1, seed) * 0.6 + vnoise(v.x * 3.3 + v.z * 2, v.y * 3.3 - v.z, seed + 3) * 0.25;
-    const f = 0.72 + n * 0.62;
-    v.multiplyScalar(f);
-    // facet the silhouette a little
-    v.x = Math.round(v.x * 5) / 5 * 0.35 + v.x * 0.65;
-    v.z = Math.round(v.z * 5) / 5 * 0.35 + v.z * 0.65;
-    if (v.y < -0.25) v.y = -0.25 + (v.y + 0.25) * 0.3;
-    p.setXYZ(i, v.x, v.y, v.z);
-  }
-  g.computeVertexNormals();
-  const nrm = g.attributes.normal;
-  tint(g, 0xffffff, (c, x, y, z, i) => {
-    const up = nrm.getY(i), m = smoothstep(0.35, 0.8, up + (vnoise(x * 2.5, z * 2.5, seed + 7) - 0.5) * 0.7);
-    const ao = 0.55 + 0.45 * smoothstep(-0.3, 0.6, y);
-    c.setRGB((1 - m * 0.72) * ao, (1 - m * 0.3) * ao, (1 - m * 0.8) * ao);
-  });
   return g;
 }
 
@@ -178,28 +156,23 @@ function buildGiantShroom(rnd) {
   return mergeGeos([stem, cap, gill]);
 }
 
-function buildFern(rnd, broad) {
-  const pos = [], nor = [], col = [], uv = [], idx = [];
-  const n = broad ? 6 : 8, segs = 4;
-  for (let f = 0; f < n; f++) {
-    const a = (f / n) * 6.283 + rnd() * 0.5, len = (broad ? 0.42 : 0.72) * (0.75 + rnd() * 0.5), w = broad ? 0.2 : 0.11;
-    const cx = Math.cos(a), cz = Math.sin(a), arch = broad ? 0.42 : 0.55, droop = broad ? 0.25 : 0.55;
-    for (let i = 0; i <= segs; i++) {
-      const t = i / segs, d = len * t, y = arch * Math.sin(t * Math.PI * 0.62) * len * 1.6 - droop * t * t * len;
-      const ww = w * Math.sin(Math.min(1, t * 1.15 + 0.12) * Math.PI) * (broad ? 1.25 : 1);
-      const b = pos.length / 3;
-      pos.push(cx * d - cz * ww, y - 0.03, cz * d + cx * ww, cx * d, y + (broad ? 0 : 0.012), cz * d, cx * d + cz * ww, y - 0.03, cz * d - cx * ww);
-      for (let k = 0; k < 3; k++) { nor.push(cx * 0.3, 1, cz * 0.3); uv.push(k / 2, t); }
-      const l = 0.35 + 0.65 * t;
-      for (let k = 0; k < 3; k++) { const m = k === 1 ? 0.7 : 1; col.push(l * m * (broad ? 0.9 : 0.75), l * m * 1.0, l * m * (broad ? 0.55 : 0.6)); }
-      if (i < segs) idx.push(b, b + 3, b + 1, b + 1, b + 3, b + 4, b + 1, b + 4, b + 2, b + 2, b + 4, b + 5);
+// Two upright painted cards crossed at right angles: one cell of the plants atlas, standing on its bottom edge.
+function buildPlantCards(cell, cells, size) {
+  const pos = [], nor = [], uv = [], idx = [];
+  for (let k = 0; k < 2; k++) {
+    const a = k * Math.PI / 2 + 0.4, cx = Math.cos(a), cz = Math.sin(a), b = pos.length / 3;
+    for (const [u, v] of [[0, 0], [1, 0], [1, 1], [0, 1]]) {
+      const x = (u - 0.5) * size;
+      pos.push(cx * x, v * size, cz * x);
+      nor.push(cx * (u - 0.5) * 0.6, 1, cz * (u - 0.5) * 0.6);
+      uv.push((cell + u) / cells, v);
     }
+    idx.push(b, b + 1, b + 2, b, b + 2, b + 3);
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
   g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
   g.setIndex(idx);
   return g;
 }
@@ -244,28 +217,46 @@ function buildCrystal(rnd) {
   return mergeGeos(parts);
 }
 
-export function createVegetation(layout, maps, T, quality) {
+export function createVegetation(layout, maps, T, quality, A) {
   const group = new THREE.Group();
   const rnd = mulberry32(777);
   const glowLights = []; // candidate positions for the pooled point lights
 
   // ---------------- trees
+  // The big trees stand on generated trunk models: a thick base with buttress roots (tree_a) and a slender
+  // leaning trunk with sprawling roots (tree_b). A model ends a few metres up, where the game dissolves trunks
+  // into the dark canopy anyway; the part above the roots is stretched so the cut top always sits above that fade.
   const mkBark = (fade) => foliage(new THREE.MeshStandardMaterial({ map: T.bark, normalMap: T.barkN, vertexColors: true, roughness: 0.94, normalScale: new THREE.Vector2(1.3, 1.3) }), { fade });
   const barkMat = mkBark([6.5, 8.8]), thinBarkMat = mkBark([8, 10.5]);
-  const leafMat = foliage(new THREE.MeshLambertMaterial({ map: T.leaf, alphaTest: 0.42, side: THREE.DoubleSide }), { wind: '0.22', fade: [6.5, 9], noFlip: true });
+  const TRUNK_TOP = 11;
+  // r: trunk radius of the model, rootTop: where its roots end (both in model units)
+  const trunks = [{ model: A.models.tree_a, r: 0.185, rootTop: 0.2, stretch: 2.6 }, { model: A.models.tree_b, r: 0.062, rootTop: 0.2, stretch: 1.15 }].map((d) => {
+    const geo = d.model.geo.clone(), p = geo.attributes.position;
+    for (let i = 0; i < p.count; i++) { const y = p.getY(i); if (y > d.rootTop) p.setY(i, d.rootTop + (y - d.rootTop) * d.stretch); }
+    geo.computeBoundingSphere();
+    return { ...d, geo, h: d.rootTop + (d.model.size[1] - d.rootTop) * d.stretch, mat: foliage(propMaterial(d.model), { fade: [6.5, 8.8] }) };
+  });
+  // the painted leaf clumps are dense, so they dissolve lower than the trunks do: the canopy must not hide the fight
+  const leafMat = foliage(new THREE.MeshLambertMaterial({ map: T.leaf, alphaTest: 0.42, side: THREE.DoubleSide }), { wind: '0.22', fade: [4.4, 7.0], noFlip: true });
   const canopyMat = new THREE.MeshBasicMaterial({ map: T.leaf, alphaTest: 0.42, side: THREE.DoubleSide, colorWrite: false, depthWrite: false });
   const leafGeo = [buildLeafCluster(rnd), buildLeafCluster(rnd, 13)];
   const leafItems = [[], []], canopyItems = [[], []];
-  const leafTones = [0x38623a, 0x2f5a40, 0x446a38, 0x2c5650, 0x4c7040];
+  // the leaf card is already painted green: these only vary it a little from clump to clump
+  const leafTones = [0xa4bea6, 0x92b0a2, 0xb0ba9a, 0x8cb0a8, 0xb6be9e];
   for (let type = 0; type < 3; type++) {
     for (let v = 0; v < 2; v++) {
       const tree = buildTree(type, rnd);
-      const items = [];
+      const items = [], trunkItems = [];
+      const trunk = type < 2 ? trunks[type] : null;
       layout.trees.forEach((t, i) => {
         if (t.type !== type || i % 2 !== v) return;
         const y = heightAt(t.x, t.z) - 0.35;
         const sxz = t.r / tree.R0;
         items.push({ x: t.x, y, z: t.z, ry: t.rot, sx: sxz, sy: t.s, sz: sxz });
+        if (trunk) {
+          const k = t.r / trunk.r;
+          trunkItems.push({ x: t.x, y: y + 0.2, z: t.z, ry: t.rot * 3.1 + i, sx: k, sy: Math.max(k, TRUNK_TOP / trunk.h), sz: k });
+        }
         const cs = Math.cos(t.rot), sn = Math.sin(t.rot);
         const inPlay = Math.hypot(t.x, t.z) < PLAY_R + 14;
         if (inPlay && type !== 2) for (const a of tree.anchors) {
@@ -281,7 +272,10 @@ export function createVegetation(layout, maps, T, quality) {
           canopyItems[(rnd() * 2) | 0].push({ x: t.x + Math.cos(a) * d, y: y + 27 + rnd() * 6, z: t.z + Math.sin(a) * d, ry: rnd() * 6.283, sx: s, sy: s * 0.5, sz: s });
         }
       });
-      group.add(chunked(tree.geo, type === 2 ? thinBarkMat : barkMat, items));
+      if (trunk) {
+        group.add(chunked(trunk.geo, trunk.mat, trunkItems));
+        group.add(chunked(tree.limbs, barkMat, items)); // the boughs the leaf clumps hang from
+      } else group.add(chunked(tree.geo, thinBarkMat, items));
     }
   }
   for (let v = 0; v < 2; v++) {
@@ -289,31 +283,34 @@ export function createVegetation(layout, maps, T, quality) {
     group.add(chunked(leafGeo[v], canopyMat, canopyItems[v], { receive: false }));
   }
 
-  // ---------------- rocks & logs
-  const stoneMat = new THREE.MeshStandardMaterial({ map: T.stone, normalMap: T.stoneN, vertexColors: true, roughness: 0.9 });
-  for (let v = 0; v < 3; v++) {
-    const items = layout.rocks.filter((r) => r.type === v).map((r) => ({ x: r.x, y: heightAt(r.x, r.z) + r.r * r.sy * 0.12, z: r.z, ry: r.rot, sx: r.r, sy: r.r * r.sy, sz: r.r * (0.8 + (r.rot % 1) * 0.4) }));
-    group.add(chunked(buildRock(v + 1), stoneMat, items));
-  }
+  // ---------------- rocks, stumps & logs (generated models)
   {
-    const body = new THREE.CylinderGeometry(1, 1, 1, 12, 4, false).rotateZ(Math.PI / 2);
-    const nrm = body.attributes.normal;
-    tint(body, 0xffffff, (c, x, y, z, i) => {
-      const cap = Math.abs(nrm.getX(i)) > 0.9;
-      const m = smoothstep(0.25, 0.85, nrm.getY(i) + (vnoise(x * 9, z * 3, 3) - 0.5) * 0.8);
-      if (cap) c.setRGB(1.5, 1.25, 0.95); else c.setRGB(1 - m * 0.72, 1 - m * 0.18, 1 - m * 0.8);
-    });
-    const logMat = new THREE.MeshStandardMaterial({ map: T.bark, normalMap: T.barkN, vertexColors: true, roughness: 0.95 });
-    const items = layout.logs.map((l) => ({ x: l.x, y: heightAt(l.x, l.z) + l.rad * 0.7, z: l.z, ry: l.rot, sx: l.len, sy: l.rad, sz: l.rad }));
-    group.add(chunked(body, logMat, items));
+    const rock = A.models.rock, stump = A.models.stump, log = A.models.log;
+    const rocks = [], stumps = [];
+    for (const r of layout.rocks) {
+      const y = heightAt(r.x, r.z);
+      if (r.type === 2 && r.r < 1.5) stumps.push({ x: r.x, y: y - 0.12, z: r.z, ry: r.rot, s: r.r * 2.7 });
+      else { const sy = r.r * r.sy * 2.5; rocks.push({ x: r.x, y: y - sy * 0.13, z: r.z, ry: r.rot, sx: r.r * 2.15, sy, sz: r.r * 2.15 * (0.8 + (r.rot % 1) * 0.4) }); }
+    }
+    group.add(chunked(rock.geo, propMaterial(rock), rocks));
+    group.add(chunked(stump.geo, propMaterial(stump), stumps));
+    // the model lies along z; a layout log runs along its own x
+    const logs = layout.logs.map((l) => ({ x: l.x, y: heightAt(l.x, l.z) - l.rad * 0.25, z: l.z, ry: l.rot + Math.PI / 2, sx: l.rad * 5.6, sy: l.rad * 5.6, sz: l.len * 1.05 }));
+    group.add(chunked(log.geo, propMaterial(log), logs));
   }
 
   // ---------------- mushrooms
-  const glowMat = new THREE.MeshBasicMaterial({ vertexColors: true, color: new THREE.Color(1.1, 1.1, 1.1), side: THREE.DoubleSide });
   const dullMat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
-  for (const glow of [true, false]) for (let v = 0; v < 2; v++) {
-    const items = layout.shrooms.filter((s, i) => s.glow === glow && i % 2 === v).map((s) => ({ x: s.x, y: heightAt(s.x, s.z) + s.lift - 0.02, z: s.z, ry: s.rot, s: s.s * 1.5 }));
-    group.add(chunked(buildShroomCluster(rnd, glow), glow ? glowMat : dullMat, items, { cast: false }));
+  {
+    // glowing clusters are a generated model whose painted caps also light themselves
+    const m = A.models.mushrooms;
+    const mat = new THREE.MeshStandardMaterial({ map: m.map, normalMap: m.normalMap, roughness: 0.6, emissive: 0xffffff, emissiveMap: m.map, emissiveIntensity: 1.25 });
+    const items = layout.shrooms.filter((s) => s.glow).map((s) => ({ x: s.x, y: heightAt(s.x, s.z) + s.lift - 0.05, z: s.z, ry: s.rot, s: s.s * 0.8 }));
+    group.add(chunked(m.geo, mat, items, { cast: false }));
+  }
+  for (let v = 0; v < 2; v++) {
+    const items = layout.shrooms.filter((s, i) => !s.glow && i % 2 === v).map((s) => ({ x: s.x, y: heightAt(s.x, s.z) + s.lift - 0.02, z: s.z, ry: s.rot, s: s.s * 1.5 }));
+    group.add(chunked(buildShroomCluster(rnd, false), dullMat, items, { cast: false }));
   }
   layout.shrooms.forEach((s, i) => { if (s.glow && s.s > 0.95 && i % 3 === 0) glowLights.push({ x: s.x, y: heightAt(s.x, s.z) + s.lift + 0.45, z: s.z, color: 0x3fa8ff, intensity: 2.2 * s.s, dist: 7 }); });
   {
@@ -338,8 +335,9 @@ export function createVegetation(layout, maps, T, quality) {
     const d = maps.dens(x, z);
     if (d < 0.12) continue;
     const y = heightAt(x, z), k = rnd();
-    if (k < 0.5) ferns[i % 2].push({ x, y, z, ry: rnd() * 6.283, s: 0.7 + rnd() * 0.8, color: rnd() < 0.5 ? 0x356a38 : 0x285c42 });
-    else if (k < 0.86) broad[i % 2].push({ x, y, z, ry: rnd() * 6.283, s: 0.6 + rnd() * 0.6, color: rnd() < 0.5 ? 0x3b7040 : 0x2e654a });
+    const tone = [0xb8ccb2, 0xa0bcaa, 0xc4c8a8, 0xa4c0b8][(rnd() * 4) | 0];
+    if (k < 0.5) ferns[i % 2].push({ x, y: y - 0.04, z, ry: rnd() * 6.283, s: 0.7 + rnd() * 0.7, color: tone });
+    else if (k < 0.86) broad[i % 2].push({ x, y: y - 0.04, z, ry: rnd() * 6.283, s: 0.7 + rnd() * 0.6, color: tone });
     else { const s = 0.9 + rnd() * 0.9; bushes[i % 2].push({ x, y: y + s * 0.35, z, ry: rnd() * 6.283, sx: s, sy: s * 0.6, sz: s, color: leafTones[(rnd() * leafTones.length) | 0] }); }
   }
   // moonpetal flowers grow in drifts
@@ -348,11 +346,14 @@ export function createVegetation(layout, maps, T, quality) {
     if (vnoise(x * 0.09, z * 0.09, 303) < 0.63 || maps.dens(x, z) < 0.1) continue;
     flowers.push({ x, y: heightAt(x, z) + 0.12 + rnd() * 0.25, z, ry: rnd() * 6.283, s: 0.9 + rnd() * 0.9 });
   }
-  const fernMat = foliage(new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }), { wind: 'uv.y * 0.22', noFlip: true });
+  // ferns, broad-leaved plants and sprigs are painted cards (assets/env/plants.webp), two crossed per plant
+  const plants = A.cards.plants;
+  const fernMat = foliage(new THREE.MeshLambertMaterial({ map: plants.map, alphaTest: 0.4, side: THREE.DoubleSide }), { wind: 'uv.y * 0.2', noFlip: true });
+  const plantGeo = [buildPlantCards(0, plants.cells, 1.15), buildPlantCards(1, plants.cells, 0.9), buildPlantCards(2, plants.cells, 1.2)];
   const bushMat = foliage(new THREE.MeshLambertMaterial({ map: T.leaf, alphaTest: 0.42, side: THREE.DoubleSide }), { wind: '0.1', noFlip: true });
   for (let v = 0; v < 2; v++) {
-    group.add(chunked(buildFern(rnd, false), fernMat, ferns[v], { cast: false, colors: true }));
-    group.add(chunked(buildFern(rnd, true), fernMat, broad[v], { cast: false, colors: true }));
+    group.add(chunked(plantGeo[0], fernMat, ferns[v], { cast: false, colors: true }));
+    group.add(chunked(plantGeo[1 + v], fernMat, broad[v], { cast: false, colors: true }));
     group.add(chunked(leafGeo[v], bushMat, bushes[v], { cast: false, colors: true }));
   }
   const flowerMat = foliage(new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide }), { wind: 'position.y * 0.5' });

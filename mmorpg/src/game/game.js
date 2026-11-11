@@ -14,6 +14,8 @@ const PREFS_KEY = 'nightglade.prefs.v2';
 const lerp = (a, b, k) => a + (b - a) * k;
 const angLerp = (a, b, k) => { let d = (b - a) % 6.2831853; if (d > Math.PI) d -= 6.2831853; if (d < -Math.PI) d += 6.2831853; return a + d * k; };
 const FIRES = [...CAMP.torches, CAMP.fire, ...GATE.braziers];
+const FOV = 30; // a long lens from far back: flat, composed, little perspective distortion
+const MOONLIGHT = new THREE.Color(0x9cc4ff);
 
 export class Game {
   constructor(canvas) {
@@ -30,7 +32,7 @@ export class Game {
     this.ents = new Map();
     this.npcs = [];
     this.me = { id: null, x: SPAWN.x, z: SPAWN.z, y: 0, rot: 1.2, hp: 1, mp: 1, xp: 0, dead: false, moving: false, speed: 0, faceLock: 0, aimRot: 0, dash: null, full: null };
-    this.cam = { yaw: 0.2, pitch: 0.74, dist: 24, tYaw: 0.2, tPitch: 0.74, tDist: 24, target: new THREE.Vector3(SPAWN.x, 1, SPAWN.z) };
+    this.cam = { yaw: 0.2, pitch: 0.7, dist: 30, tYaw: 0.2, tPitch: 0.7, tDist: 30, target: new THREE.Vector3(SPAWN.x, 1, SPAWN.z) };
     this.input = { keys: new Set(), mx: 0, my: 0, attack: false, joy: { x: 0, y: 0 }, hasMouse: false, drag: null };
     this.aim = { x: 0, z: 0, dx: 0, dz: 1 };
     this.cd = {}; this.castAt = {};
@@ -40,6 +42,7 @@ export class Game {
     this.danger = 0; this.resScale = 1; this.fpsAcc = 0; this.fpsN = 0; this.fpsAt = 0;
     this._v = new THREE.Vector3(); this._ray = new THREE.Raycaster(); this._hero = new THREE.Vector3();
     this.touch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    if (this.touch) this.cam.dist = this.cam.tDist = 25; // small screens start a little closer
   }
 
   savePrefs() { try { localStorage.setItem(PREFS_KEY, JSON.stringify(this.prefs)); } catch { /* ignore */ } }
@@ -67,7 +70,7 @@ export class Game {
     this.me.y = heightAt(this.me.x, this.me.z);
     this.meActor.group.position.set(this.me.x, this.me.y, this.me.z);
     this.meActor.group.rotation.y = this.me.rot;
-    this.world.heroLight.color.set(LOOKS[look].blade);
+    this.world.heroLight.color.set(LOOKS[look].blade).lerp(MOONLIGHT, 0.5); // the hero's own glow: half blade, half moon
   }
 
   async enter({ name, look, socket }) {
@@ -154,7 +157,7 @@ export class Game {
       if (d && d.id === e.pointerId) { if (!d.touch && d.moved < 6) this.cast('wave'); inp.drag = null; }
     };
     c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
-    c.addEventListener('wheel', (e) => { e.preventDefault(); this.cam.tDist = Math.min(34, Math.max(11, this.cam.tDist * (1 + Math.sign(e.deltaY) * 0.1))); }, { passive: false });
+    c.addEventListener('wheel', (e) => { e.preventDefault(); this.cam.tDist = Math.min(42, Math.max(14, this.cam.tDist * (1 + Math.sign(e.deltaY) * 0.1))); }, { passive: false });
     window.addEventListener('resize', () => this.world.resize());
     document.addEventListener('pointerdown', () => this.audio.start(), { once: true });
   }
@@ -529,7 +532,7 @@ export class Game {
   _updateTitle(dt) {
     const cam = this.cam;
     cam.tYaw = 0.2 + Math.sin(this.clock * 0.07) * 0.35;
-    cam.tDist = 23; cam.tPitch = 0.68;
+    cam.tDist = 29; cam.tPitch = 0.62;
     this.meActor.update(dt, 0);
   }
 
@@ -548,7 +551,7 @@ export class Game {
     c.position.set(cam.target.x + Math.sin(cam.yaw) * cp * cam.dist, cam.target.y + sp * cam.dist, cam.target.z + Math.cos(cam.yaw) * cp * cam.dist);
     c.position.y = Math.max(c.position.y, heightAt(c.position.x, c.position.z) + 2);
     c.lookAt(cam.target);
-    const fov = 38 - Math.min(4, this.fx.kick * 1.7);
+    const fov = FOV - Math.min(3.2, this.fx.kick * 1.4);
     if (Math.abs(fov - c.fov) > 0.01) { c.fov = fov; c.updateProjectionMatrix(); }
     if (sh > 0) { c.position.x += (Math.random() - 0.5) * sh * 0.5; c.position.y += (Math.random() - 0.5) * sh * 0.5; c.rotation.z += (Math.random() - 0.5) * sh * 0.02; }
     // grass reacts to nearby bodies

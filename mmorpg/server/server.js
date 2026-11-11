@@ -13,7 +13,7 @@ const PORT = Number(process.env.PORT) || 8080;
 const BOTS = process.env.BOTS !== undefined ? Number(process.env.BOTS) : 4;
 const MAX_PLAYERS = Number(process.env.MAX_PLAYERS) || 60;
 const SAVE_FILE = path.join(ROOT, 'server', 'data', 'characters.json');
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.webp': 'image/webp', '.mesh': 'application/octet-stream', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
 
 // ---------------------------------------------------------------- persistence
 let saves = {};

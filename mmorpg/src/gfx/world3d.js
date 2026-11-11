@@ -6,13 +6,14 @@ import { createVegetation } from './vegetation.js';
 import { createRuins } from './ruins.js';
 import { LightPool, createFires, createFireflies, createMist, createGodRays, MOON_DIR } from './ambient.js';
 import { PostFX } from './post.js';
+import { loadEnv } from './assets.js';
 import { buildLayout, heightGrid, heightAt } from '../shared/world.js';
 
 export const QUALITY = {
-  low: { grass: 34000, undergrowth: 0.4, msaa: 0, dof: false, shadow: 1024, pixelRatio: 1, fireflies: 110, mist: 20, rays: 36, lights: 5, bloom: 5 },
-  medium: { grass: 80000, undergrowth: 0.7, msaa: 2, dof: false, shadow: 2048, pixelRatio: 1.25, fireflies: 200, mist: 34, rays: 60, lights: 7, bloom: 6 },
-  high: { grass: 140000, undergrowth: 1, msaa: 4, dof: true, shadow: 2048, pixelRatio: 1.5, fireflies: 300, mist: 46, rays: 80, lights: 8, bloom: 6 },
-  ultra: { grass: 230000, undergrowth: 1.25, msaa: 4, dof: true, shadow: 4096, pixelRatio: 2, fireflies: 420, mist: 56, rays: 90, lights: 9, bloom: 7 },
+  low: { grass: 8000, undergrowth: 0.4, msaa: 0, dof: false, shadow: 1024, pixelRatio: 1, fireflies: 110, mist: 20, rays: 36, lights: 5, bloom: 5, torchShadow: 0 },
+  medium: { grass: 18000, undergrowth: 0.7, msaa: 2, dof: false, shadow: 2048, pixelRatio: 1.25, fireflies: 200, mist: 34, rays: 60, lights: 7, bloom: 6, torchShadow: 0 },
+  high: { grass: 32000, undergrowth: 1, msaa: 4, dof: true, shadow: 2048, pixelRatio: 1.5, fireflies: 300, mist: 46, rays: 80, lights: 8, bloom: 6, torchShadow: 1024 },
+  ultra: { grass: 52000, undergrowth: 1.25, msaa: 4, dof: true, shadow: 4096, pixelRatio: 2, fireflies: 420, mist: 56, rays: 90, lights: 9, bloom: 7, torchShadow: 2048 },
 };
 
 const tick = () => new Promise((r) => setTimeout(r, 0));
@@ -33,7 +34,7 @@ export class World3D {
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(0x08142f, 0.0125);
     this.scene.background = new THREE.Color(0x04080f);
-    this.camera = new THREE.PerspectiveCamera(38, 1, 1, 260);
+    this.camera = new THREE.PerspectiveCamera(30, 1, 1, 280);
     this.focus = new THREE.Vector3();
     this.time = 0;
     this._v = new THREE.Vector3();
@@ -47,6 +48,13 @@ export class World3D {
     progress(0.05, 'textures'); await tick();
     const T = this.tex = buildTextures();
     U.uNoiseTex.value = T.noise;
+    // generated art: prop models, ground textures and foliage cards replace the code-drawn ones
+    const A = this.assets = await loadEnv((k) => progress(0.05 + k * 0.13, 'textures'));
+    T.dirt = A.ground.ground_path.map; T.groundN = A.ground.ground_path.normalMap;
+    T.moss = A.ground.ground_forest.map; T.mossN = A.ground.ground_forest.normalMap;
+    T.stone = A.ground.stone.map; T.stoneN = A.ground.stone.normalMap;
+    T.bark = A.ground.bark.map; T.barkN = A.ground.bark.normalMap;
+    T.leaf = A.cards.leaves.map;
     progress(0.2, 'terrain'); await tick();
     const layout = this.layout = buildLayout();
     heightGrid();
@@ -57,17 +65,17 @@ export class World3D {
     this.terrain = createTerrain(T);
     scene.add(this.terrain.group);
     progress(0.5, 'forest'); await tick();
-    const veg = createVegetation(layout, maps, T, q);
+    const veg = createVegetation(layout, maps, T, q, A);
     scene.add(veg.group);
     progress(0.7, 'ruins'); await tick();
-    const ruins = createRuins(T);
+    const ruins = createRuins(T, A);
     scene.add(ruins.group);
     progress(0.8, 'grass'); await tick();
-    scene.add(createGrass(q.grass));
+    scene.add(createGrass(q.grass, A.cards.grass));
     progress(0.88, 'lights'); await tick();
 
     // --- lighting
-    this.hemi = new THREE.HemisphereLight(0x4a70bc, 0x14221e, 2.0);
+    this.hemi = new THREE.HemisphereLight(0x5a84d8, 0x1a2c38, 3.4);
     scene.add(this.hemi);
     const moon = this.moon = new THREE.DirectionalLight(0xa3beff, 4.2);
     moon.castShadow = true;
@@ -87,7 +95,20 @@ export class World3D {
       ...ruins.lamps.map((l) => ({ ...l, priority: 200 })),
       ...veg.glowLights,
     ]);
-    this.heroLight = new THREE.PointLight(0x86bdff, 11, 12, 1.3);
+    // The camp's first wall torch also throws real shadows across the court (one extra shadow pass):
+    // a wide spot aimed out from the wall and down, on top of the pooled glow every fire has.
+    const torch = q.torchShadow && ruins.fires.find((f) => f.kind === 'torch');
+    if (torch) {
+      const spot = this.torchSpot = new THREE.SpotLight(torch.color, 150, 26, 1.2, 0.75, 1.5);
+      spot.position.set(torch.x, torch.y + 0.1, torch.z);
+      spot.target.position.set(torch.x + Math.sin(torch.face) * 5, torch.y - 4.2, torch.z + Math.cos(torch.face) * 5);
+      spot.castShadow = true;
+      spot.shadow.mapSize.set(q.torchShadow, q.torchShadow);
+      spot.shadow.camera.near = 0.4; spot.shadow.camera.far = 26;
+      spot.shadow.bias = -0.006; spot.shadow.normalBias = 0.12;
+      scene.add(spot, spot.target);
+    }
+    this.heroLight = new THREE.PointLight(0x86bdff, 8, 10, 1.3);
     scene.add(this.heroLight);
     this.fxLights = [new THREE.PointLight(0xffffff, 0, 14, 1.6), new THREE.PointLight(0xffffff, 0, 14, 1.6)];
     scene.add(...this.fxLights);
@@ -147,6 +168,7 @@ export class World3D {
     this.moon.position.set(tx - MOON_DIR.x * 95, ty - MOON_DIR.y * 95, tz - MOON_DIR.z * 95);
 
     this.pool.update(hero, this.time);
+    if (this.torchSpot) { const t = this.time; this.torchSpot.intensity = 150 * (1 + 0.1 * Math.sin(t * 9.1) + 0.06 * Math.sin(t * 23.7)); }
     this.heroLight.position.set(hero.x, hero.y + 2.5, hero.z);
     this.terrain.update(this.time);
   }

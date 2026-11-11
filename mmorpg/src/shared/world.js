@@ -186,8 +186,8 @@ export const CAMP_WALLS = [
 ];
 export const CAMP = {
   torches: [
-    { x: C.x - 3.2, z: C.z - 4.55, y: 2.5, wall: true },
-    { x: C.x + 6.05, z: C.z - 1.6, y: 2.4, wall: true, face: -Math.PI / 2 },
+    { x: C.x - 4.6, z: C.z - 4.5, y: 2.5, wall: true },
+    { x: C.x + 6.0, z: C.z - 3.5, y: 2.2, wall: true, face: -Math.PI / 2 },
   ],
   fire: { x: C.x - 2.2, z: C.z + 1.6 },
   column: { x: C.x + 3.4, z: C.z + 3.2, rot: 0.5 },

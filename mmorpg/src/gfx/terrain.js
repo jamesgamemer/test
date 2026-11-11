@@ -104,33 +104,46 @@ export function createTerrain(T) {
   }
   geo.computeVertexNormals();
 
-  T.groundN.repeat.set(70, 70);
-  const mat = new THREE.MeshStandardMaterial({ map: T.dirt, normalMap: T.groundN, roughness: 0.96, metalness: 0, normalScale: new THREE.Vector2(0.9, 0.9) });
+  // The ground textures are sampled in world space (gUv); the mesh uv only gives the normal map its tangent
+  // frame, so it has to run the same way: u along +x, v along -z.
+  T.groundN.repeat.set(74, 74);
+  const mat = new THREE.MeshStandardMaterial({ map: T.dirt, normalMap: T.groundN, roughness: 0.95, metalness: 0, normalScale: new THREE.Vector2(0.75, 0.75) });
   patch(mat, (s) => {
     s.vertexShader = 'varying vec3 vWPos;\n' + s.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\n vWPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     s.fragmentShader = `
       varying vec3 vWPos;
-      uniform sampler2D uWorldTex; uniform sampler2D uMossTex; uniform sampler2D uNoiseTex;
+      uniform sampler2D uWorldTex; uniform sampler2D uMossTex; uniform sampler2D uMossN; uniform sampler2D uNoiseTex; uniform float uTime;
+      // one tile sampled at two unrelated scales and blended by broad noise, so the repeat never lines up
+      vec3 untile(sampler2D t, vec2 uv, float k) { return mix(texture2D(t, uv).rgb, texture2D(t, uv * 0.41 + vec2(0.31, 0.67)).rgb, k); }
       ` + s.fragmentShader
       .replace('#include <map_fragment>', `
+        vec2 gUv = vec2(vWPos.x, -vWPos.z);
         vec2 wuv = vWPos.xz / ${WORLD_SIZE.toFixed(1)} + 0.5;
         vec4 wd = texture2D(uWorldTex, wuv);
         float tn = texture2D(uNoiseTex, vWPos.xz * 0.09).g;
         float macro = texture2D(uNoiseTex, vWPos.xz * 0.013).r;
+        float mixK = smoothstep(0.38, 0.62, texture2D(uNoiseTex, vWPos.xz * 0.027 + 0.5).r);
         float dirtK = smoothstep(0.32, 0.62, wd.b + (tn - 0.5) * 0.4);
-        vec3 cDirt = texture2D(map, vWPos.xz * 0.23).rgb;
-        vec3 cMoss = texture2D(uMossTex, vWPos.xz * 0.17).rgb;
-        vec3 albedo = mix(cMoss, cDirt, dirtK) * (0.7 + macro * 0.6);
+        vec3 cDirt = untile(map, gUv * 0.23125, mixK);
+        vec3 cMoss = untile(uMossTex, gUv * 0.185, mixK);
+        // the painted textures are lit for daylight: pull them down into the cool, dark range of a moonlit floor
+        vec3 albedo = mix(cMoss * vec3(0.5, 0.7, 0.66), cDirt * vec3(0.5, 0.5, 0.58), dirtK) * (0.62 + macro * 0.55);
         float wetK = smoothstep(0.35, 0.8, wd.a + (tn - 0.5) * 0.25);
-        albedo = mix(albedo, albedo * vec3(0.6, 0.66, 0.78), wetK);
+        albedo = mix(albedo, albedo * vec3(0.5, 0.57, 0.72), wetK);
         diffuseColor.rgb *= albedo;`)
-      .replace('#include <roughnessmap_fragment>', 'float roughnessFactor = mix(roughness, 0.24, wetK);')
-      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n totalEmissiveRadiance += vec3(0.002, 0.006, 0.015) * wetK;')
+      .replace('#include <roughnessmap_fragment>', 'float roughnessFactor = mix(roughness, 0.13, wetK);')
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+        // standing water mirrors the night sky: brighter at a glancing angle, broken up by slow ripples
+        float wFres = pow(1.0 - clamp(dot(normalize(vViewPosition), normal), 0.0, 1.0), 3.0);
+        float wRip = texture2D(uNoiseTex, vWPos.xz * 0.21 + uTime * vec2(0.012, 0.008)).g;
+        totalEmissiveRadiance += vec3(0.018, 0.045, 0.1) * wetK * (0.3 + 1.6 * wFres) * (0.55 + 0.9 * wRip);`)
       .replace('#include <normal_fragment_maps>', `
         vec3 flatN = normal;
-        #include <normal_fragment_maps>
+        vec3 mapN = mix(texture2D(uMossN, gUv * 0.185).xyz, texture2D(normalMap, gUv * 0.23125).xyz, dirtK) * 2.0 - 1.0;
+        mapN.xy *= normalScale;
+        normal = normalize(tbn * mapN);
         normal = normalize(mix(normal, flatN, wetK * 0.97));`);
-  }, { uMossTex: { value: T.moss } });
+  }, { uMossTex: { value: T.moss }, uMossN: { value: T.mossN } });
 
   const mesh = new THREE.Mesh(geo, mat);
   mesh.receiveShadow = true;

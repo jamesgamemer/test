@@ -1,0 +1,86 @@
+{
+  "about": "How the environment art in assets/env/ was made. Props: a concept image per prop (Higgsfield, model gpt_image_2_6, quality high, opaque background; each prompt is the description below followed by the 'prop' style text), then lifted to a textured 3D model with Higgsfield image-to-3D (model tripo_h3_1_image_to_3d, texture and pbr on, face_limit as listed). Ground textures: the description followed by the 'tile' style text; dev/build_env.py makes them seamless and derives the normal maps. Foliage cards: generated with background 'transparent'; the description is followed by the 'card' style text. The models are packed by dev/build_env.py and can be inspected in dev/env.html.",
+  "style": {
+    "prop": "Stylized-realistic dark fantasy game asset with hand-painted texture detail like a high-end action RPG. Single isolated object, the whole object fully visible and centered with space around it, three-quarter view from slightly above, plain flat light-grey studio background, soft even neutral diffuse lighting from all sides, no strong shadows, no cast shadow on the floor, no text.",
+    "tile": "Completely flat even diffuse lighting with no directional shadows and no highlights. Hand-painted stylized-realistic texture for a dark fantasy action RPG. No border, no vignette, no text.",
+    "card": "hand-painted stylized-realistic foliage for a dark fantasy action RPG, flat even lighting. No ground, no soil, no shadow, no text."
+  },
+  "models": {
+    "tree_a": {
+      "size": "832x1248",
+      "face_limit": 12000,
+      "prompt": "Game environment asset concept: the lower trunk of an ancient forest tree. A thick gnarled trunk about six metres tall, cut off cleanly and flat at the top, with massive spreading buttress roots gripping the ground all around its base, deep furrowed dark brown bark, patches of green moss on the roots and up one side. No leaves, no branches, no ground, no grass."
+    },
+    "tree_b": {
+      "size": "832x1248",
+      "face_limit": 10000,
+      "prompt": "Game environment asset concept: the lower trunk of an old slender forest tree, slightly twisted and leaning, about seven metres tall, cut off cleanly and flat at the top, with long sinuous surface roots snaking outward from its base, dark ridged grey-brown bark with pale lichen spots and moss at the base. No leaves, no branches, no ground, no grass."
+    },
+    "stump": {
+      "size": "1024x1024",
+      "face_limit": 6000,
+      "prompt": "Game environment asset concept: an old mossy tree stump about one metre tall with a jagged splintered broken top and thick spreading roots, dark furrowed bark, moss covering the roots and one side. No ground, no grass, no mushrooms."
+    },
+    "ruin_arch": {
+      "size": "1024x1024",
+      "face_limit": 14000,
+      "prompt": "Game environment asset concept: a free-standing fragment of a ruined medieval stone wall, about four metres wide and four metres tall, with one gothic pointed-arch window opening in it that still holds remains of stone tracery. Built from large weathered sandstone blocks with visible joints, a broken stepped top edge, ivy creeping over one upper corner, moss in the joints near the bottom. No ground, no grass."
+    },
+    "ruin_corner": {
+      "size": "1024x1024",
+      "face_limit": 9000,
+      "prompt": "Game environment asset concept: a broken L-shaped corner fragment of a ruined medieval stone wall, crumbling in steps from three metres high at the corner down to knee height at both ends. Large weathered sandstone blocks with visible joints, chipped edges, moss and a few tiny ferns growing in the cracks. No ground, no grass."
+    },
+    "column": {
+      "size": "1248x832",
+      "face_limit": 5000,
+      "prompt": "Game environment asset concept: a fallen broken stone column lying on its side. One fluted cylindrical shaft segment about two metres long with a simple moulded base ring at one end and a jagged broken face at the other, weathered pale sandstone, chipped, with moss along its upper side. No ground, no grass."
+    },
+    "rubble": {
+      "size": "1024x1024",
+      "face_limit": 4000,
+      "prompt": "Game environment asset concept: a small pile of five tumbled rectangular sandstone building blocks from a collapsed wall, resting against each other at odd angles, chipped corners, weathered surfaces, moss on the tops. No ground, no grass."
+    },
+    "rock": {
+      "size": "1024x1024",
+      "face_limit": 4000,
+      "prompt": "Game environment asset concept: a large rounded forest boulder about two metres wide, dark grey stone with a few deep cracks, its top and one side covered in thick soft green moss. No ground, no grass."
+    },
+    "log": {
+      "size": "1248x832",
+      "face_limit": 6000,
+      "prompt": "Game environment asset concept: a fallen rotting tree log lying horizontally, about four metres long, thick, bark peeling in places, covered in patches of green moss, with one jagged broken end, one flat end showing growth rings, and two short broken branch stubs. No ground, no grass, no mushrooms."
+    },
+    "mushrooms": {
+      "size": "1024x1024",
+      "face_limit": 5000,
+      "prompt": "Game environment asset concept: a cluster of seven bioluminescent mushrooms of different heights growing from a small rounded clump of dark moss. Slender pale blue-white stems and smooth domed caps in saturated glowing cyan-blue, lighter at the cap edges. No ground, no grass.",
+      "note": "mid-grey background instead of light-grey"
+    },
+    "torch": {
+      "size": "1024x1024",
+      "face_limit": 3000,
+      "prompt": "Game environment asset concept: a medieval wall torch, unlit. A wrought-iron wall bracket with a small back plate and a ring holding a wooden torch shaft tilted outward, its head a blackened iron basket wrapped in charred cloth. No flame, no fire, no smoke, no wall."
+    }
+  },
+  "ground": {
+    "ground_path": "Seamless tileable game ground texture, strictly top-down orthographic view, filling the whole image edge to edge: a damp dirt forest path. Packed dark earth-brown mud with fine grit, small half-buried pebbles of varied sizes, a few flat stones, tiny roots and scattered decayed leaf fragments, subtle footprints-free natural unevenness. Uniform distribution of detail with no large distinctive feature, no puddles, no grass.",
+    "ground_forest": "Seamless tileable game ground texture, strictly top-down orthographic view, filling the whole image edge to edge: a dark forest floor. Dark humus soil densely covered with soft green moss patches, tiny clover and low creeping leaves, fallen twigs, decayed brown leaves and small pine-needle litter. Uniform distribution of detail with no large distinctive feature, no tall grass, no stones larger than a coin.",
+    "stone": "Seamless tileable game surface texture, strictly flat front-on orthographic view, filling the whole image edge to edge: the weathered face of old sandstone masonry. Continuous warm grey-brown sandstone with fine grain, small pits, hairline cracks, faint mineral streaks and a few lichen and moss stains. One continuous stone surface with no block joints, no mortar lines, no bricks, no large distinctive feature.",
+    "bark": "Seamless tileable game surface texture, strictly flat front-on orthographic view, filling the whole image edge to edge: old tree bark. Dark brown deeply furrowed bark with long vertical ridges and cracks running top to bottom, small knots, flecks of pale lichen and a few patches of green moss. Uniform distribution of detail with no large distinctive feature."
+  },
+  "cards": {
+    "grass": {
+      "size": "1248x832",
+      "prompt": "Game foliage sprite sheet on a fully transparent background: three separate tufts of tall wild forest grass standing side by side in one row with clear gaps between them, each seen straight from the side. Each tuft has many long slender blades growing from one narrow base at the bottom and fanning upward and outward, some arching over at the tips, a few blades bent. Left tuft tall and dense, middle tuft medium and wispy, right tuft short and broad. Blades deep blue-green at the base blending to lighter fresh green at the tips. Every tuft entirely inside the image with its base at the bottom margin."
+    },
+    "plants": {
+      "size": "1248x832",
+      "prompt": "Game foliage sprite sheet on a fully transparent background: three separate forest plants standing side by side in one row with clear gaps between them, each seen straight from the side. Left: a fern with seven long arching fronds spreading from one base. Middle: a low plant with large broad rounded leaves on short stems, like wild hosta. Right: a small leafy forest shrub sprig with many small oval leaves. All deep green with slightly lighter leaf edges. Every plant entirely inside the image with its base at the bottom margin."
+    },
+    "leaves": {
+      "size": "1024x1024",
+      "prompt": "Game foliage sprite on a fully transparent background: one dense leafy tree branch cluster seen from the front, a thin dark twig structure almost hidden by many overlapping broad oak-like leaves forming a full irregular rounded clump. Deep forest green leaves with slightly lighter edges and a few darker ones in the depth. The whole clump inside the image with a margin all around. No trunk."
+    }
+  }
+}
