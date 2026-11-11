@@ -57,6 +57,7 @@ export class World3D {
     T.stone = A.ground.stone.map; T.stoneN = A.ground.stone.normalMap;
     T.bark = A.ground.bark.map; T.barkN = A.ground.bark.normalMap;
     T.leaf = A.cards.leaves.map;
+    T.hero = A.hero || null; // actors are built from the texture set, so the rigged hero rides along with it
     progress(0.2, 'terrain'); await tick();
     const layout = this.layout = buildLayout();
     heightGrid();

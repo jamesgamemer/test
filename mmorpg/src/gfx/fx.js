@@ -113,7 +113,7 @@ class Particles {
 
 // ---------------------------------------------------------------- sword ribbons
 // A strip of geometry that follows the blade; its look comes from the painted flame-ribbon texture.
-const TRAIL_MAX = 22;
+const TRAIL_MAX = 72;
 class Trail {
   constructor(scene, ribbonTex) {
     const n = TRAIL_MAX * 2;
@@ -284,11 +284,25 @@ export class FX {
   // flame ribbon behind a swinging blade: call every frame for each swordsman
   blade(actor, look) {
     let t = this.bladeTrails.get(actor);
-    const swinging = actor.action === 'atk' || actor.action === 'dash' || actor.action === 'ult';
+    const swinging = (actor.action === 'atk' || actor.action === 'dash' || actor.action === 'ult') && actor.bladeOut !== false;
     if (!swinging) { if (t) { t.stop(); this.bladeTrails.delete(actor); } return; }
-    if (!t) { t = this.trail(look, actor.action === 'ult' ? 0.34 : 0.24, 0.5); this.bladeTrails.set(actor, t); }
-    actor.bladePoints(this._a, this._b);
-    t.push(this._a.x, this._a.y, this._a.z, this._b.x, this._b.y, this._b.z);
+    if (!t) { t = this.trail(look, actor.action === 'ult' ? 0.34 : 0.24, 0.5); t.last = null; this.bladeTrails.set(actor, t); }
+    const a = this._a, b = this._b;
+    actor.bladePoints(a, b);
+    // A cut crosses half a circle in a few frames. Joined by straight lines the ribbon would be a fan of flat
+    // panels, so the blade's turn since the last frame is filled in: the hilt along a line, the blade turning with it.
+    const L = t.last, dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z, len = Math.hypot(dx, dy, dz) || 1;
+    if (L) {
+      const cos = (dx * L[3] + dy * L[4] + dz * L[5]) / (len * L[6]), n = Math.min(8, Math.ceil(Math.acos(Math.max(-1, Math.min(1, cos))) / 0.14));
+      for (let i = 1; i < n; i++) {
+        const k = i / n, x = L[0] + (a.x - L[0]) * k, y = L[1] + (a.y - L[1]) * k, z = L[2] + (a.z - L[2]) * k;
+        let ex = L[3] / L[6] + (dx / len - L[3] / L[6]) * k, ey = L[4] / L[6] + (dy / len - L[4] / L[6]) * k, ez = L[5] / L[6] + (dz / len - L[5] / L[6]) * k;
+        const el = (L[6] + (len - L[6]) * k) / (Math.hypot(ex, ey, ez) || 1);
+        t.push(x, y, z, x + ex * el, y + ey * el, z + ez * el, this.dt * (1 - k));
+      }
+    }
+    t.push(a.x, a.y, a.z, b.x, b.y, b.z);
+    t.last = [a.x, a.y, a.z, dx, dy, dz, len];
   }
   dropBlade(actor) { const t = this.bladeTrails.get(actor); if (t) { t.stop(); this.bladeTrails.delete(actor); } }
 
@@ -361,8 +375,10 @@ export class FX {
   }
 
   ghost(actor, color, dur) {
-    const g = actor.group.clone(true);
     const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(0.9), ...ADD, opacity: 0.55 });
+    // a skinned body cannot simply be cloned (the copy would keep following the live skeleton): it hands over a still copy
+    if (actor.snapshot) { const g = actor.snapshot(mat); this.scene.add(g); this.ghosts.push({ g, mat, t: 0, dur }); return; }
+    const g = actor.group.clone(true);
     g.traverse((o) => { if (o.isSprite || (o.isMesh && o.material && o.material.blending === THREE.AdditiveBlending)) o.visible = false; else if (o.isMesh) { o.material = mat; o.castShadow = false; } });
     this.scene.add(g);
     this.ghosts.push({ g, mat, t: 0, dur });
@@ -527,6 +543,7 @@ export class FX {
 
   // ------------------------------------------------------------ frame
   update(dt) {
+    this.dt = dt;
     const T = (this.time += dt), cam = this.world.camera;
     for (let i = this.queue.length - 1; i >= 0; i--) if (T >= this.queue[i].at) { const q = this.queue[i]; this.queue.splice(i, 1); q.fn(); }
 
@@ -566,7 +583,7 @@ export class FX {
       const g = this.ghosts[i];
       g.t += dt;
       g.mat.opacity = 0.55 * (1 - Math.min(1, g.t / g.dur)) ** 2;
-      if (g.t >= g.dur) { this.scene.remove(g.g); g.mat.dispose(); this.ghosts.splice(i, 1); }
+      if (g.t >= g.dur) { this.scene.remove(g.g); g.mat.dispose(); if (g.g.userData.release) g.g.userData.release(); this.ghosts.splice(i, 1); }
     }
 
     if (this.eclipses <= 0) this.darkTarget = 0;

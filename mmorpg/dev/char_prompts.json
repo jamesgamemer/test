@@ -1,0 +1,103 @@
+{
+  "about": "How the hero was made. Nothing is modelled, textured or animated by hand or in code: the design is generated artwork, the model is lifted from that artwork, and every move is a clip from a motion library played on the model. dev/build_char.py packs the downloads for the game.",
+  "service": "Higgsfield (images: GPT Image 2.6; model: Meshy multi-image-to-3D; clips: Meshy 3D rigging with a clip from its animation library)",
+  "design": [
+    {
+      "file": "hero_keyart.png",
+      "model": "gpt_image_2_6",
+      "size": "832x1248",
+      "quality": "high",
+      "prompt": "Original game character key art: a chibi-proportioned young warden of a night forest, about two and a half heads tall, standing in a confident three-quarter pose and looking at the viewer with a calm, determined expression. Messy ash-grey hair with one ember-orange streak, large amber eyes, a deep midnight-blue hood pushed back onto the shoulders, a short asymmetric mantle of layered dark raven feathers over the left shoulder, fitted charcoal leather and blackened steel armor with fine brass filigree and small crescent-moon charms on thin chains, a wide belt with pouches and a small glowing brass lantern, tattered deep-blue waist cloth with pale stitched runes, armored gloves, sturdy buckled boots with brass toe caps. The right hand rests on the grip of a large curved single-edged greatsword planted point-down in front, its dark blade etched with glowing ember-orange runes and a thin line of living flame along the cutting edge. Setting: a torch-lit forest outpost at night, softly out of focus: a wooden palisade of sharpened stakes, barrels, a burning brazier, wet mud ground with a small puddle reflecting the fire, cool blue moonlit trees behind. Lighting: warm orange firelight from one side, cool blue rim light from the other. Style: highly detailed stylized 3D anime game render, chibi proportions, crisp materials, soft depth of field, rich colour. Full body visible from head to boots. No text, no logo, no watermark."
+    },
+    {
+      "file": "sheet.png (cut into front.png, side.png, back.png)",
+      "model": "gpt_image_2_6",
+      "size": "1248x832",
+      "quality": "high",
+      "reference": "hero_keyart.png",
+      "prompt": "Character turnaround model sheet of the SAME character as in the reference image, for 3D modelling. Three full-body views of the character standing side by side in one row with clear empty space between them: FRONT view on the left, SIDE view facing right in the middle, BACK view on the right. Same chibi proportions (about two and a half heads tall), same messy ash-grey hair with one ember-orange streak, amber eyes, midnight-blue hood pushed back, layered dark raven-feather mantle over the left shoulder, charcoal leather and blackened steel armor with brass filigree, wide belt with pouches and a small brass lantern, tattered deep-blue waist cloth with pale stitched runes, armored gloves, buckled boots with brass toe caps. Pose in every view: standing perfectly straight and symmetrical in a neutral A-pose, arms straight and held about 40 degrees away from the body, fingers relaxed and open, legs straight and slightly apart, feet flat, neutral calm face, mouth closed. Hands are EMPTY: no sword, no weapon. No loose dangling chains: charms sit flat on the armor. Plain flat light-grey studio background, soft even neutral lighting from all sides, no cast shadows, no ground, no text, no labels. Same highly detailed stylized 3D anime game render style as the reference."
+    },
+    {
+      "file": "relief/sword.png",
+      "model": "gpt_image_2_6",
+      "size": "832x1248",
+      "quality": "high",
+      "reference": "hero_keyart.png",
+      "prompt": "Game weapon asset concept: the SAME curved greatsword the character holds in the reference image, shown alone. A large single-edged curved greatsword standing perfectly vertical with the point at the bottom and the grip at the top: dark steel blade with etched rune symbols glowing ember-orange and a bright orange glowing cutting edge, an ornate brass crossguard with a crescent-moon motif, a grip wrapped in dark leather, a small brass pommel with a short strip of tattered blue cloth. No flames, no fire, no smoke around it. Single isolated object, whole sword fully visible and centered with space around it, straight-on side view of the flat of the blade, plain flat light-grey studio background, soft even neutral lighting, no cast shadow, no hand, no character, no text. Stylized 3D anime game asset render, crisp detail.",
+      "note": "Image-to-3D refused this picture three times (two services), and a sword is nearly flat anyway: dev/build_env.py lifts it straight from the painting (pack_relief), cutting away the tassel."
+    }
+  ],
+  "model": {
+    "model": "multi_image_to_3d",
+    "images": [
+      "front.png",
+      "side.png",
+      "back.png"
+    ],
+    "should_texture": true,
+    "enable_pbr": true,
+    "enable_rigging": true,
+    "pose_mode": "a-pose",
+    "target_polycount": 20000,
+    "topology": "triangle",
+    "symmetry_mode": "off",
+    "rigging_height_meters": 1.6,
+    "note": "Only the mesh and its colour texture are used from this file. Its normal map lights the face as flat facets, so it is dropped; its skeleton differs by 3-5 cm from the one every clip below comes with, so the game takes its skeleton from a clip file instead."
+  },
+  "clips": {
+    "how": "3d_rigging with model_url = the model above, height_meters 1.6, enable_animation true and the animation_action_id below; each result is saved as hero/<name>.glb",
+    "idle": {
+      "id": 11,
+      "name": "Idle_02"
+    },
+    "run": {
+      "id": 14,
+      "name": "Run_02",
+      "note": "also provides the mesh, skeleton and skin weights (RIG in build_char.py)"
+    },
+    "sprint": {
+      "id": 509,
+      "name": "Lean_Forward_Sprint",
+      "use": "the dash"
+    },
+    "slash": {
+      "id": 97,
+      "name": "Left_Slash",
+      "use": "first cut of the combo"
+    },
+    "charged": {
+      "id": 242,
+      "name": "Charged_Slash",
+      "use": "its backhand is the second cut; its forehand throws the wave"
+    },
+    "chop": {
+      "id": 4,
+      "name": "Attack",
+      "use": "third cut of the combo"
+    },
+    "spin": {
+      "id": 238,
+      "name": "Axe_Spin_Attack",
+      "use": "Eclipse"
+    },
+    "cast": {
+      "id": 125,
+      "name": "Charged_Spell_Cast",
+      "use": "Nova, Starfall"
+    },
+    "collect": {
+      "id": 284,
+      "name": "Collect_Object",
+      "use": "gathering"
+    },
+    "flinch": {
+      "id": 179,
+      "name": "Hit_Reaction_1",
+      "use": "being hit, laid over whatever else the body is doing"
+    },
+    "dead": {
+      "id": 8,
+      "name": "Dead"
+    }
+  }
+}

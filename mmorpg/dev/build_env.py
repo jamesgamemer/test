@@ -7,7 +7,8 @@ too. The prompts are in dev/env_prompts.json.
 
     python3 dev/build_env.py <dir>
 
-<dir> holds models/<name>.glb, tex/<name>.png and cards/<name>.png as listed in MODELS, GROUND and CARDS below.
+<dir> holds models/<name>.glb, tex/<name>.png and cards/<name>.png as listed in MODELS, GROUND and CARDS below
+(and relief/<name>.png for a model lifted from a single painting, see pack_relief).
 Writes assets/env/* and src/gfx/env-manifest.js. Needs Pillow and numpy.
 
 Models become a small binary mesh (quantised positions, normals, uvs; see src/gfx/assets.js for the reader)
@@ -57,6 +58,15 @@ MODELS = {
     'leanto': dict(tex=1024, yaw=-90),
     'logpile': dict(tex=512, yaw=90),
     'shrooms_tan': dict(tex=512),
+    # The hero's sword: stands point down, pommel at the top (see dev/build_char.py for how it is held).
+    # It is flat enough to be lifted straight from its painting (relief/sword.png) instead of going through
+    # image-to-3D. axis: the pixel column the grip is centred on. erase: the tassel, cut away so nothing
+    # sticks out stiffly when the sword swings. bands: down the length (0 = top, 1 = tip) how thick the sword
+    # is - half its thickness in pixels, the distance from the edge at which it gets that thick, and whether
+    # the edge is rounded (grip, pommel, guard) or a wedge (the blade).
+    'sword': dict(relief=True, tex=(256, 1024), axis=417, cell=(8, 12),
+                  erase=[(232, 110), (372, 56), (391, 58), (391, 244), (386, 258), (348, 267), (317, 287), (302, 297), (299, 345), (299, 425), (232, 425)],
+                  bands=[(0.0, 24, 24, 'round'), (0.2, 24, 24, 'round'), (0.215, 15, 15, 'round'), (0.26, 13, 14, 'round'), (0.285, 7, 22, 'wedge'), (1.0, 6, 20, 'wedge')]),
 }
 GROUND = {
     'ground_mud': dict(size=1024, bump=3.4),
@@ -188,22 +198,8 @@ def rot_y(a):
     return np.array([[c, 0, s], [0, 1, 0], [-s, 0, c]])
 
 
-def pack_model(name, spec, src):
-    P, N, T, I, colour, normal, rough, nmat = load_model(os.path.join(src, 'models', name + '.glb'))
-    R = np.eye(3)
-    if spec.get('up') == 'z':
-        R = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]]) @ R
-    if spec.get('yaw'):
-        R = rot_y(np.radians(spec['yaw'])) @ R
-    P, N = P @ R.T, N @ R.T
-    lo, hi = P.min(axis=0), P.max(axis=0)
-    # stand it on the ground, centred, and scale so the longest side is one unit: the game sizes props in metres
-    P = P - [(lo[0] + hi[0]) / 2, lo[1], (lo[2] + hi[2]) / 2]
-    unit = (hi - lo).max()
-    P /= unit
-    if spec.get('origin'):
-        P[:, 0] -= spec['origin'][0]
-        P[:, 2] -= spec['origin'][1]
+def write_mesh(name, P, N, T, I):
+    """<name>.mesh: quantised positions, normals and uvs, 16- or 32-bit indices (read by src/gfx/assets.js)."""
     lo, hi = P.min(axis=0), P.max(axis=0)
     size = np.maximum(hi - lo, 1e-9)
     q_pos = np.round((P - lo) / size * 65535).astype('<u2')
@@ -225,6 +221,27 @@ def pack_model(name, spec, src):
     hj += b' ' * (-len(hj) % 4)
     with open(os.path.join(OUT, name + '.mesh'), 'wb') as f:
         f.write(b'NGM1' + struct.pack('<I', len(hj)) + hj + body)
+    return head
+
+
+def pack_model(name, spec, src):
+    P, N, T, I, colour, normal, rough, nmat = load_model(os.path.join(src, 'models', name + '.glb'))
+    R = np.eye(3)
+    if spec.get('up') == 'z':
+        R = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]]) @ R
+    if spec.get('yaw'):
+        R = rot_y(np.radians(spec['yaw'])) @ R
+    P, N = P @ R.T, N @ R.T
+    lo, hi = P.min(axis=0), P.max(axis=0)
+    # stand it on the ground, centred, and scale so the longest side is one unit: the game sizes props in metres
+    P = P - [(lo[0] + hi[0]) / 2, lo[1], (lo[2] + hi[2]) / 2]
+    unit = (hi - lo).max()
+    P /= unit
+    if spec.get('origin'):
+        P[:, 0] -= spec['origin'][0]
+        P[:, 2] -= spec['origin'][1]
+    head = write_mesh(name, P, N, T, I)
+    size = head['size']
     entry = dict(mesh=name + '.mesh', verts=len(P), tris=len(I), size=head['size'], min=head['min'])
     s = spec['tex']
     if colour is not None:
@@ -271,6 +288,17 @@ def pack_ground(name, spec, src):
 
 
 # ---------------------------------------------------------------- foliage cards
+def bleed(rgb, al, rounds=24):
+    """The colour of the opaque pixels, spread outward into the transparent ones."""
+    acc, wgt = rgb * al, al.copy()
+    for _ in range(rounds):
+        acc = sum(np.roll(acc, s, axis=ax) for ax in (0, 1) for s in (-1, 1)) / 4 + acc * (wgt > 0.02)
+        wgt = sum(np.roll(wgt, s, axis=ax) for ax in (0, 1) for s in (-1, 1)) / 4 + wgt * (wgt > 0.02)
+    fill = acc / np.maximum(wgt, 1e-4)
+    mean = (rgb * al).sum(axis=(0, 1)) / max(al.sum(), 1)
+    return np.where(wgt > 1e-3, fill, mean)
+
+
 def pack_cards(name, spec, src):
     im = Image.open(os.path.join(src, 'cards', name + '.png')).convert('RGBA')
     a = np.asarray(im).astype(np.float32)
@@ -324,24 +352,136 @@ def pack_cards(name, spec, src):
         info.append(dict(w=round(w / cw, 3), h=round(h / ch, 3)))
     # spread the plant colour into the transparent pixels so mip-mapping never pulls in black fringes
     rgb, al = atlas[..., :3], atlas[..., 3:4] / 255
-    acc, wgt = rgb * al, al.copy()
-    for _ in range(24):
-        acc = sum(np.roll(acc, s, axis=ax) for ax in (0, 1) for s in (-1, 1)) / 4 + acc * (wgt > 0.02)
-        wgt = sum(np.roll(wgt, s, axis=ax) for ax in (0, 1) for s in (-1, 1)) / 4 + wgt * (wgt > 0.02)
-    fill = acc / np.maximum(wgt, 1e-4)
-    mean = (rgb * al).sum(axis=(0, 1)) / max(al.sum(), 1)
-    fill = np.where(wgt > 1e-3, fill, mean)
-    out = np.concatenate([np.where(al > 0.5, rgb, fill), atlas[..., 3:4]], axis=-1)
+    out = np.concatenate([np.where(al > 0.5, rgb, bleed(rgb, al)), atlas[..., 3:4]], axis=-1)
     Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGBA').save(os.path.join(OUT, name + '.webp'), 'WEBP', quality=86, method=6)
     print(f'{name:12s} {len(spans)} cards of {cw}x{ch}')
     return dict(map=name + '.webp', cells=len(spans), aspect=round(cw / ch, 4), fill=info)
+
+
+# ---------------------------------------------------------------- relief models
+def grow(m, eight=False):
+    p = np.pad(m, 1, constant_values=False)
+    out = p[1:-1, 1:-1] | p[:-2, 1:-1] | p[2:, 1:-1] | p[1:-1, :-2] | p[1:-1, 2:]
+    if eight:
+        out |= p[:-2, :-2] | p[:-2, 2:] | p[2:, :-2] | p[2:, 2:]
+    return out
+
+
+def cut_out(rgb, tol=24.0, soft=40.0):
+    """Alpha for a painting on a plain backdrop: the backdrop is whatever is the colour of the border and
+    joined to it, so a highlight of the same grey inside the object stays."""
+    edge = np.concatenate([rgb[:6].reshape(-1, 3), rgb[-6:].reshape(-1, 3), rgb[:, :6].reshape(-1, 3), rgb[:, -6:].reshape(-1, 3)])
+    far = np.linalg.norm(rgb - np.median(edge, axis=0), axis=2)
+    like = far < tol
+    out = np.zeros(like.shape, bool)
+    out[0], out[-1], out[:, 0], out[:, -1] = like[0], like[-1], like[:, 0], like[:, -1]
+    while True:
+        nxt = grow(out) & like
+        if (nxt == out).all():
+            break
+        out = nxt
+    near = out
+    for _ in range(3):
+        near = grow(near, True)
+    alpha = np.where(out, 0.0, np.where(near, np.clip((far - tol) / soft, 0, 1), 1.0))
+    return alpha.astype(np.float32)
+
+
+def edge_distance(mask, reach):
+    """About how many pixels each pixel lies inside the shape (positive) or outside it (negative)."""
+    d = np.where(mask, 0.5, -0.5).astype(np.float32)
+    ins, out = mask.copy(), ~mask
+    for i in range(reach):  # 4- and 8-neighbour steps in turn: an octagon, close enough to a circle
+        ins, out = ~grow(~ins, i % 2 == 1), ~grow(~out, i % 2 == 1)
+        d += ins
+        d -= out
+    for _ in range(2):
+        p = np.pad(d, 1, mode='edge')
+        d = sum(p[1 + dy:p.shape[0] - 1 + dy, 1 + dx:p.shape[1] - 1 + dx] for dy in (-1, 0, 1) for dx in (-1, 0, 1)) / 9
+    return d
+
+
+def pack_relief(name, spec, src):
+    """A model lifted from one painting of a flat thing (a sword): the painting is cut from its backdrop and
+    becomes both faces; the shape swells from the outline inward, as thick as `bands` says."""
+    rgb = np.asarray(Image.open(os.path.join(src, 'relief', name + '.png')).convert('RGB')).astype(np.float32)
+    alpha = cut_out(rgb)
+    if spec.get('erase'):
+        gone = Image.new('L', (rgb.shape[1], rgb.shape[0]), 0)
+        ImageDraw.Draw(gone).polygon([tuple(p) for p in spec['erase']], fill=255)
+        alpha[np.asarray(gone) > 0] = 0
+    ys, xs = np.nonzero(alpha > 0.5)
+    x0, x1, y0, y1 = xs.min() - 3, xs.max() + 4, ys.min() - 3, ys.max() + 4
+    rgb, alpha = rgb[y0:y1, x0:x1], alpha[y0:y1, x0:x1]
+    h, w = alpha.shape
+    top, tip = ys.min() - y0, ys.max() - y0
+    length = float(tip - top)
+    # thickness: from the distance to the outline, shaped per band
+    reach = int(max(b[2] for b in spec['bands'])) + 2
+    d = edge_distance(alpha > 0.5, reach)
+    along = np.clip((np.arange(h) - top) / length, 0, 1)
+    half = np.interp(along, [b[0] for b in spec['bands']], [b[1] for b in spec['bands']])[:, None]
+    ramp = np.interp(along, [b[0] for b in spec['bands']], [b[2] for b in spec['bands']])[:, None]
+    wedge = np.interp(along, [b[0] for b in spec['bands']], [1.0 if b[3] == 'wedge' else 0.0 for b in spec['bands']])[:, None]
+    k = np.clip(d / ramp, -1, 1)
+    rounded = np.sign(k) * np.sqrt(1 - (1 - np.abs(k)) ** 2)
+    height = half * (wedge * k + (1 - wedge) * rounded)  # in pixels; negative outside the outline
+    # a grid over the painting: front and back sheets that cross exactly on the outline (the alpha test trims them)
+    cw, ch = spec['cell']
+    gx = np.linspace(0, w - 1, max(2, int(round(w / cw)) + 1))
+    gy = np.linspace(0, h - 1, max(2, int(round(h / ch)) + 1))
+
+    def at(field, x, y):
+        xi, yi = np.clip(np.floor(x).astype(int), 0, w - 2), np.clip(np.floor(y).astype(int), 0, h - 2)
+        fx, fy = x - xi, y - yi
+        return (field[yi, xi] * (1 - fx) + field[yi, xi + 1] * fx) * (1 - fy) + (field[yi + 1, xi] * (1 - fx) + field[yi + 1, xi + 1] * fx) * fy
+
+    X, Y = np.meshgrid(gx, gy)
+    Z = at(height, X, Y)
+    dzdx = (at(height, np.clip(X + 2, 0, w - 1), Y) - at(height, np.clip(X - 2, 0, w - 1), Y)) / 4
+    dzdy = (at(height, X, np.clip(Y + 2, 0, h - 1)) - at(height, X, np.clip(Y - 2, 0, h - 1))) / 4
+    inside = at(alpha, X, Y) > 0.02
+    nx, ny = len(gx), len(gy)
+    cells = [(i, j) for j in range(ny - 1) for i in range(nx - 1) if inside[j:j + 2, i:i + 2].any()]
+    used = sorted({(j + b) * nx + (i + a) for i, j in cells for a in (0, 1) for b in (0, 1)})
+    slot = {v: k for k, v in enumerate(used)}
+    vx, vy, vz = X.reshape(-1)[used], Y.reshape(-1)[used], Z.reshape(-1)[used]
+    gxn, gyn = dzdx.reshape(-1)[used], dzdy.reshape(-1)[used]
+    n = len(used)
+    # model space: x to the painting's right, y up (tip at 0, top at 1), z toward the viewer; one unit = its length
+    px = np.concatenate([vx, vx]) + x0 - spec.get('axis', x0 + w / 2)
+    py = tip - np.concatenate([vy, vy])
+    pz = np.concatenate([vz, -vz])
+    P = np.stack([px, py, pz], axis=1) / length
+    N = np.stack([np.concatenate([-gxn, -gxn]), np.concatenate([gyn, gyn]), np.concatenate([np.ones(n), -np.ones(n)])], axis=1)
+    N /= np.linalg.norm(N, axis=1, keepdims=True)
+    T = np.stack([np.concatenate([vx, vx]) / (w - 1), np.concatenate([vy, vy]) / (h - 1)], axis=1)
+    tris = []
+    for i, j in cells:
+        a, b, c, e = slot[j * nx + i], slot[j * nx + i + 1], slot[(j + 1) * nx + i], slot[(j + 1) * nx + i + 1]
+        tris += [(a, c, b), (b, c, e), (a + n, b + n, c + n), (b + n, e + n, c + n)]  # y runs down the grid: front faces +z
+    I = np.array(tris, dtype=np.int64)
+    head = write_mesh(name, P, N, T, I)
+    tw, th = spec['tex']
+    al = alpha[..., None]
+    out = np.concatenate([np.where(al > 0.6, rgb, bleed(rgb, (al > 0.6).astype(np.float32), 12)), al * 255], axis=-1)
+    Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGBA').resize((tw, th), Image.LANCZOS).save(os.path.join(OUT, name + '_c.webp'), 'WEBP', quality=90, method=6)
+    size = head['size']
+    kb = sum(os.path.getsize(os.path.join(OUT, f)) for f in os.listdir(OUT) if f.startswith(name + '.') or f.startswith(name + '_')) // 1024
+    print(f'{name:12s} {len(P):6d} verts {len(I):6d} tris  size {size[0]:.2f} x {size[1]:.2f} x {size[2]:.2f}  relief of {w}x{h} px  {kb} KB')
+    return dict(mesh=name + '.mesh', verts=len(P), tris=len(I), size=head['size'], min=head['min'], map=name + '_c.webp', alpha=True, roughness=0.5)
 
 
 def main(src):
     os.makedirs(OUT, exist_ok=True)
     man = dict(models={}, ground={}, cards={})
     for name, spec in MODELS.items():
-        if os.path.exists(os.path.join(src, 'models', name + '.glb')):
+        if spec.get('relief'):
+            if os.path.exists(os.path.join(src, 'relief', name + '.png')):
+                man['models'][name] = pack_relief(name, spec, src)
+            else:
+                print('missing painting', name)
+        elif os.path.exists(os.path.join(src, 'models', name + '.glb')):
             man['models'][name] = pack_model(name, spec, src)
         else:
             print('missing model', name)

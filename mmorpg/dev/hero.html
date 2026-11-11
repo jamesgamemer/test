@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightglade hero</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #05070c; color: #cfd8ea; font: 13px/1.4 system-ui, sans-serif; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  #ui { position: fixed; left: 12px; top: 10px; display: flex; flex-wrap: wrap; gap: 6px; max-width: 80vw; align-items: center; }
+  button, select, label { background: #121a2a; color: #cfd8ea; border: 1px solid #263452; border-radius: 6px; padding: 5px 9px; font: inherit; }
+  #info { position: fixed; left: 12px; bottom: 10px; color: #8e9bb4; white-space: pre; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui"></div>
+<div id="info"></div>
+<script type="module">
+// The rigged hero on its own, driven by the game's own actor class: every clip, the moves as the game plays
+// them, what hangs loose, and the sword's place in the hand.
+import { THREE } from '../src/gfx/common.js';
+import { loadEnv } from '../src/gfx/assets.js';
+import { HeroActor } from '../src/gfx/hero.js';
+import { LOOKS } from '../src/gfx/actors.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x141a26);
+scene.add(new THREE.HemisphereLight(0xdfe6ff, 0x4a4036, 1.7));
+const sun = new THREE.DirectionalLight(0xfff0dc, 2.2); sun.position.set(2.5, 5, 3.5); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4, near: 0.5, far: 20 }); scene.add(sun); scene.add(sun.target);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x2a3140, roughness: 1 })); ground.receiveShadow = true; scene.add(ground);
+scene.add(new THREE.GridHelper(40, 40, 0x3a4660, 0x232c3e));
+const cam = new THREE.PerspectiveCamera(32, 1, 0.05, 100);
+
+const env = await loadEnv();
+const H = env.hero;
+const look = +(new URLSearchParams(location.search).get('look') || 3);
+const actor = new HeroActor(H, LOOKS[look % LOOKS.length]);
+scene.add(actor.group);
+// S.speed: how fast the game says the hero is moving; S.move: actually carry it round a circle at that speed
+const S = { speed: 0, yaw: 0.5, pitch: 0.28, dist: 5.2, slow: 1, move: false, tx: 0, tz: 0, look: 0.85 };
+const ui = document.getElementById('ui');
+const btn = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; ui.append(b); return b; };
+btn('stand', () => { S.speed = 0; S.move = false; });
+btn('run on the spot', () => { S.speed = 6.2; S.move = false; });
+btn('run in a circle', () => { S.speed = 6.2; S.move = true; });
+btn('cut 1', () => actor.play('atk', 0.36, 0));
+btn('cut 2', () => actor.play('atk', 0.36, 1));
+btn('cut 3', () => actor.play('atk', 0.36, 2));
+btn('wave', () => actor.play('atk', 0.4, 3));
+btn('cast', () => actor.play('cast', 0.6));
+btn('dash', () => actor.play('dash', 0.28));
+btn('eclipse', () => actor.play('ult', 1.5));
+btn('gather', () => actor.play('gather', 1.2));
+btn('hit', () => actor.hit());
+btn('die / rise', () => actor.setDead(!actor.dead));
+btn('slow ×0.25', () => { S.slow = S.slow === 1 ? 0.25 : 1; });
+btn('what hangs loose', () => window.setMask(actor.mesh.material === liveMat));
+// orange: cloth and hair that swing; blue: what rises with a breath
+const maskMat = new THREE.ShaderMaterial({
+  vertexShader: `#include <common>\n#include <skinning_pars_vertex>\nattribute vec4 aSoft; varying vec2 vC; void main() { vC = aSoft.xy; vec3 transformed = position;\n#include <skinbase_vertex>\n#include <skinning_vertex>\n gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0); }`,
+  fragmentShader: `varying vec2 vC; void main() { gl_FragColor = vec4(vec3(0.08, 0.1, 0.16) + vec3(1.0, 0.35, 0.1) * vC.x + vec3(0.1, 0.4, 1.0) * vC.y, 1.0); }`,
+});
+const liveMat = actor.mesh.material;
+window.setMask = (on) => { actor.mesh.material = on ? maskMat : liveMat; };
+
+let drag = null;
+canvas.onpointerdown = (e) => { drag = [e.clientX, e.clientY]; };
+window.onpointerup = () => { drag = null; };
+window.onpointermove = (e) => { if (!drag) return; S.yaw -= (e.clientX - drag[0]) * 0.008; S.pitch = Math.min(1.4, Math.max(-0.1, S.pitch + (e.clientY - drag[1]) * 0.006)); drag = [e.clientX, e.clientY]; };
+canvas.onwheel = (e) => { S.dist = Math.min(14, Math.max(0.6, S.dist * (1 + Math.sign(e.deltaY) * 0.1))); };
+
+const frame = () => {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== w || canvas.height !== h) { renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
+  const p = actor.group.position, cp = Math.cos(S.pitch);
+  cam.position.set(p.x + Math.sin(S.yaw) * cp * S.dist, S.look + Math.sin(S.pitch) * S.dist, p.z + Math.cos(S.yaw) * cp * S.dist);
+  cam.lookAt(p.x, S.look, p.z);
+  sun.position.set(p.x + 2.5, 5, p.z + 3.5); sun.target.position.copy(p);
+  renderer.render(scene, cam);
+};
+let T = 0, ang = 0;
+// one step of the viewer; the headless tests drive this directly
+window.heroStep = (dt) => {
+  T += dt;
+  if (S.move) { const r = 3.2; ang += S.speed / r * dt; actor.group.position.set(Math.cos(ang) * r, 0, -Math.sin(ang) * r); actor.group.rotation.y = ang + Math.PI; }
+  else actor.group.position.set(S.tx, 0, S.tz);
+  actor.update(dt, S.speed);
+  frame();
+};
+// One clip held at one moment with nothing else laid over it, for reading a clip frame by frame.
+// over: play a move's upper body over the running legs, as the game does when the hero attacks on the move.
+window.heroPose = (name, time, over = false) => {
+  const off = (a) => a && a.setEffectiveWeight(0), on = (a, t) => { a.paused = true; a.time = Math.max(0, Math.min(t, a.getClip().duration - 1e-3)); a.setEffectiveWeight(1); };
+  for (const k in actor.loops) { off(actor.loops[k].low); off(actor.loops[k].up); }
+  for (const k in actor.players) for (const p of actor.players[k]) { off(p.low); off(p.up); off(p.top); off(p.whole); }
+  const L = actor.loops[name], p = actor.players[name] && actor.players[name][0];
+  if (L) { on(L.low, time); on(L.up, time); }
+  else if (p.whole) on(p.whole, time);
+  else if (!p.low) { on(actor.loops.idle.low, 0); on(actor.loops.idle.up, 0); on(p.up, time); }
+  else if (over) { on(actor.loops.run.low, time % H.clips.run.dur); on(p.top, time); }
+  else { on(p.low, time); on(p.up, time); }
+  actor.mixer.update(0);
+  actor.group.position.set(0, 0, 0);
+  frame();
+};
+window.hero = { actor, S, H, scene, THREE, renderer, cam, frame };
+let last = performance.now();
+const info = document.getElementById('info');
+info.textContent = `${H.geo.index.count / 3} triangles · ${H.bones.length} bones\nclips: ${Object.keys(H.clips).map((k) => k + ' ' + H.clips[k].dur.toFixed(2) + 's').join(', ')}\ndrag to turn, wheel to zoom`;
+const loop = (now) => { const dt = Math.min(0.05, (now - last) / 1000) * S.slow; last = now; if (!window.heroManual) window.heroStep(dt); requestAnimationFrame(loop); };
+window.heroReady = true;
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

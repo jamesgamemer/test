@@ -32,7 +32,7 @@ export class Game {
     this.ents = new Map();
     this.npcs = [];
     this.me = { id: null, x: SPAWN.x, z: SPAWN.z, y: 0, rot: 1.2, hp: 1, mp: 1, xp: 0, dead: false, moving: false, speed: 0, faceLock: 0, aimRot: 0, dash: null, full: null };
-    this.cam = { yaw: 0.2, pitch: 0.7, dist: 30, tYaw: 0.2, tPitch: 0.7, tDist: 30, target: new THREE.Vector3(SPAWN.x, 1, SPAWN.z) };
+    this.cam = { yaw: 0.2, pitch: 0.7, dist: 24, tYaw: 0.2, tPitch: 0.7, tDist: 24, target: new THREE.Vector3(SPAWN.x, 1, SPAWN.z) };
     this.input = { keys: new Set(), mx: 0, my: 0, attack: false, joy: { x: 0, y: 0 }, hasMouse: false, drag: null };
     this.aim = { x: 0, z: 0, dx: 0, dz: 1 };
     this.cd = {}; this.castAt = {};
@@ -42,7 +42,7 @@ export class Game {
     this.danger = 0; this.resScale = 1; this.fpsAcc = 0; this.fpsN = 0; this.fpsAt = 0;
     this._v = new THREE.Vector3(); this._ray = new THREE.Raycaster(); this._hero = new THREE.Vector3();
     this.touch = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-    if (this.touch) this.cam.dist = this.cam.tDist = 25; // small screens start a little closer
+    if (this.touch) this.cam.dist = this.cam.tDist = 21; // small screens start a little closer
   }
 
   savePrefs() { try { localStorage.setItem(PREFS_KEY, JSON.stringify(this.prefs)); } catch { /* ignore */ } }
@@ -89,6 +89,7 @@ export class Game {
       await tr.connect({ name, look });
     }
     this.mode = 'play';
+    this.cam.tDist = this.touch ? 21 : 24; // the title screen stands further back; play starts close enough to see the hero
     this.ui.setTouch(this.touch);
     document.getElementById('hud').classList.remove('hidden');
     this.ui.chat('sys', '', t('sys_welcome'));
@@ -157,7 +158,7 @@ export class Game {
       if (d && d.id === e.pointerId) { if (!d.touch && d.moved < 6) this.cast('wave'); inp.drag = null; }
     };
     c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
-    c.addEventListener('wheel', (e) => { e.preventDefault(); this.cam.tDist = Math.min(42, Math.max(14, this.cam.tDist * (1 + Math.sign(e.deltaY) * 0.1))); }, { passive: false });
+    c.addEventListener('wheel', (e) => { e.preventDefault(); this.cam.tDist = Math.min(42, Math.max(9, this.cam.tDist * (1 + Math.sign(e.deltaY) * 0.1))); }, { passive: false });
     window.addEventListener('resize', () => this.world.resize());
     document.addEventListener('pointerdown', () => this.audio.start(), { once: true });
   }
@@ -207,7 +208,7 @@ export class Game {
   _playCast(actor, look, ev, d) {
     const fx = this.fx, a = this.audio;
     if (ev.s === 'slash') { actor.play('atk', SKILLS.slash.dur, ev.c || 0); fx.slash(ev.x, ev.z, ev.dx, ev.dz, look, ev.c || 0); a.sfx(ev.c === 2 ? 'slash3' : 'slash', d); }
-    else if (ev.s === 'wave') { actor.play('atk', 0.4, 0); fx.slash(ev.x, ev.z, ev.dx, ev.dz, look, 1); fx.wave(ev.pj, ev.x + ev.dx * 0.9, ev.z + ev.dz * 0.9, ev.dx, ev.dz, look, SKILLS.wave.speed, SKILLS.wave.range / SKILLS.wave.speed); a.sfx('wave', d); }
+    else if (ev.s === 'wave') { actor.play('atk', 0.4, 3); fx.slash(ev.x, ev.z, ev.dx, ev.dz, look, 1); fx.wave(ev.pj, ev.x + ev.dx * 0.9, ev.z + ev.dz * 0.9, ev.dx, ev.dz, look, SKILLS.wave.speed, SKILLS.wave.range / SKILLS.wave.speed); a.sfx('wave', d); }
     else if (ev.s === 'dash') { actor.play('dash', 0.3); fx.dash(actor, ev.x, ev.z, ev.tx, ev.tz, look); a.sfx('dash', d); }
     else if (ev.s === 'nova') { actor.play('cast', 0.6); fx.nova(ev.x, ev.z, SKILLS.nova.radius, look); a.sfx('nova', d); }
     else if (ev.s === 'starfall') { actor.play('cast', 0.75); fx.starCharge(ev.tx, ev.tz, SKILLS.starfall.radius, SKILLS.starfall.delay, look); a.sfx('starcast', d); }
@@ -218,7 +219,7 @@ export class Game {
     const it = this.interactTarget;
     if (!it || this.me.dead) return;
     if (it.type === 'n') { this.ui.openNpc(it.role); this.audio.sfx('ui'); }
-    else if (it.type === 'g') { this.send({ t: 'g', id: it.id }); this.meActor.play('cast', 0.5); }
+    else if (it.type === 'g') { this.send({ t: 'g', id: it.id }); this.meActor.play('gather', 1.2); }
   }
 
   setVolume(v) { this.prefs.vol = v; this.audio.setVolume(v); this.savePrefs(); }

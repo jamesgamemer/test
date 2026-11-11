@@ -22,6 +22,7 @@ export const ENV = {
     leanto: {"mesh": "leanto.mesh", "verts": 4965, "tris": 6904, "size": [1.0, 0.81539, 0.91592], "min": [-0.5, 0.0, -0.45796], "map": "leanto_c.webp", "normalMap": "leanto_n.webp", "roughness": 0.98},
     logpile: {"mesh": "logpile.mesh", "verts": 4997, "tris": 5575, "size": [1.0, 0.68384, 0.28226], "min": [-0.5, 0.0, -0.14113], "map": "logpile_c.webp", "normalMap": "logpile_n.webp", "roughness": 0.9},
     shrooms_tan: {"mesh": "shrooms_tan.mesh", "verts": 3296, "tris": 3914, "size": [0.92657, 0.86001, 1.0], "min": [-0.46329, 0.0, -0.5], "map": "shrooms_tan_c.webp", "normalMap": "shrooms_tan_n.webp", "roughness": 0.96},
+    sword: {"mesh": "sword.mesh", "verts": 2596, "tris": 4616, "size": [0.18683, 1.00494, 0.03946], "min": [-0.09547, -0.00247, -0.01973], "map": "sword_c.webp", "alpha": true, "roughness": 0.5},
   },
   ground: {
     ground_mud: {"map": "ground_mud.webp", "normalMap": "ground_mud_n.webp"},

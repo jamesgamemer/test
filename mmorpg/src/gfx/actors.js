@@ -1,4 +1,5 @@
 import { THREE } from './common.js';
+import { HeroActor } from './hero.js';
 
 // ---------------------------------------------------------------- helpers
 const geoCache = new Map();
@@ -483,8 +484,9 @@ export class Sentinel extends Actor {
 }
 
 export function createActor(kind, opts, T) {
-  if (kind === 'player') return new Humanoid(opts.look || 0);
-  if (kind === 'npc') return new Humanoid(0, { npc: NPC_LOOKS[opts.role] || NPC_LOOKS.elder });
+  // people are the generated, rigged hero model when it is loaded; the block figure below is only the fallback
+  if (kind === 'player') return T.hero ? new HeroActor(T.hero, LOOKS[(opts.look || 0) % LOOKS.length]) : new Humanoid(opts.look || 0);
+  if (kind === 'npc') return T.hero ? new HeroActor(T.hero, LOOKS[0], { npc: NPC_LOOKS[opts.role] || NPC_LOOKS.elder }) : new Humanoid(0, { npc: NPC_LOOKS[opts.role] || NPC_LOOKS.elder });
   if (kind === 'wisp') return new Wisp(opts.level);
   if (kind === 'spore') return new Sporecap();
   if (kind === 'wolf') return new Wolf(opts.level);

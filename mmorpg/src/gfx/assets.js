@@ -2,6 +2,8 @@
 // images, tileable ground textures and foliage cards. Nothing here is drawn in code.
 import { THREE } from './common.js';
 import { ENV } from './env-manifest.js';
+import { CHAR } from './char-manifest.js';
+import { parseSkin, parseAnim } from './hero.js';
 
 const BASE = (() => { try { return new URL('../../assets/env/', import.meta.url).href; } catch { return 'assets/env/'; } })();
 const embedded = () => (typeof window !== 'undefined' && window.NG_ASSETS) || {};
@@ -74,7 +76,7 @@ export async function loadEnv(progress = () => {}) {
         d.map ? texture(d.map, { flipY: false, aniso: 8 }) : null,
         d.normalMap ? texture(d.normalMap, { srgb: false, flipY: false }) : null,
       ]);
-      out.models[name] = { geo: parseMesh(buf), map, normalMap, size: d.size, roughness: d.roughness ?? 0.9 };
+      out.models[name] = { geo: parseMesh(buf), map, normalMap, size: d.size, roughness: d.roughness ?? 0.9, alpha: !!d.alpha };
       step();
     })());
   }
@@ -90,11 +92,20 @@ export async function loadEnv(progress = () => {}) {
     const d = ENV.cards[name];
     jobs.push((async () => { out.cards[name] = { ...d, map: await texture(d.map, { aniso: 4 }) }; step(); })());
   }
+  // the rigged hero: skinned mesh, skeleton, motion clips (see dev/build_char.py)
+  if (CHAR.hero) jobs.push((async () => {
+    const d = CHAR.hero;
+    const [skin, anim, map] = await Promise.all([bytes(d.skin), bytes(d.anim), texture(d.map, { flipY: false, aniso: 8 })]);
+    const S = parseSkin(skin), clips = parseAnim(anim, S.bones, S.named);
+    for (const name in clips) Object.assign(clips[name], d.clips[name] || {});
+    out.hero = { ...S, clips, map, sword: null };
+  })());
   await Promise.all(jobs);
+  if (out.hero && out.models.sword) out.hero.sword = out.models.sword;
   return out;
 }
 
 // A lit material for one of the generated props.
 export function propMaterial(model, opts = {}) {
-  return new THREE.MeshStandardMaterial({ map: model.map, normalMap: model.normalMap, roughness: model.roughness, metalness: 0, ...opts });
+  return new THREE.MeshStandardMaterial({ map: model.map, normalMap: model.normalMap, roughness: model.roughness, metalness: 0, alphaTest: model.alpha ? 0.5 : 0, ...opts });
 }
