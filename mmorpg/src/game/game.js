@@ -1,7 +1,7 @@
 import { THREE } from '../gfx/common.js';
 import { World3D, QUALITY } from '../gfx/world3d.js';
 import { createActor, setActorTextures, LOOKS } from '../gfx/actors.js';
-import { FX, makeLoot, makeGatherNode } from '../gfx/fx.js';
+import { FX, FIRE, makeLoot, makeGatherNode } from '../gfx/fx.js';
 import { heightAt, zoneAt, SPAWN, POIS, CAMP, GATE } from '../shared/world.js';
 import { SKILLS, SKILL_ORDER, PLAYER_SPEED } from '../shared/data.js';
 import { dashDest } from '../shared/sim.js';
@@ -10,7 +10,7 @@ import { t, setLang, itemName, RARITY_COLORS } from '../ui/i18n.js';
 import { Audio } from './audio.js';
 import { LocalTransport, WsTransport, clearSave } from './transport.js';
 
-const PREFS_KEY = 'nightglade.prefs.v1';
+const PREFS_KEY = 'nightglade.prefs.v2';
 const lerp = (a, b, k) => a + (b - a) * k;
 const angLerp = (a, b, k) => { let d = (b - a) % 6.2831853; if (d > Math.PI) d -= 6.2831853; if (d < -Math.PI) d += 6.2831853; return a + d * k; };
 const FIRES = [...CAMP.torches, CAMP.fire, ...GATE.braziers];
@@ -18,7 +18,7 @@ const FIRES = [...CAMP.torches, CAMP.fire, ...GATE.braziers];
 export class Game {
   constructor(canvas) {
     this.canvas = canvas;
-    this.prefs = { lang: 'th', quality: null, vol: 0.7, fps: false, name: '', look: 0 };
+    this.prefs = { lang: 'th', quality: null, vol: 0.7, fps: false, name: '', look: 3 };
     try { Object.assign(this.prefs, JSON.parse(localStorage.getItem(PREFS_KEY) || '{}')); } catch { /* ignore */ }
     const P = new URLSearchParams(location.search);
     if (P.get('lang')) this.prefs.lang = P.get('lang');
@@ -49,6 +49,7 @@ export class Game {
     await this.world.build(progress);
     setActorTextures(this.world.tex);
     this.fx = new FX(this.world);
+    this.fx.onMeteor = (x, z) => this.audio.sfx('meteor', Math.hypot(x - this.me.x, z - this.me.z));
     this.layout = this.world.layout;
     this.ui.setMapImage(this.world.maps.mapCanvas);
     this.setPreview(this.prefs.look);
@@ -120,6 +121,7 @@ export class Game {
       else if (k === 'Digit2' || k === 'Space') this.cast('dash');
       else if (k === 'Digit3') this.cast('nova');
       else if (k === 'Digit4') this.cast('starfall');
+      else if (k === 'KeyR') this.cast('eclipse');
       else if (k === 'KeyQ') this.usePotion('hp');
       else if (k === 'KeyE') this.usePotion('mp');
     });
@@ -176,7 +178,7 @@ export class Game {
 
   cast(s) {
     const me = this.me, f = me.full, sk = SKILLS[s];
-    if (this.mode !== 'play' || !f || me.dead || me.dash) return;
+    if (this.mode !== 'play' || !f || me.dead || me.dash || this.clock < (me.rootUntil || 0)) return;
     if (f.lvl < sk.lvl) { if (s !== 'slash') { this.ui.toast(t('unlock_at', sk.lvl)); this.audio.sfx('deny'); } return; }
     if (this.cdRemaining(s) > 0) return;
     if (me.mp < sk.mp) { this.ui.toast(t('sys_nomana'), '#7fb8ff'); this.audio.sfx('deny'); this.cd[s] = this.clock + 0.4; return; }
@@ -184,26 +186,29 @@ export class Game {
     const { dx, dz } = this.aim;
     let tx = this.aim.x, tz = this.aim.z;
     if (this.hover) { tx = this.hover.x; tz = this.hover.z; }
+    if (s === 'starfall') { const td = Math.hypot(tx - me.x, tz - me.z); if (td > sk.range) { tx = me.x + (tx - me.x) / td * sk.range; tz = me.z + (tz - me.z) / td * sk.range; } }
     this.cd[s] = this.clock + sk.cd; this.castAt[s] = this.clock;
     me.mp -= sk.mp;
     me.faceLock = sk.dur + 0.12; me.aimRot = Math.atan2(dx, dz);
     this.send({ t: 'c', s, dx, dz, tx, tz });
     let c = 0;
     if (s === 'slash') { this.combo = (this.combo + 1) % 3; c = this.combo; }
-    const ev = { s, x: me.x, z: me.z, dx, dz, c };
+    const ev = { s, x: me.x, z: me.z, dx, dz, c, tx, tz };
+    if (s === 'eclipse') me.rootUntil = this.clock + sk.finalAt + 0.1;
     if (s === 'dash') { const [ex, ez] = dashDest(this.layout, me.x, me.z, dx, dz, sk.dist); ev.tx = ex; ev.tz = ez; me.dash = { x0: me.x, z0: me.z, x1: ex, z1: ez, t: 0, dur: 0.2 }; }
     if (s === 'wave') ev.pj = 'local' + this.localProj++;
-    this._playCast(this.meActor, LOOKS[this.prefs.look].blade, ev, 0);
+    this._playCast(this.meActor, LOOKS[this.prefs.look], ev, 0);
     if (s !== 'slash') this.ui.flashSlot(s);
   }
 
-  _playCast(actor, color, ev, d) {
+  _playCast(actor, look, ev, d) {
     const fx = this.fx, a = this.audio;
-    if (ev.s === 'slash') { actor.play('atk', SKILLS.slash.dur, ev.c || 0); fx.slash(ev.x, ev.z, ev.dx, ev.dz, color, ev.c || 0); a.sfx(ev.c === 2 ? 'slash3' : 'slash', d); }
-    else if (ev.s === 'wave') { actor.play('atk', 0.4, 0); fx.slash(ev.x, ev.z, ev.dx, ev.dz, color, 0); fx.wave(ev.pj, ev.x + ev.dx * 0.9, ev.z + ev.dz * 0.9, ev.dx, ev.dz, color, SKILLS.wave.speed, SKILLS.wave.range / SKILLS.wave.speed); a.sfx('wave', d); }
-    else if (ev.s === 'dash') { actor.play('dash', 0.3); fx.dashTrail(ev.x, ev.z, ev.tx, ev.tz, color); a.sfx('dash', d); }
-    else if (ev.s === 'nova') { actor.play('cast', 0.6); fx.nova(ev.x, ev.z, SKILLS.nova.radius, color); a.sfx('nova', d); if (d < 20) fx.shake = Math.max(fx.shake, 0.3); }
-    else if (ev.s === 'starfall') { actor.play('cast', 0.75); a.sfx('starcast', d); }
+    if (ev.s === 'slash') { actor.play('atk', SKILLS.slash.dur, ev.c || 0); fx.slash(ev.x, ev.z, ev.dx, ev.dz, look, ev.c || 0); a.sfx(ev.c === 2 ? 'slash3' : 'slash', d); }
+    else if (ev.s === 'wave') { actor.play('atk', 0.4, 0); fx.slash(ev.x, ev.z, ev.dx, ev.dz, look, 1); fx.wave(ev.pj, ev.x + ev.dx * 0.9, ev.z + ev.dz * 0.9, ev.dx, ev.dz, look, SKILLS.wave.speed, SKILLS.wave.range / SKILLS.wave.speed); a.sfx('wave', d); }
+    else if (ev.s === 'dash') { actor.play('dash', 0.3); fx.dash(actor, ev.x, ev.z, ev.tx, ev.tz, look); a.sfx('dash', d); }
+    else if (ev.s === 'nova') { actor.play('cast', 0.6); fx.nova(ev.x, ev.z, SKILLS.nova.radius, look); a.sfx('nova', d); }
+    else if (ev.s === 'starfall') { actor.play('cast', 0.75); fx.starCharge(ev.tx, ev.tz, SKILLS.starfall.radius, SKILLS.starfall.delay, look); a.sfx('starcast', d); }
+    else if (ev.s === 'eclipse') { actor.play('ult', SKILLS.eclipse.dur); fx.eclipse(ev.x, ev.z, SKILLS.eclipse.radius, look, SKILLS.eclipse); a.sfx('eclipse', d); }
   }
 
   interact() {
@@ -272,7 +277,7 @@ export class Game {
   _spawnEnt(a) {
     const type = a[0], id = a[1];
     const e = { id, type, x: a[2], z: a[3], rot: 0, px: a[2], pz: a[3], pr: 0, nx: a[2], nz: a[3], nr: 0, t: 1, dur: 0.1, speed: 0, dead: false, hp: 1, mhp: 1 };
-    if (type === 'p') { e.rot = e.pr = e.nr = a[4]; e.look = a[8]; e.name = a[11]; e.actor = createActor('player', { look: a[8] }, this.world.tex); e.color = LOOKS[a[8] % LOOKS.length].blade; }
+    if (type === 'p') { e.rot = e.pr = e.nr = a[4]; e.look = a[8]; e.name = a[11]; e.actor = createActor('player', { look: a[8] }, this.world.tex); e.look = LOOKS[a[8] % LOOKS.length]; }
     else if (type === 'm') { e.rot = e.pr = e.nr = a[4]; e.kind = a[8]; e.lvl = a[7]; e.actor = createActor(a[8], { level: a[7] }, this.world.tex); }
     else if (type === 'l') { e.kind = a[4]; e.obj = makeLoot(a[4], a[5], this.world.tex.soft); e.spin = Math.random() * 6; }
     else if (type === 'g') { e.avail = true; e.obj = makeGatherNode(this.world.tex.soft); }
@@ -287,6 +292,7 @@ export class Game {
 
   _removeEnt(e) {
     this.world.scene.remove(e.obj);
+    if (e.actor) this.fx.dropBlade(e.actor);
     this.ui.dropPlate(e.id);
     this.ents.delete(e.id);
     if (this.hover === e) this.hover = null;
@@ -306,7 +312,7 @@ export class Game {
     switch (ev.e) {
       case 'cast': {
         if (ev.id === me.id) break;
-        if (ent && ent.actor) { ent.nr = ent.rot = Math.atan2(ev.dx, ev.dz); this._playCast(ent.actor, ent.color || 0x9fc8ff, ev, d); }
+        if (ent && ent.actor) { ent.nr = ent.rot = Math.atan2(ev.dx, ev.dz); this._playCast(ent.actor, ent.look || FIRE, ev, d); }
         break;
       }
       case 'dmg': {
@@ -316,7 +322,14 @@ export class Game {
           if (ent && ent.actor) ent.actor.hit();
           if (ev.by === me.id) { this._floatAt(ev.x, ev.z, (ent ? ent.height : 1.6), String(ev.amt), ev.crit ? 'crit' : ''); au.sfx(ev.crit ? 'crit' : 'hit'); if (ent) { this.lastTarget = ent; this.lastTargetAt = this.clock; } if (ev.crit) fx.shake = Math.max(fx.shake, 0.18); }
           else if (d < 30) au.sfx('hit', d + 12);
-          fx.hit(ev.x, ev.z, ev.pl ? 0xff6a5a : 0xcfe6ff, ent ? Math.min(1.6, ent.height * 0.5) : 1);
+          const atk = ev.by === me.id ? me : this.ents.get(ev.by), hh = ent ? Math.min(1.6, ent.height * 0.5) : 1;
+          if (atk && ev.s) {
+            const ax = ev.x - atk.x, az = ev.z - atk.z, al = Math.hypot(ax, az) || 1;
+            fx.hitMark(ev.x, ev.z, hh, ax / al, az / al, ev.s, ev.by === me.id ? LOOKS[this.prefs.look] : atk.look || FIRE, !!ev.crit);
+            // hit-stop: the struck body (and a heavy striker) hold their pose for a few frames
+            if (ent && ent.actor) ent.actor.freeze(ev.crit || ev.s === 'slash3' ? 0.09 : 0.045);
+            if (ev.by === me.id && (ev.crit || ev.s === 'slash3')) this.meActor.freeze(0.05);
+          } else fx.hit(ev.x, ev.z, ev.pl ? 0xff6a5a : 0xcfe6ff, hh);
         }
         break;
       }
@@ -325,7 +338,7 @@ export class Game {
         const col = { wisp: 0x8fe0ff, spore: 0x8ffbe6, wolf: 0x9aa4b4, thorn: 0x9dff6a, sentinel: 0x4fd0ff, player: 0xffb4a6 }[ev.k] || 0xffffff;
         fx.puff(ev.x, ev.z, col, ev.k === 'sentinel' ? 90 : 26, 1);
         au.sfx(ev.k === 'sentinel' ? 'boom' : 'mobdie', d);
-        if (ev.k === 'sentinel') { fx.shake = 0.8; fx.ring(ev.x, ev.z, 9, 0x4fd0ff, 1.2); }
+        if (ev.k === 'sentinel') { fx.impact(0.8, 1.6, 1); fx.ring(ev.x, ev.z, 9, 0x4fd0ff, 1.2); fx.shock(ev.x, ev.z, 14, 0.03, 0.8); fx.scorch(ev.x, ev.z, 13, { blade: 0x4fd0ff, ramp: [0x0a3a8a, 0x4fd0ff, 0xffffff] }, 4.5, 1.4); }
         if (ev.k === 'player' && ev.name) ui.chat('bad', '', t('sys_died', ev.name));
         break;
       }
@@ -340,10 +353,17 @@ export class Game {
       }
       case 'proj': fx.bolt(ev.id, ev.x, ev.z, ev.dx, ev.dz, ev.spd, ev.ttl, ev.lv >= 4 ? 0xc27bff : 0x7fdcff); break;
       case 'pjend': fx.endProj(ev.id, ev.x, ev.z); break;
-      case 'tele': fx.telegraph(ev.x, ev.z, ev.r, ev.t, ev.k !== 'star'); if (ev.k !== 'star') au.sfx('tele', d); break;
+      case 'tele': {
+        // a player's own starfall sigil is drawn from the cast itself
+        if (ev.k !== 'star') { fx.telegraph(ev.x, ev.z, ev.r, ev.t); au.sfx('tele', d); }
+        break;
+      }
       case 'boom': {
-        if (ev.k === 'star') { fx.starfall(ev.x, ev.z, ev.r, 0x8fc4ff); au.sfx('starfall', d); }
-        else { fx.quake(ev.x, ev.z, ev.r, ev.k === 'slam'); au.sfx('boom', d); fx.shake = Math.max(fx.shake, ev.k === 'slam' ? 0.9 * Math.max(0, 1 - d / 30) : 0.4 * Math.max(0, 1 - d / 20)); }
+        const col = ev.by === me.id ? LOOKS[this.prefs.look] : (this.ents.get(ev.by) || {}).look || FIRE;
+        if (ev.k === 'star') { fx.starfall(ev.x, ev.z, ev.r, col); au.sfx('starfall', d); }
+        else if (ev.k === 'ecl') { fx.eclipseCut(ev.x, ev.z, ev.r, col); au.sfx('eclcut', d); }
+        else if (ev.k === 'eclf') { fx.eclipseEnd(ev.x, ev.z, ev.r, col); au.sfx('starfall', d); au.sfx('boom', d); }
+        else { fx.quake(ev.x, ev.z, ev.r, ev.k === 'slam'); au.sfx('boom', d); fx.impact(ev.k === 'slam' ? 0.9 * Math.max(0, 1 - d / 30) : 0.4 * Math.max(0, 1 - d / 20), 0.8, 0.5); }
         break;
       }
       case 'lvl': {
@@ -422,7 +442,7 @@ export class Game {
       const k = Math.min(1, d.t), e = 1 - (1 - k) * (1 - k);
       me.x = lerp(d.x0, d.x1, e); me.z = lerp(d.z0, d.z1, e); me.moving = true;
       if (k >= 1) me.dash = null;
-    } else if (ml > 0.15 && !me.dead) {
+    } else if (ml > 0.15 && !me.dead && this.clock >= (me.rootUntil || 0)) {
       const sp = PLAYER_SPEED * Math.min(1, ml) * dt;
       const [x, z] = this.layout.collide(me.x + mx / ml * sp, me.z + mz / ml * sp, 0.4);
       me.speed = Math.hypot(x - me.x, z - me.z) / dt;
@@ -448,6 +468,7 @@ export class Game {
     const ma = this.meActor;
     ma.group.position.set(me.x, me.y, me.z); ma.group.rotation.y = me.rot;
     ma.update(dt, me.dash ? 9 : me.speed);
+    this.fx.blade(ma, LOOKS[this.prefs.look]);
     // --- other entities
     const camera = this.world.camera;
     let interact = null, ibest = 1e9, fire = 0;
@@ -461,6 +482,7 @@ export class Game {
         e.speed = lerp(e.speed, sp, Math.min(1, dt * 10));
         e.obj.position.set(e.x, heightAt(e.x, e.z), e.z); e.obj.rotation.y = e.rot;
         if (dist < 60) e.actor.update(dt, e.speed);
+        if (e.type === 'p' && dist < 45) this.fx.blade(e.actor, e.look);
       } else if (e.type === 'n') {
         e.actor.update(dt, 0);
         if (dist < 4.2 && dist < ibest) { ibest = dist; interact = e; }
@@ -526,9 +548,12 @@ export class Game {
     c.position.set(cam.target.x + Math.sin(cam.yaw) * cp * cam.dist, cam.target.y + sp * cam.dist, cam.target.z + Math.cos(cam.yaw) * cp * cam.dist);
     c.position.y = Math.max(c.position.y, heightAt(c.position.x, c.position.z) + 2);
     c.lookAt(cam.target);
+    const fov = 38 - Math.min(4, this.fx.kick * 1.7);
+    if (Math.abs(fov - c.fov) > 0.01) { c.fov = fov; c.updateProjectionMatrix(); }
     if (sh > 0) { c.position.x += (Math.random() - 0.5) * sh * 0.5; c.position.y += (Math.random() - 0.5) * sh * 0.5; c.rotation.z += (Math.random() - 0.5) * sh * 0.02; }
     // grass reacts to nearby bodies
     const push = [{ x: me.x, z: me.z, r: 1.3, k: 0.9 }];
+    for (const p of this.fx.pushers) if (push.length < 5) push.push(p);
     if (this.mode === 'play') for (const e of this.ents.values()) { if (push.length >= 8) break; if ((e.type === 'm' || e.type === 'p') && !e.dead && Math.abs(e.x - me.x) < 26 && Math.abs(e.z - me.z) < 26) push.push({ x: e.x, z: e.z, r: e.kind === 'sentinel' ? 3 : 1.2, k: e.kind === 'wisp' ? 0.25 : 0.8 }); }
     this._hero.set(me.x, me.y, me.z);
     world.update(dt, this._hero, push);
@@ -537,8 +562,9 @@ export class Game {
     const u = world.post.mFinal.uniforms;
     this.danger = Math.max(0, this.danger - dt * 1.6);
     const low = me.full && !me.dead && me.hp < me.full.mhp * 0.3 ? 0.35 + Math.sin(this.clock * 6) * 0.15 : 0;
-    u.uDanger.value = Math.max(this.danger * 0.7, low);
+    u.uDanger.value = Math.max(this.danger * 0.55, low);
     u.uFlash.value = Math.max(0, u.uFlash.value - dt * 0.9);
+    u.uAberr.value = this.fx.aberr; u.uDark.value = this.fx.dark; u.uSquash.value = Math.max(0.3, Math.sin(cam.pitch));
     world.render();
     // frame-rate governor: trade resolution for smoothness
     this.fpsAcc += dt; this.fpsN++;

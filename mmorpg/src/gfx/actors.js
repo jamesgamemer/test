@@ -69,12 +69,15 @@ class Actor {
     this.time = Math.random() * 10;
     this.height = 1.9; this.radius = 0.4;
     this.hitT = 1;
+    this.freezeT = 0;
   }
+  freeze(t) { this.freezeT = Math.max(this.freezeT, t); }
   play(name, dur = 0.4, arg = 0) { this.action = name; this.actionT = 0; this.actionDur = dur; this.actionArg = arg; }
   hit() { this.hitT = 0; }
   setDead(d) { if (d !== this.dead) { this.dead = d; this.deadT = 0; if (!d) { this.group.scale.setScalar(1); this.group.position.y = 0; } } }
   // returns normalized action time or -1
   tick(dt, speed, stride) {
+    if (this.freezeT > 0) { this.freezeT -= dt; dt = 0; }
     this.time += dt;
     this.phase += speed * dt * stride;
     this.hitT = Math.min(1, this.hitT + dt * 5);
@@ -91,11 +94,12 @@ class Actor {
 
 // ---------------------------------------------------------------- hero
 export const LOOKS = [
-  { id: 'moon', cloak: 0x2a3a5c, trim: 0x8fb0e6, blade: 0x79b8ff, tunic: 0x39414f },
-  { id: 'dusk', cloak: 0x4a2f5e, trim: 0xc59cf0, blade: 0xc88cff, tunic: 0x3b3346 },
-  { id: 'moss', cloak: 0x2f4a38, trim: 0x9fd6a0, blade: 0x7dffb0, tunic: 0x3a4238 },
-  { id: 'ember', cloak: 0x5a2c26, trim: 0xf0b07a, blade: 0xffa45c, tunic: 0x45362f },
-  { id: 'frost', cloak: 0x6f7f96, trim: 0xe8f2ff, blade: 0xbfe9ff, tunic: 0x4a5566 },
+  // ramp recolours the painted fire effects: [smoky edge, body, hot core]; null keeps their own fire colours
+  { id: 'moon', cloak: 0x2a3a5c, trim: 0x8fb0e6, blade: 0x79b8ff, tunic: 0x39414f, ramp: [0x1b2fd0, 0x45b4ff, 0xf2fbff] },
+  { id: 'dusk', cloak: 0x4a2f5e, trim: 0xc59cf0, blade: 0xc88cff, tunic: 0x3b3346, ramp: [0x5a1fb0, 0xc07cff, 0xfff0ff] },
+  { id: 'moss', cloak: 0x2f4a38, trim: 0x9fd6a0, blade: 0x7dffb0, tunic: 0x3a4238, ramp: [0x0f7a45, 0x5dffa6, 0xf4fff6] },
+  { id: 'ember', cloak: 0x5a2c26, trim: 0xf0b07a, blade: 0xffa45c, tunic: 0x45362f, ramp: null },
+  { id: 'frost', cloak: 0x6f7f96, trim: 0xe8f2ff, blade: 0xbfe9ff, tunic: 0x4a5566, ramp: [0x3f6fb8, 0xa6dcff, 0xffffff] },
 ];
 
 export class Humanoid extends Actor {
@@ -172,6 +176,7 @@ export class Humanoid extends Actor {
     }
     this.height = 2.0; this.radius = 0.4;
     this.capeSwing = 0;
+    this.bladeHot = 0;
     this.npc = npc;
     this._lastSpeed = 0;
   }
@@ -192,7 +197,7 @@ export class Humanoid extends Actor {
     // arms: left swings, right carries the blade low and back like in the key art
     arms[0].sh.rotation.set(-s * 0.8 * run + 0.05, 0, -0.12);
     arms[0].el.rotation.x = -0.25 - 0.55 * run;
-    let rsx = 0.28 + s * 0.22 * run, rsz = 0.16, rel = -0.25 - 0.2 * run, wx = 2.3 + 1.6 * run, wz = 0.1, twist = 0, lean = 0, rise = 0;
+    let rsx = 0.28 + s * 0.22 * run, rsz = 0.16, rel = -0.25 - 0.2 * run, wx = 2.3 + 1.6 * run, wz = 0.1, twist = 0, lean = 0, rise = 0, whirl = 0;
     if (this.npc) { rsx = this.npc.staff ? -0.55 : s * 0.5 * run; rsz = 0.1; rel = this.npc.staff ? -0.6 : -0.2; wx = this.npc.staff ? 1.1 : 0; wz = 0; }
     // actions
     if (a >= 0) {
@@ -209,12 +214,23 @@ export class Humanoid extends Actor {
         lean = 0.75 * k; rsx = 1.1; wx = 3.6; legs[0].hip.rotation.x = 0.9 * k; legs[1].hip.rotation.x = -1.0 * k;
       } else if (this.action === 'wave') {
         arms[0].sh.rotation.set(-2.6, 0, -0.5 + Math.sin(t * 9) * 0.3);
+      } else if (this.action === 'ult') {
+        // rise, whirl through the flurry, then drive the blade into the ground
+        const up = ease(clamp01(a / 0.2)), down = ease(clamp01((a - 0.86) / 0.1));
+        rise = 0.9 * up * (1 - down);
+        const spin = clamp01((a - 0.22) / 0.64);
+        whirl = spin < 1 && spin > 0 ? ease(spin) * Math.PI * 8 : 0;
+        rsx = lerp(lerp(rsx, -1.5, up), -0.4, down); rsz = 0.5 * (1 - down); rel = -0.1; wx = lerp(3.05, 2.3, down);
+        arms[0].sh.rotation.set(-1.2 * up * (1 - down), 0, -0.9 * up * (1 - down));
+        lean = 0.5 * down;
+        legs[0].hip.rotation.x = -0.35 * up * (1 - down); legs[1].hip.rotation.x = 0.25 * up * (1 - down);
+        legs[0].knee.rotation.x = 0.7 * up; legs[1].knee.rotation.x = 0.3 * up;
       }
     }
     arms[1].sh.rotation.set(rsx, 0, rsz);
     arms[1].el.rotation.x = rel;
     weapon.rotation.set(wx, 0, wz);
-    spine.rotation.y += twist; spine.rotation.x += lean; hips.position.y += rise;
+    spine.rotation.y += twist; spine.rotation.x += lean; hips.position.y += rise; inner.rotation.y = whirl;
     // death
     if (this.dead) {
       const d = ease(clamp01(this.deadT * 2.2));
@@ -235,7 +251,19 @@ export class Humanoid extends Actor {
     }
     p.needsUpdate = true;
     this.capeGeo.computeVertexNormals();
-    if (this.bladeHalo) this.bladeHalo.material.opacity = 0.42 + Math.sin(t * 3) * 0.08;
+    if (this.bladeHalo) {
+      const hot = this.action === 'ult' || this.action === 'cast' ? 1 : this.action ? 0.45 : 0;
+      this.bladeHot += (hot - this.bladeHot) * Math.min(1, dt * 10);
+      this.bladeHalo.material.opacity = 0.42 + Math.sin(t * 3) * 0.08 + this.bladeHot * 0.5;
+      this.bladeHalo.scale.setScalar(0.9 + this.bladeHot * 1.3);
+    }
+  }
+
+  // world-space base and tip of the blade, for sword trails
+  bladePoints(base, tip) {
+    this.weapon.updateWorldMatrix(true, false);
+    base.set(0, 0.18, 0).applyMatrix4(this.weapon.matrixWorld);
+    tip.set(0, 1.08, 0).applyMatrix4(this.weapon.matrixWorld);
   }
 }
 

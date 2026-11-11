@@ -11,13 +11,14 @@ export const ICONS = {
   dash: svg('<path d="M3 7l5 5-5 5M9 7l5 5-5 5M17 5l3 7-3 7"/>'),
   nova: svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>'),
   starfall: svg('<path d="M12 9l1.6 3.4 3.7.4-2.8 2.5.8 3.7-3.3-1.9-3.3 1.9.8-3.7-2.8-2.5 3.7-.4zM6 2l2 4M12 1v4M18 2l-2 4"/>'),
+  eclipse: svg('<circle cx="12" cy="12" r="6.5"/><path d="M14.5 6a6.5 6.5 0 0 0 0 12"/><path d="M12 1.5v2M12 20.5v2M1.5 12h2M20.5 12h2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M19.4 4.6L18 6M6 18l-1.4 1.4"/>'),
   potion: svg('<path d="M9 3h6M10 3v5l-4 8a3 3 0 0 0 3 5h6a3 3 0 0 0 3-5l-4-8V3M7.5 14h9"/>'),
   weapon: svg('<path d="M20 4L9 15M20 4v4M20 4h-4M6 12l6 6M4 20l4-4"/>'),
   armor: svg('<path d="M6 4l6-2 6 2v8c0 5-3 8-6 10-3-2-6-5-6-10z"/><path d="M12 6v12"/>'),
   trinket: svg('<circle cx="12" cy="15" r="5"/><path d="M12 10V4M9 4h6M12 13v4M10 15h4"/>'),
   hand: svg('<path d="M8 12V5a1.5 1.5 0 0 1 3 0v5V4a1.5 1.5 0 0 1 3 0v6V6a1.5 1.5 0 0 1 3 0v8c0 4-2 7-6 7s-6-3-7-7l-1-3a1.5 1.5 0 0 1 3-1z"/>'),
 };
-const KEYS = { slash: 'LMB', wave: '1', dash: '2', nova: '3', starfall: '4' };
+const KEYS = { slash: 'LMB', wave: '1', dash: '2', nova: '3', starfall: '4', eclipse: 'R' };
 const QUEST_SPOT = [[-2, 6], [POIS.hollow.x, POIS.hollow.z], [POIS.den.x, POIS.den.z], [POIS.rot.x, POIS.rot.z], [POIS.gate.x, POIS.gate.z]];
 
 export class UI {
@@ -96,6 +97,7 @@ export class UI {
     mk('', ICONS.dash, 'right:80px;bottom:66px', () => this.g.cast('dash'));
     mk('', ICONS.nova, 'right:16px;bottom:94px', () => this.g.cast('nova'));
     mk('', ICONS.starfall, 'right:154px;bottom:22px', () => this.g.cast('starfall'));
+    mk('', ICONS.eclipse, 'right:140px;bottom:86px', () => this.g.cast('eclipse'));
     const stick = $('#stick'), nub = stick.firstElementChild;
     let pid = null;
     const move = (e) => {

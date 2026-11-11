@@ -174,7 +174,7 @@ export class Sim {
     const T = this.time;
     switch (msg.t) {
       case 'm': {
-        if (p.dead || !isFinite(msg.x) || !isFinite(msg.z)) return;
+        if (p.dead || !isFinite(msg.x) || !isFinite(msg.z) || (p.cds.eclipse || 0) - SKILLS.eclipse.cd + SKILLS.eclipse.finalAt > T) return;
         const dt = Math.max(0.016, Math.min(1, T - p.lastMove));
         p.lastMove = T;
         let dx = msg.x - p.x, dz = msg.z - p.z;
@@ -297,7 +297,7 @@ export class Sim {
         const ox = m.x - p.x, oz = m.z - p.z, d = Math.hypot(ox, oz);
         if (d - m.r > sk.range) continue;
         if (d > 1.1 && Math.acos(clamp((ox * dx + oz * dz) / d, -1, 1)) > sk.arc) continue;
-        this._hitMob(p, m, mult);
+        this._hitMob(p, m, mult, p.combo === 2 ? 'slash3' : 'slash');
       }
     } else if (msg.s === 'wave') {
       const id = 'j' + this.seq++;
@@ -309,7 +309,7 @@ export class Sim {
         if (m.dead) continue;
         const sx = tx - p.x, sz = tz - p.z, l2 = sx * sx + sz * sz || 1;
         const t = clamp(((m.x - p.x) * sx + (m.z - p.z) * sz) / l2, 0, 1);
-        if (Math.hypot(p.x + sx * t - m.x, p.z + sz * t - m.z) < sk.radius + m.r) this._hitMob(p, m, sk.mult);
+        if (Math.hypot(p.x + sx * t - m.x, p.z + sz * t - m.z) < sk.radius + m.r) this._hitMob(p, m, sk.mult, 'dash');
       }
       p.x = tx; p.z = tz; p.invuln = T + 0.45; p.slackUntil = T + 0.8;
       ev.tx = r2(tx); ev.tz = r2(tz);
@@ -317,22 +317,26 @@ export class Sim {
       for (const m of this.mobs.values()) {
         if (m.dead || dist(m, p) - m.r > sk.radius) continue;
         m.slowUntil = T + sk.slowDur;
-        this._hitMob(p, m, sk.mult);
+        this._hitMob(p, m, sk.mult, 'nova');
       }
     } else if (msg.s === 'starfall') {
       let tx = +msg.tx, tz = +msg.tz;
       if (!isFinite(tx) || !isFinite(tz)) { tx = p.x + dx * 8; tz = p.z + dz * 8; }
       const d = Math.hypot(tx - p.x, tz - p.z);
       if (d > sk.range) { tx = p.x + (tx - p.x) / d * sk.range; tz = p.z + (tz - p.z) / d * sk.range; }
-      this.pending.push({ at: T + sk.delay, type: 'aoe', side: 'p', by: p.id, x: tx, z: tz, r: sk.radius, mult: sk.mult, k: 'star' });
-      this.emit({ e: 'tele', x: r2(tx), z: r2(tz), r: sk.radius, t: sk.delay, k: 'star' });
+      this.pending.push({ at: T + sk.delay, type: 'aoe', side: 'p', by: p.id, x: tx, z: tz, r: sk.radius, mult: sk.mult, k: 'star', s: 'starfall' });
+      this.emit({ e: 'tele', x: r2(tx), z: r2(tz), r: sk.radius, t: sk.delay, k: 'star', by: p.id });
       ev.tx = r2(tx); ev.tz = r2(tz);
+    } else if (msg.s === 'eclipse') {
+      for (let i = 0; i < sk.ticks; i++) this.pending.push({ at: T + sk.first + i * sk.gap, type: 'aoe', side: 'p', by: p.id, x: p.x, z: p.z, r: sk.radius, mult: sk.mult, k: 'ecl', s: 'eclipse' });
+      this.pending.push({ at: T + sk.finalAt, type: 'aoe', side: 'p', by: p.id, x: p.x, z: p.z, r: sk.radius + 0.5, mult: sk.finalMult, k: 'eclf', s: 'eclipse' });
+      p.invuln = T + sk.dur; p.moving = false;
     }
     this.emit(ev);
   }
 
   // ------------------------------------------------------------ combat
-  _hitMob(p, m, mult) {
+  _hitMob(p, m, mult, skill = '') {
     if (m.dead) return;
     const crit = this.rnd() * 100 < p.crit;
     const raw = p.atk * mult * (0.9 + this.rnd() * 0.2) * (crit ? 1.8 : 1);
@@ -341,7 +345,7 @@ export class Sim {
     m.threat.set(p.id, (m.threat.get(p.id) || 0) + dmg);
     p.lastCombat = this.time;
     if (!m.tgt && m.st !== 'return') { m.tgt = p.id; m.st = 'chase'; }
-    this.emit({ e: 'dmg', id: m.id, by: p.id, amt: dmg, crit: crit ? 1 : 0, x: r2(m.x), z: r2(m.z) });
+    this.emit({ e: 'dmg', id: m.id, by: p.id, amt: dmg, crit: crit ? 1 : 0, x: r2(m.x), z: r2(m.z), s: skill });
     if (m.hp <= 0) this._killMob(m);
   }
 
@@ -436,7 +440,7 @@ export class Sim {
         const p = this.players.get(j.by);
         if (p) for (const m of this.mobs.values()) {
           if (m.dead || j.hit.has(m.id) || Math.hypot(m.x - j.x, m.z - j.z) > j.r + m.r) continue;
-          j.hit.add(m.id); this._hitMob(p, m, j.mult);
+          j.hit.add(m.id); this._hitMob(p, m, j.mult, 'wave');
         }
       } else {
         for (const p of this.players.values()) {
@@ -459,8 +463,8 @@ export class Sim {
         if (m && !m.dead && p && dist(m, p) <= h.range) this._hitPlayer(p, m.atk, m.kind);
       } else if (h.side === 'p') {
         const p = this.players.get(h.by);
-        this.emit({ e: 'boom', x: r2(h.x), z: r2(h.z), r: h.r, k: h.k });
-        if (p) for (const m of this.mobs.values()) if (!m.dead && Math.hypot(m.x - h.x, m.z - h.z) < h.r + m.r) this._hitMob(p, m, h.mult);
+        this.emit({ e: 'boom', x: r2(h.x), z: r2(h.z), r: h.r, k: h.k, by: h.by });
+        if (p && !p.dead) for (const m of this.mobs.values()) if (!m.dead && Math.hypot(m.x - h.x, m.z - h.z) < h.r + m.r) this._hitMob(p, m, h.mult, h.s || 'starfall');
       } else {
         this.emit({ e: 'boom', x: r2(h.x), z: r2(h.z), r: h.r, k: h.k });
         for (const p of this.players.values()) if (Math.hypot(p.x - h.x, p.z - h.z) < h.r + 0.3) this._hitPlayer(p, h.dmg, 'sentinel');

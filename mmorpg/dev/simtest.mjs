@@ -16,7 +16,7 @@ for (let i = 0; i < minutes * 60 * 20; i++) {
     if (best) {
       const dx = (best.x - p.x) / (bd || 1), dz = (best.z - p.z) / (bd || 1);
       if (bd > 2.2) sim.handle(me, { t: 'm', x: p.x + dx * 6 * 0.05, z: p.z + dz * 6 * 0.05, r: Math.atan2(dx, dz), mv: 1 });
-      for (const s of ['slash', 'nova', 'wave', 'starfall']) if (bd < (SKILLS[s].range || SKILLS[s].radius || 3)) sim.handle(me, { t: 'c', s, dx, dz, tx: best.x, tz: best.z });
+      for (const s of ['slash', 'nova', 'wave', 'starfall', 'eclipse']) if (bd < (SKILLS[s].range || SKILLS[s].radius || 3)) sim.handle(me, { t: 'c', s, dx, dz, tx: best.x, tz: best.z });
       if (p.hp < p.mhp * 0.4) sim.handle(me, { t: 'pot', k: 'hp' });
     }
     if (p.quest.s === 'offer' || p.quest.s === 'ready') { // teleport-free: quests need the elder nearby, so emulate being there

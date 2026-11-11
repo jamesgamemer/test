@@ -79,18 +79,32 @@ export class PostFX {
 
     this.mFinal = pass(`
       uniform sampler2D tScene; uniform sampler2D tBloom; uniform float uBloom; uniform float uExposure; uniform float uTime; uniform vec2 uRes; uniform float uFlash; uniform float uDanger;
+      uniform vec4 uShock[4]; uniform float uSquash; uniform float uAberr; uniform float uDark;
       varying vec2 vUv;
       vec3 aces(vec3 x) { return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0); }
       void main() {
-        vec2 d = vUv - 0.5;
+        // shockwaves bend the image: each is a ring on the ground, so an ellipse on screen
+        vec2 uv = vUv; float bend = 0.0;
+        float aspect = uRes.x / uRes.y;
+        for (int i = 0; i < 4; i++) {
+          vec2 sd = (vUv - uShock[i].xy) * vec2(aspect, 1.0 / uSquash);
+          float sl = length(sd);
+          float k = (sl - uShock[i].z) / (0.035 + uShock[i].z * 0.16);
+          float w = exp(-k * k) * uShock[i].w;
+          uv += (sd / max(sl, 1e-4)) * vec2(1.0 / aspect, uSquash) * w;
+          bend += abs(w);
+        }
+        vec2 d = uv - 0.5;
         float r2 = dot(d, d);
-        // gentle lens fringe toward the corners
-        vec2 off = d * r2 * 0.012;
-        vec3 c = vec3(texture2D(tScene, vUv + off).r, texture2D(tScene, vUv).g, texture2D(tScene, vUv - off).b);
-        vec3 bloom = texture2D(tBloom, vUv).rgb;
+        // lens fringe toward the corners; impacts and shock fronts pull the channels apart
+        vec2 off = d * (r2 * 0.012 + uAberr * 0.009 + bend * 0.15);
+        vec3 c = vec3(texture2D(tScene, uv + off).r, texture2D(tScene, uv).g, texture2D(tScene, uv - off).b);
+        vec3 bloom = texture2D(tBloom, uv).rgb;
+        // eclipse: the world dims while light sources keep burning
+        c *= mix(1.0, 0.32 + 0.68 * smoothstep(0.5, 2.5, max(c.r, max(c.g, c.b))), uDark);
         c += bloom * uBloom;
-        float vig = smoothstep(0.95, 0.2, length(d * vec2(1.0, 0.92)) * 1.25);
-        c *= mix(0.42, 1.0, vig);
+        float vig = smoothstep(0.95, 0.2, length(d * vec2(1.0, 0.92)) * (1.25 + uDark * 0.35));
+        c *= mix(0.42 - uDark * 0.25, 1.0, vig);
         c *= uExposure;
         c = aces(c);
         float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
@@ -99,12 +113,12 @@ export class PostFX {
         c += vec3(0.0, 0.006, 0.02) * (1.0 - smoothstep(0.0, 0.3, l));
         c = pow(max(c, 0.0), vec3(0.96));
         c = mix(c, vec3(1.0), uFlash);
-        c = mix(c, vec3(c.r + 0.25, c.g * 0.35, c.b * 0.35), uDanger * (1.0 - vig));
+        c = mix(c, vec3(c.r + 0.2, c.g * 0.45, c.b * 0.45), uDanger * (1.0 - vig) * (1.0 - vig));
         c = mix(12.92 * c, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
         float g = fract(sin(dot(gl_FragCoord.xy + fract(uTime) * 61.0, vec2(12.9898, 78.233))) * 43758.5453);
         c += (g - 0.5) * 0.022;
         gl_FragColor = vec4(c, 1.0);
-      }`, { tScene: { value: null }, tBloom: { value: null }, uBloom: { value: 0.8 }, uExposure: { value: 1.35 }, uTime: U.uTime, uRes: { value: new THREE.Vector2() }, uFlash: { value: 0 }, uDanger: { value: 0 } });
+      }`, { tScene: { value: null }, tBloom: { value: null }, uBloom: { value: 0.8 }, uExposure: { value: 1.35 }, uTime: U.uTime, uRes: { value: new THREE.Vector2() }, uFlash: { value: 0 }, uDanger: { value: 0 }, uShock: { value: [0, 1, 2, 3].map(() => new THREE.Vector4(0.5, 0.5, 0, 0)) }, uSquash: { value: 0.7 }, uAberr: { value: 0 }, uDark: { value: 0 } });
 
     this.rtScene = null;
     this.setSize(2, 2);

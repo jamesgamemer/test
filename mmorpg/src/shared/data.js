@@ -11,8 +11,10 @@ export const SKILLS = {
   dash: { cd: 6, mp: 8, lvl: 2, dist: 7.5, radius: 1.6, mult: 1.3, dur: 0.28 },
   nova: { cd: 10, mp: 22, lvl: 4, radius: 5.4, mult: 2.3, slow: 0.45, slowDur: 3.5, dur: 0.6 },
   starfall: { cd: 26, mp: 38, lvl: 6, range: 15, radius: 4.8, delay: 0.8, mult: 4.4, dur: 0.7 },
+  // channelled ultimate: a flurry of cuts around the caster, then the moon comes down
+  eclipse: { cd: 42, mp: 45, lvl: 8, radius: 7.5, mult: 0.85, ticks: 5, first: 0.4, gap: 0.16, finalAt: 1.35, finalMult: 3.6, dur: 1.5 },
 };
-export const SKILL_ORDER = ['slash', 'wave', 'dash', 'nova', 'starfall'];
+export const SKILL_ORDER = ['slash', 'wave', 'dash', 'nova', 'starfall', 'eclipse'];
 
 export const MOBS = {
   wisp: { hp: 44, atk: 7, def: 0, xp: 16, gold: [2, 6], speed: 3.0, aggro: 9.5, range: 7, atkCd: 2.1, radius: 0.45, ranged: 9.5 },

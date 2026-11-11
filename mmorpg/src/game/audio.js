@@ -106,6 +106,9 @@ export class Audio {
       case 'nova': T({ f: 130, f2: 42, d: 0.7, g: 0.4 }); N({ d: 0.5, g: 0.16, f: 4000, f2: 600, q: 0.5 }); for (let i = 0; i < 4; i++) T({ f: 880 * (1 + i * 0.5), t: now + i * 0.04, d: 0.6, g: 0.03 }); break;
       case 'starcast': T({ f: 1400, f2: 240, d: 0.8, g: 0.09, type: 'triangle' }); break;
       case 'starfall': T({ f: 90, f2: 30, d: 1.0, g: 0.55 }); N({ d: 0.7, g: 0.3, f: 2500, f2: 200, q: 0.4, type: 'lowpass' }); for (let i = 0; i < 6; i++) T({ f: 1320 + Math.random() * 1400, t: now + i * 0.05, d: 0.5, g: 0.035 }); break;
+      case 'meteor': N({ d: 0.12, g: 0.16, f: 5000, f2: 700, q: 0.7 }); T({ f: 160, f2: 60, d: 0.16, g: 0.2 }); T({ f: 1500 + Math.random() * 900, d: 0.25, g: 0.03 }); break;
+      case 'eclipse': T({ f: 55, f2: 38, d: 1.5, g: 0.5, type: 'sawtooth', lp: 260 }); T({ f: 220, f2: 880, d: 1.3, g: 0.07, type: 'triangle' }); N({ d: 1.3, g: 0.1, f: 300, f2: 4000, q: 1.5 }); [392, 466, 587].forEach((f, i) => T({ f, t: now + i * 0.05, d: 1.2, g: 0.05 })); break;
+      case 'eclcut': N({ d: 0.12, g: 0.24, f: 3600, f2: 700, q: 0.8 }); N({ t: now + 0.06, d: 0.12, g: 0.2, f: 4200, f2: 600, q: 0.8 }); T({ f: 1200 + Math.random() * 600, d: 0.14, g: 0.04 }); break;
       case 'hit': T({ f: 190, f2: 70, d: 0.09, g: 0.26 }); N({ d: 0.05, g: 0.13, f: 3000, q: 0.6 }); break;
       case 'crit': T({ f: 240, f2: 60, d: 0.14, g: 0.34 }); N({ d: 0.08, g: 0.2, f: 4200, q: 0.6 }); T({ f: 1760, d: 0.2, g: 0.05 }); break;
       case 'hurt': T({ f: 150, f2: 50, d: 0.2, g: 0.36, type: 'triangle' }); N({ d: 0.1, g: 0.14, f: 700, q: 0.7 }); break;

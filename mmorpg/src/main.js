@@ -36,7 +36,7 @@ async function boot() {
 
   // character creation
   const looks = $('#looks');
-  let look = game.prefs.look || 0;
+  let look = game.prefs.look ?? 3;
   LOOKS.forEach((L, i) => {
     const b = document.createElement('button');
     b.type = 'button';
