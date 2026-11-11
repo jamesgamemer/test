@@ -20,7 +20,7 @@
   <h1>Nightglade — VFX sprite sheets</h1>
   <p>Every effect is played here by the game's own flipbook code and shader. The blue frame is the edge of one cell: no part of an effect may be cut by it.
      The dashed box is the area the art occupies, the cross is its pivot (the point placed on the effect's origin in the world) and the circle its reach.</p>
-  <p><label><input type="checkbox" id="edges" checked> guides</label><label><input type="checkbox" id="slow"> slow motion</label><span id="report"></span></p>
+  <p><label><input type="checkbox" id="edges" checked> guides</label><label><input type="checkbox" id="slow"> slow motion</label><label>colour <select id="pal"><option value="">painted fire</option><option value="moon">moon blue</option><option value="moss">moss green</option><option value="dusk">dusk violet</option><option value="frost">frost</option></select></label><span id="report"></span></p>
 </header>
 <div id="grid"></div>
 <script type="module">
@@ -29,6 +29,10 @@ import { Flipbooks } from '../src/gfx/flipbook.js';
 import { VFX } from '../src/gfx/vfx-manifest.js';
 
 const grid = document.getElementById('grid');
+// the recolour palettes the game uses for the other sword colours: [smoky edge, body, hot core]
+const RAMPS = { moon: [0x1b2fd0, 0x45b4ff, 0xf2fbff], moss: [0x0f7a3a, 0x5dff9a, 0xf1fff2], dusk: [0x5a1bd0, 0xb47bff, 0xfbf2ff], frost: [0x1b8fd0, 0x9fe8ff, 0xffffff] };
+let ramp = null;
+document.getElementById('pal').onchange = (e) => { ramp = RAMPS[e.target.value] || null; };
 const S = 256;
 const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
 renderer.setClearColor(0x000000, 1);
@@ -50,9 +54,9 @@ for (const name in VFX) {
 function draw(v, frame) {
   renderer.setSize(v.w, v.h, false);
   for (const h of fb.live.splice(0)) { h.mesh.visible = false; fb.free.push(h); }
-  const h = fb.play(v.name, { x: 0, z: 0, y: 0, size: 2, h: 2, board: true, anchor: [0.5, 0.5], gain: 1.6, dur: 1e9, fadeIn: 0, fadeOut: 0 });
+  const h = fb.play(v.name, { x: 0, z: 0, y: 0, size: 2, h: 2, board: true, anchor: [0.5, 0.5], gain, ramp, dur: 1e9, fadeIn: 0, fadeOut: 0 });
   h.mesh.position.set(0, 0, 0);
-  fb.frame(h, frame); h.u.uAlpha.value = 1; h.u.uGain.value = 1.6;
+  fb.frame(h, frame); h.u.uAlpha.value = 1; h.u.uGain.value = gain;
   renderer.render(scene, cam);
   v.ctx.drawImage(renderer.domElement, 0, 0, v.w, v.h);
   if (!guides || !document.getElementById('edges').checked) return;
@@ -66,7 +70,7 @@ function draw(v, frame) {
   c.strokeStyle = 'rgba(110,255,170,0.9)'; c.beginPath(); c.moveTo(px - 7, py); c.lineTo(px + 7, py); c.moveTo(px, py - 7); c.lineTo(px, py + 7); c.stroke();
   c.strokeStyle = 'rgba(110,255,170,0.4)'; c.beginPath(); c.arc(px, py, d.reach * v.w, 0, 6.2832); c.stroke();
 }
-let guides = true;
+let guides = true, gain = 1.6;
 
 let last = performance.now();
 function loop(now) {
@@ -113,11 +117,26 @@ window.vfxTest = () => {
       const energy = cells[i].reduce((a, b) => a + b, 0) / cells[i].length;
       if (energy > 30 && best !== i && bc - own > 0.03) wrong.push({ frame: i, shows: best, own: +own.toFixed(3), best: +bc.toFixed(3) });
     }
+    // the same frames recoloured and over-exposed, as the other sword colours show them: faint glow that the fire
+    // palette hides becomes visible, so the outer edge of the quad must still be black
+    const keep = ramp, tinted = [];
+    if (d.file !== 'ribbon.webp') {
+      ramp = RAMPS.moon; gain = 3;
+      const b = Math.max(2, Math.round(Math.min(v.w, v.h) * 0.012));
+      for (let i = 0; i < d.n; i++) {
+        draw(v, i);
+        const px = v.ctx.getImageData(0, 0, v.w, v.h).data; let m = 0;
+        for (let y = 0; y < v.h; y++) for (let x = 0; x < v.w; x++) if (x < b || y < b || x >= v.w - b || y >= v.h - b) { const k = (y * v.w + x) * 4; m = Math.max(m, px[k], px[k + 1], px[k + 2]); }
+        if (m > 12) tinted.push(i + 1);
+      }
+      ramp = keep; gain = 1.6;
+    }
     guides = true;
     const cut = d.file === 'ribbon.webp' ? [] : edge.map((m, i) => (m > 28 ? i + 1 : 0)).filter(Boolean); // the sword-trail strip runs edge to edge by design
-    report[v.name] = { frames: d.n, wrongCell: wrong, cutAtEdge: cut, maxEdge: Math.max(...edge) };
-    v.st.textContent = wrong.length || cut.length ? `${wrong.length ? 'wrong cell ' : ''}${cut.length ? 'cut: ' + cut.join(',') : ''}` : 'ok';
-    v.st.className = 'st ' + (wrong.length || cut.length ? 'bad' : 'ok');
+    report[v.name] = { frames: d.n, wrongCell: wrong, cutAtEdge: cut, cutRecoloured: tinted, maxEdge: Math.max(...edge) };
+    const bad = wrong.length || cut.length || tinted.length;
+    v.st.textContent = bad ? `${wrong.length ? 'wrong cell ' : ''}${cut.length ? 'cut: ' + cut.join(',') + ' ' : ''}${tinted.length ? 'edge shows when recoloured: ' + tinted.join(',') : ''}` : 'ok';
+    v.st.className = 'st ' + (bad ? 'bad' : 'ok');
   }
   return report;
 };
