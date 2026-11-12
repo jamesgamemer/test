@@ -471,16 +471,17 @@ $('#ticks').addEventListener('pointerdown', (e) => {
   const n = e.target.dataset && e.target.dataset.n; if (n === undefined) return;
   const key = shownKeys()[+n]; if (!key) return;
   e.preventDefault(); e.target.setPointerCapture(e.pointerId);
-  keyDrag = { key, x: e.clientX, t0: key.t, moved: false, el: e.target };
+  const all = shownKeys(), at = all.indexOf(key), c = clipInfo(), f = 1 / fps();
+  // it moves between its neighbours (a loop's end is its beginning: no key sits there)
+  keyDrag = { key, x: e.clientX, t0: key.t, moved: false, lo: at > 0 ? all[at - 1].t + f : 0, hi: at < all.length - 1 ? all[at + 1].t - f : c.loop && A.mode === 'keys' ? c.dur - f : c.dur };
   A.playing = false; A.t = key.t; refresh();
 });
 $('#ticks').addEventListener('pointermove', (e) => {
   if (!keyDrag) return;
   const c = clipInfo(), w = $('#ticks').clientWidth || 1, dx = e.clientX - keyDrag.x;
   if (!keyDrag.moved) { if (Math.abs(dx) < 4) return; keyDrag.moved = true; remember(); }
-  const top = c.loop && A.mode === 'keys' ? c.dur - 1 / fps() : c.dur; // a loop's end is its beginning: no key sits there
-  const t = r4(clamp(fpsSnap(keyDrag.t0 + (dx / w) * c.dur), 0, top));
-  if (shownKeys().some((k) => k !== keyDrag.key && Math.abs(k.t - t) < 0.5 / fps())) return; // two keys cannot share a moment
+  if (keyDrag.hi < keyDrag.lo - 1e-6) return; // no room between its neighbours
+  const t = r4(clamp(fpsSnap(keyDrag.t0 + (dx / w) * c.dur), keyDrag.lo, keyDrag.hi));
   keyDrag.key.t = t; A.t = t; A.dirty = true;
   if (A.mode === 'keys') rebake();
   refresh();
@@ -495,9 +496,12 @@ $('#ticks').addEventListener('pointerup', endKeyDrag); $('#ticks').addEventListe
 
 // ---------------------------------------------------------------- the keyframe room
 // Turn the open clip into keys of its own (see reduceKeys). What was laid over it goes into the keys.
-const LEVELS = { fine: { tol: 1.5, max: 60 }, mid: { tol: 3, max: 32 }, rough: { tol: 6, max: 14 } };
+// how closely the keys must follow the clip (the furthest a joint may be off, in metres) and how many keys a second at most
+const LEVELS = { fine: { tol: 0.008, rate: 20 }, mid: { tol: 0.02, rate: 12 }, rough: { tol: 0.045, rate: 7 } };
+const levelOf = (name, level) => { const L = LEVELS[level] || LEVELS.mid, c = clipInfo(name); return { tol: L.tol, max: clamp(Math.ceil(c.dur * L.rate), 4, Math.floor(c.frames / 2)) }; };
 function convertClip(name = A.clip, level = $('#kf-level').value) {
-  const def = reduceKeys(A.H, A.E, name, LEVELS[level] || LEVELS.mid);
+  if (!clipInfo(name)) return null;
+  const def = reduceKeys(A.H, A.E, name, levelOf(name, level));
   if (!def) return null;
   if (!A.E.keyed) A.E.keyed = {};
   A.E.keyed[name] = def;
@@ -705,7 +709,7 @@ $('#new-form').onsubmit = (e) => {
     undo.push(snapshot()); redo = [];
     const dur = clamp(+$('#nf-dur').value || 1.5, 0.1, 30), loop = $('#nf-loop').checked;
     let def;
-    if (from === 'copy') { def = JSON.parse(JSON.stringify(KD() || reduceKeys(A.H, A.E, A.clip, LEVELS.mid))); const f = dur / def.dur; for (const k of def.keys) k.t = r4(fpsSnap(k.t * f)); def.dur = dur; def.loop = loop; }
+    if (from === 'copy') { def = JSON.parse(JSON.stringify(KD() || reduceKeys(A.H, A.E, A.clip, levelOf(A.clip, 'mid')))); const f = dur / def.dur; for (const k of def.keys) k.t = r4(fpsSnap(k.t * f)); def.dur = dur; def.loop = loop; }
     else { const k0 = from === 'rest' ? restKey(0) : fullKey(0, A.t); def = { dur, loop, keys: loop ? [k0] : [k0, { ...JSON.parse(JSON.stringify(k0)), t: r4(dur) }] }; }
     if (!A.E.keyed) A.E.keyed = {};
     A.E.keyed[name] = def; applyEdits(A.H, A.E); A.dirty = true; $('#new-form').hidden = true; A.t = 0; selectClip(name); buildMoves();

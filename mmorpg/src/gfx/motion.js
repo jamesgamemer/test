@@ -145,16 +145,39 @@ export function keyedClips(H, edits) {
 
 export const clipOf = (H, name) => (H.keyed && H.keyed[name]) || H.raw.clips[name] || (H.made && H.made[name]) || null;
 
+// Where every joint is, for a pose given as local rotations Q and positions PP: out (bones * 3), in the
+// model's own units. Parents come before their children.
+function jointsOf(H, Q, PP, out, rot, scl) {
+  const B = H.bones, v = [0, 0, 0];
+  for (let i = 0; i < B.length; i++) {
+    const p = B[i].parent, q = [Q[i * 4], Q[i * 4 + 1], Q[i * 4 + 2], Q[i * 4 + 3]];
+    if (p < 0) { rot[i] = q; scl[i] = B[i].s[0]; out[i * 3] = PP[i * 3]; out[i * 3 + 1] = PP[i * 3 + 1]; out[i * 3 + 2] = PP[i * 3 + 2]; continue; }
+    // the parent's rotation applied to this bone's place (v' = v + 2w(u x v) + 2u x (u x v))
+    const r = rot[p], x = PP[i * 3] * scl[p], y = PP[i * 3 + 1] * scl[p], z = PP[i * 3 + 2] * scl[p];
+    const cx = r[1] * z - r[2] * y, cy = r[2] * x - r[0] * z, cz = r[0] * y - r[1] * x;
+    v[0] = x + 2 * (r[3] * cx + r[1] * cz - r[2] * cy); v[1] = y + 2 * (r[3] * cy + r[2] * cx - r[0] * cz); v[2] = z + 2 * (r[3] * cz + r[0] * cy - r[1] * cx);
+    out[i * 3] = out[p * 3] + v[0]; out[i * 3 + 1] = out[p * 3 + 1] + v[1]; out[i * 3 + 2] = out[p * 3 + 2] + v[2];
+    rot[i] = qmul(r, q, []); scl[i] = scl[p] * B[i].s[0];
+  }
+  return out;
+}
+
 // Turn a clip as it stands (what is laid over it included, but not the posture laid over every clip, which
-// stays a layer of its own) into keys: start from its ends and keep adding the frame the curve misses by
-// most, until it misses nowhere by more than `tol` degrees (or `ptol` rig units of position), or `max` keys.
-export function reduceKeys(H, edits, clipName, { tol = 3, ptol = 1, max = 24 } = {}) {
+// stays a layer of its own) into keys. It starts from the clip's ends and keeps adding the frame at which
+// the curve through the keys is furthest from the clip, measured as how far any joint is from where the clip
+// has it, until no joint is off by more than `tol` (in the model's units: metres for a figure 1.6 tall), or
+// there are `max` keys. Keys are never put on neighbouring frames, so each has room to be moved in time.
+export function reduceKeys(H, edits, clipName, { tol = 0.02, max = 24 } = {}) {
   const c = clipOf(H, clipName);
   if (!c) return null;
   const fps = H.raw.fps, F = c.frames, N = H.bones.length, E = edits ? { ...edits, all: null } : null;
-  const QQ = [], PP = [];
-  for (let f = 0; f < F; f++) { const q = new Float32Array(N * 4), p = new Float32Array(N * 3); poseAt(H, E, clipName, f / fps, q, null, p); QQ.push(q); PP.push(p); }
-  const turn = [], move = [];
+  const QQ = [], PP = [], JJ = [], rot = [], scl = [];
+  for (let f = 0; f < F; f++) {
+    const q = new Float32Array(N * 4), p = new Float32Array(N * 3);
+    poseAt(H, E, clipName, f / fps, q, null, p);
+    QQ.push(q); PP.push(p); JJ.push(jointsOf(H, q, p, new Float32Array(N * 3), rot, scl));
+  }
+  const turn = [], move = [], leaf = H.bones.map((b, i) => !helperBone(b.name) && !H.bones.some((k) => k.parent === i));
   H.bones.forEach((b, i) => {
     if (helperBone(b.name)) return;
     if (QQ.some((q) => Math.abs(q[i * 4] * b.r[0] + q[i * 4 + 1] * b.r[1] + q[i * 4 + 2] * b.r[2] + q[i * 4 + 3] * b.r[3]) < 0.999995)) turn.push(i);
@@ -168,19 +191,27 @@ export function reduceKeys(H, edits, clipName, { tol = 3, ptol = 1, max = 24 } =
   };
   const last = c.loop ? F - 2 : F - 1; // a loop's last frame is its first one again
   const picks = c.loop ? [0] : [0, F - 1], o = [];
+  const q = new Float32Array(N * 4), p = new Float32Array(N * 3), J = new Float32Array(N * 3);
   let def;
   for (;;) {
     def = { dur: c.dur, loop: c.loop, keys: picks.slice().sort((a, b) => a - b).map(keyOf) };
     if (picks.length >= max) break;
     let worst = -1, at = -1;
     for (let f = 1; f <= last; f++) {
-      if (picks.includes(f)) continue;
+      if (picks.some((k) => Math.abs(k - f) < 2) || (c.loop && f > last - 1)) continue;
+      q.set(QQ[f]); p.set(PP[f]);
+      for (const i of turn) { const b = H.bones[i]; sampleKeyed(def, f / fps, 'q', b.name, b.r, o); q[i * 4] = o[0]; q[i * 4 + 1] = o[1]; q[i * 4 + 2] = o[2]; q[i * 4 + 3] = o[3]; }
+      for (const i of move) { const b = H.bones[i]; sampleKeyed(def, f / fps, 'p', b.name, b.t, o); p[i * 3] = o[0]; p[i * 3 + 1] = o[1]; p[i * 3 + 2] = o[2]; }
+      jointsOf(H, q, p, J, rot, scl);
       let e = 0;
-      for (const i of turn) { const b = H.bones[i]; sampleKeyed(def, f / fps, 'q', b.name, b.r, o); const d = Math.abs(o[0] * QQ[f][i * 4] + o[1] * QQ[f][i * 4 + 1] + o[2] * QQ[f][i * 4 + 2] + o[3] * QQ[f][i * 4 + 3]); e = Math.max(e, 2 * Math.acos(Math.min(1, d)) * 57.2958 / tol); }
-      for (const i of move) { const b = H.bones[i]; sampleKeyed(def, f / fps, 'p', b.name, b.t, o); e = Math.max(e, Math.hypot(o[0] - PP[f][i * 3], o[1] - PP[f][i * 3 + 1], o[2] - PP[f][i * 3 + 2]) / ptol); }
+      for (let i = 0; i < N; i++) {
+        e = Math.max(e, Math.hypot(J[i * 3] - JJ[f][i * 3], J[i * 3 + 1] - JJ[f][i * 3 + 1], J[i * 3 + 2] - JJ[f][i * 3 + 2]));
+        // a bone at the end of a limb moves no joint: its own turn counts, as the swing of a hand's width
+        if (leaf[i]) { const d = Math.abs(q[i * 4] * QQ[f][i * 4] + q[i * 4 + 1] * QQ[f][i * 4 + 1] + q[i * 4 + 2] * QQ[f][i * 4 + 2] + q[i * 4 + 3] * QQ[f][i * 4 + 3]); e = Math.max(e, 2 * Math.acos(Math.min(1, d)) * 0.08); }
+      }
       if (e > worst) { worst = e; at = f; }
     }
-    if (worst <= 1 || at < 0) break;
+    if (worst <= tol || at < 0) break;
     picks.push(at);
   }
   return def;
