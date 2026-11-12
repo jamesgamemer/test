@@ -41,7 +41,7 @@ const cam = { yaw: 0.45, pitch: 0.14, dist: 4.8, target: new THREE.Vector3(0, 0.
 const VIEWS = { front: [0, 0.06, 4.8], side: [Math.PI / 2, 0.06, 4.8], back: [Math.PI, 0.06, 4.8], top: [0, 1.5, 6], face: [0.2, 0.04, 1.9], game: [0.2, 0.8, 24] };
 
 // ---------------------------------------------------------------- state
-const A = { id: null, H: null, E: {}, clip: 'ease', t: 0, playing: false, speed: 1, scope: 'clip', sel: -1, mode: 'pose', ik: true, showSword: false, manual: false, dirty: false };
+const A = { id: null, H: null, E: {}, clip: 'ease', t: 0, playing: false, speed: 1, scope: 'clip', sel: -1, mode: 'pose', ik: true, showSword: false, manual: false, dirty: false, rings: true, local: true, snap: false };
 let actor = null, ghost = null, game = null, rest = null, handles = [], undo = [], redo = [], clipboard = null, db = null, downloads = null;
 const Q = new Float32Array(96 * 4), P = [0, 0, 0], PP = new Float32Array(96 * 3);
 const r4 = (v) => Math.round(v * 1e4) / 1e4;
@@ -260,8 +260,8 @@ function placeHandles() {
   const s = handles.find((h) => h.bone === A.sel && !h.tip), sp = buildHandles.sel.geometry.attributes.position;
   buildHandles.sel.visible = !!s && buildHandles.pts.visible; if (s) { sp.setXYZ(0, s.pos.x, s.pos.y, s.pos.z); sp.needsUpdate = true; }
 }
-function pick(x, y) {
-  const r = canvas.getBoundingClientRect(); let best = null, bd = 18;
+function pick(x, y, reach = 18) {
+  const r = canvas.getBoundingClientRect(); let best = null, bd = reach;
   const v = new THREE.Vector3();
   for (const h of handles) {
     if (h.off) continue;
@@ -339,21 +339,90 @@ function restore(json) { A.E = JSON.parse(json); A.dirty = true; applyEdits(A.H,
 function doUndo() { if (!undo.length) return; redo.push(snapshot()); restore(undo.pop()); }
 function doRedo() { if (!redo.length) return; undo.push(snapshot()); restore(redo.pop()); }
 
+// ---------------------------------------------------------------- the turning rings
+// Round the selected part: one ring for each of its three axes (or the character's, if asked), and a pale
+// outer ring that turns it about the line of sight. Dragging a ring turns the part about that axis, in
+// whichever room and scope is open; the angle turned shows beside the pointer.
+const RING_PX = 78; // the rings' radius on screen
+const gizmo = new THREE.Group(), gizmoV = new THREE.Group(), ringGrabs = [], ringLook = {};
+for (const [axis, color] of [['x', 0xff6470], ['y', 0x64dc86], ['z', 0x62a4ff], ['v', 0xdfe6f3]]) {
+  const r = axis === 'v' ? 1.2 : 1;
+  const show = new THREE.Mesh(new THREE.TorusGeometry(r, 0.019, 8, 80), new THREE.MeshBasicMaterial({ color, depthTest: false, transparent: true, opacity: 0.9 }));
+  const grab = new THREE.Mesh(new THREE.TorusGeometry(r, 0.085, 6, 48), new THREE.MeshBasicMaterial({ visible: false })); // wider than it looks: easy to take hold of
+  for (const m of [show, grab]) { if (axis === 'x') m.rotation.y = Math.PI / 2; if (axis === 'y') m.rotation.x = Math.PI / 2; m.renderOrder = 30; }
+  grab.userData.axis = axis; ringGrabs.push(grab); ringLook[axis] = show;
+  (axis === 'v' ? gizmoV : gizmo).add(show, grab);
+}
+gizmo.visible = gizmoV.visible = false; scene.add(gizmo, gizmoV);
+let ringDrag = null, ringHot = null;
+function placeGizmo() {
+  const i = A.sel, h = i >= 0 && handles.find((k) => k.bone === i && !k.tip);
+  const on = A.mode !== 'game' && A.rings && !!h && !h.off;
+  gizmo.visible = gizmoV.visible = on;
+  if (!on) return;
+  const bone = actor.bones[i];
+  bone.getWorldPosition(gizmo.position); gizmoV.position.copy(gizmo.position);
+  const s = camera.position.distanceTo(gizmo.position) * Math.tan((camera.fov * DEG) / 2) * 2 * (RING_PX / Math.max(1, canvas.clientHeight));
+  gizmo.scale.setScalar(s); gizmoV.scale.setScalar(s);
+  if (!ringDrag) { if (A.local) bone.getWorldQuaternion(gizmo.quaternion); else gizmo.quaternion.identity(); } // while one is dragged the rings stay as they were taken hold of
+  gizmoV.quaternion.copy(camera.quaternion);
+  gizmo.updateMatrixWorld(true); gizmoV.updateMatrixWorld(true);
+  for (const k in ringLook) ringLook[k].material.opacity = (ringDrag ? ringDrag.axis === k : ringHot === k) ? 1 : ringDrag ? 0.22 : 0.85;
+}
+function pickRing(x, y) {
+  if (!gizmo.visible) return null;
+  const r = canvas.getBoundingClientRect(), ray = new THREE.Raycaster();
+  ray.setFromCamera(new THREE.Vector2((x / r.width) * 2 - 1, -(y / r.height) * 2 + 1), camera);
+  const hits = ray.intersectObjects(ringGrabs, false);
+  return hits.length ? hits[0] : null;
+}
+const toScreen = (p) => { const q = p.clone().project(camera), r = canvas.getBoundingClientRect(); return new THREE.Vector2((q.x * 0.5 + 0.5) * r.width, (-q.y * 0.5 + 0.5) * r.height); };
+function startRing(hit, x, y) {
+  const axis = hit.object.userData.axis, c = gizmo.position.clone();
+  const n = axis === 'v' ? camera.getWorldDirection(new THREE.Vector3()).negate() : new THREE.Vector3(+(axis === 'x'), +(axis === 'y'), +(axis === 'z')).applyQuaternion(gizmo.quaternion);
+  const r = hit.point.clone().sub(c); r.addScaledVector(n, -r.dot(n));
+  // the way the grabbed point of the ring travels on screen when the part turns the positive way about the axis
+  const a = toScreen(c.clone().add(r)), tan = toScreen(c.clone().add(r).addScaledVector(n.clone().cross(r), 0.2)).sub(a);
+  if (tan.length() < 1e-3) tan.set(1, 0); // seen dead edge-on at that point: sideways will do
+  ringDrag = { axis, n, tan: tan.normalize(), x, y, turned: 0, moved: false };
+}
+function moveRing(x, y, fine) {
+  const d = ringDrag;
+  let a = ((x - d.x) * d.tan.x + (y - d.y) * d.tan.y) / RING_PX; // radians: a drag of one ring radius is one radian
+  if (!d.moved) { if (Math.hypot(x - d.x, y - d.y) < 3) return; d.moved = true; remember(); pose(actor, A.E); }
+  if (A.snap !== fine) a = Math.round(a / (5 * DEG)) * 5 * DEG; // steps of five degrees (Shift does the opposite of the switch)
+  if (Math.abs(a - d.turned) < 1e-6) return;
+  rotateWorld(A.sel, new THREE.Quaternion().setFromAxisAngle(d.n, a - d.turned));
+  d.turned = a;
+  const read = $('#ring-read');
+  read.hidden = false; read.textContent = (a >= 0 ? '+' : '−') + Math.abs(a / DEG).toFixed(1) + '°';
+  read.style.left = x + 14 + 'px'; read.style.top = y - 30 + 'px'; read.dataset.axis = d.axis;
+  refresh();
+}
+function endRing() { const moved = ringDrag && ringDrag.moved; ringDrag = null; $('#ring-read').hidden = true; if (moved) { buildClipList(); syncInspector(true); } }
+
 // ---------------------------------------------------------------- pointer: handles and camera
 let drag = null;
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 canvas.addEventListener('pointerdown', (e) => {
   const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
   canvas.setPointerCapture(e.pointerId);
-  const h = e.button === 0 && A.mode !== 'game' && buildHandles.pts.visible ? pick(x, y) : null;
+  const can = e.button === 0 && A.mode !== 'game', dots = can && buildHandles.pts.visible;
+  // a joint's dot right under the pointer comes first, then a ring, then a dot that is merely near
+  let h = dots ? pick(x, y, 8) : null;
+  const ring = !h && can ? pickRing(x, y) : null;
+  if (ring) { startRing(ring, x, y); drag = { kind: 'ring', x, y }; return; }
+  if (!h && dots) h = pick(x, y);
   if (h) {
     select(h.select);
     drag = { kind: 'handle', h, moved: false, x, y, last: h.pos.clone(), hipsAt: h.pos.clone() };
   } else drag = { kind: e.button === 1 || e.shiftKey ? 'pan' : 'orbit', x, y };
 });
 canvas.addEventListener('pointermove', (e) => {
-  if (!drag) return;
-  const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, dx = x - drag.x, dy = y - drag.y;
+  const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  if (!drag) { const hit = A.mode !== 'game' ? pickRing(x, y) : null; ringHot = hit ? hit.object.userData.axis : null; canvas.style.cursor = hit ? 'grab' : ''; return; }
+  if (drag.kind === 'ring') { moveRing(x, y, e.shiftKey); return; }
+  const dx = x - drag.x, dy = y - drag.y;
   if (drag.kind === 'orbit') { cam.yaw -= dx * 0.008; cam.pitch = clamp(cam.pitch + dy * 0.006, -0.6, 1.52); drag.x = x; drag.y = y; }
   else if (drag.kind === 'pan') {
     const k = cam.dist * 0.0011, right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0), up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
@@ -368,7 +437,7 @@ canvas.addEventListener('pointermove', (e) => {
     refresh();
   }
 });
-const endDrag = () => { if (drag && drag.kind === 'handle' && drag.moved) { buildClipList(); } drag = null; };
+const endDrag = () => { if (drag && drag.kind === 'ring') endRing(); if (drag && drag.kind === 'handle' && drag.moved) { buildClipList(); } drag = null; };
 canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); cam.dist = clamp(cam.dist * (1 + Math.sign(e.deltaY) * 0.1), 0.6, 60); }, { passive: false });
 
@@ -632,6 +701,9 @@ $('#t-bones').onchange = (e) => { for (const o of [buildHandles.pts, buildHandle
 $('#t-ghost').onchange = (e) => { ghost.group.visible = e.target.checked && A.mode !== 'game'; refresh(); };
 $('#t-sword').onchange = (e) => { A.showSword = e.target.checked; refresh(); };
 $('#t-ik').onchange = (e) => { A.ik = e.target.checked; };
+$('#t-rings').onchange = (e) => { A.rings = e.target.checked; };
+$('#t-local').onchange = (e) => { A.local = e.target.checked; };
+$('#t-snap').onchange = (e) => { A.snap = e.target.checked; };
 $('#tabs').onclick = (e) => { const t = e.target.dataset.tab; if (t) showTab(t); };
 $('#b-reset').onclick = () => { if (A.sel < 0) return; remember(); setRel(A.sel, [0, 0, 0, 1]); if (movable(A.sel)) setShift(A.sel, [0, 0, 0]); refresh(); syncInspector(true); buildClipList(); };
 $('#b-mirror').onclick = () => {
@@ -768,6 +840,7 @@ function frame(dt) {
   camera.lookAt(cam.target); camera.updateMatrixWorld();
   sun.position.set(cam.target.x + 2.5, 5, cam.target.z + 3.5); sun.target.position.set(cam.target.x, 0, cam.target.z);
   if (actor && A.mode !== 'game') placeHandles();
+  if (actor) placeGizmo();
   renderer.render(scene, camera);
 }
 function loop(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; if (!A.manual) frame(dt); requestAnimationFrame(loop); }
@@ -785,6 +858,9 @@ window.animator = {
   removeKey(t) { const K = KD(), i = K ? K.keys.findIndex((k) => Math.abs(k.t - t) < 0.5 / fps()) : -1; if (i < 0 || K.keys.length < 2) return false; remember(); K.keys.splice(i, 1); rebake(); A.dirty = true; refresh(); return true; },
   newClip(name, { dur = 1.5, loop = false, from = 'rest' } = {}) { undo.push(snapshot()); redo = []; const k0 = from === 'rest' ? restKey(0) : fullKey(0, A.t); if (!A.E.keyed) A.E.keyed = {}; A.E.keyed[name] = { dur, loop, keys: loop ? [k0] : [k0, { ...JSON.parse(JSON.stringify(k0)), t: r4(dur) }] }; applyEdits(A.H, A.E); A.dirty = true; A.t = 0; selectClip(name); buildMoves(); },
   move(name, offset) { remember(); pose(actor, A.E); moveBone(idx(name), new THREE.Vector3(...offset)); refresh(); },
+  ringAt(x, y) { const h = pickRing(x, y); return h ? h.object.userData.axis : null; }, // which ring is under a point of the view (for tests)
+  // turn a part by `deg` about axis 'x' | 'y' | 'z': its own axes, or the character's with local false (what the rings do)
+  spin(name, axis, deg, local = true) { const i = idx(name); remember(); pose(actor, A.E); const n = new THREE.Vector3(+(axis === 'x'), +(axis === 'y'), +(axis === 'z')); if (local) n.applyQuaternion(actor.bones[i].getWorldQuaternion(new THREE.Quaternion())); rotateWorld(i, new THREE.Quaternion().setFromAxisAngle(n, deg * DEG)); refresh(); },
   // angles in degrees about the character's own axes: [nod, turn, tilt]; added to what is there unless absolute
   turn(name, deg, absolute = false) { const i = idx(name); remember(); const e = absolute ? [0, 0, 0] : eulerOf(i); setEuler(i, [e[0] + deg[0], e[1] + deg[1], e[2] + deg[2]]); refresh(); },
   twist(name, deg) { const i = idx(name); remember(); pose(actor, A.E); placeHandles(); rotateWorld(i, new THREE.Quaternion().setFromAxisAngle(boneAxis(i), deg * DEG)); refresh(); },
