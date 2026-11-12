@@ -1,9 +1,9 @@
 // The hero: a generated, rigged character (assets/env/hero.skin, hero.anim; packed by dev/build_char.py).
 // Its design, its model, its skeleton and every move are generated, and no bone is ever posed by code here:
-// this file only plays the motion clips back, blending one into the next, and lets what the rig has no bones
-// for - cloth, hair, the rise of the chest with each breath - follow the body.
+// this file only plays the motion clips back (see motion.js for the clips and the animator's edits to them),
+// blending one into the next, and lets what the rig has no bones for - cloth, hair, the rise of the chest
+// with each breath - follow the body.
 import { THREE } from './common.js';
-import { CHAR } from './char-manifest.js';
 
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const ease = (t) => t * t * (3 - 2 * t);
@@ -29,57 +29,12 @@ export function parseSkin(buf) {
   g.setAttribute('skinIndex', new THREE.BufferAttribute(new Uint8Array(buf, off + B.joints[0], n * 4).slice(), 4));
   g.setAttribute('skinWeight', new THREE.BufferAttribute(new Uint8Array(buf, off + B.weights[0], n * 4).slice(), 4, true));
   // what the skeleton cannot move: x how freely the vertex hangs (cloth, hair), y how much it rises with a breath,
-  // z whether it hangs from the upper body or from the hips
+  // z whether it hangs from the upper body or from the hips; w how much it is skin of the face (lit as a ball)
   g.setAttribute('aSoft', new THREE.BufferAttribute(new Uint8Array(buf, off + B.soft[0], n * 4).slice(), 4, true));
   g.setIndex(new THREE.BufferAttribute((head.wide ? new Uint32Array(buf, off + B.idx[0], head.tris * 3) : new Uint16Array(buf, off + B.idx[0], head.tris * 3)).slice(), 1));
+  g.computeTangents(); // for the detail (normal) map: the same frames dev/make_lowpoly.py baked it in
   const ibm = new Float32Array(buf, off + B.ibm[0], head.bones.length * 16).slice();
   return { geo: g, bones: head.bones, ibm, scale: head.scale, lift: head.lift, height: head.height, named: head.named };
-}
-
-// .anim: 'NGA1', header length, JSON header, then per clip the bone rotations (16-bit) and the hips' travel.
-// Each clip comes back in parts, so that the legs can do one thing while the upper body does another:
-// low (hips and legs), up (spine, arms, head) and, for a move, top - the upper body as it has to be played
-// over legs that are running. A clip that moves the whole figure across the ground (dying) stays whole.
-export function parseAnim(buf, bones, named) {
-  const dv = new DataView(buf);
-  if (dv.getUint32(0, true) !== 0x3141474e) throw new Error('not an animation file');
-  const hl = dv.getUint32(4, true), head = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 8, hl))), off = 8 + hl;
-  const upper = new Set([named.spine]);
-  bones.forEach((b, i) => { if (upper.has(b.parent)) upper.add(i); }); // parents come before their children
-  const clips = {};
-  for (const c of head.clips) {
-    const times = new Float32Array(c.frames), dur = (c.frames - 1) / head.fps;
-    for (let f = 0; f < c.frames; f++) times[f] = f / head.fps;
-    const quats = (src, count, k) => {
-      const v = new Float32Array(c.frames * 4);
-      for (let f = 0; f < c.frames; f++) for (let j = 0; j < 4; j++) v[f * 4 + j] = src[(f * count + k) * 4 + j] / 32767;
-      return v;
-    };
-    const low = [], up = [], top = [];
-    const rot = new Int16Array(buf, off + c.rot, c.frames * c.bones.length * 4);
-    c.bones.forEach((b, k) => {
-      const name = bones[b].id + '.quaternion', track = new THREE.QuaternionKeyframeTrack(name, times, quats(rot, c.bones.length, k));
-      (upper.has(b) ? up : low).push(track);
-      if (upper.has(b) && b !== named.spine) top.push(track);
-    });
-    if (c.top >= 0) top.push(new THREE.QuaternionKeyframeTrack(bones[named.spine].id + '.quaternion', times, quats(new Int16Array(buf, off + c.top, c.frames * 4), 1, 0)));
-    const pos = new Float32Array(buf, off + c.pos, c.frames * c.moved.length * 3);
-    c.moved.forEach((b, k) => {
-      const v = new Float32Array(c.frames * 3);
-      for (let f = 0; f < c.frames; f++) for (let j = 0; j < 3; j++) v[f * 3 + j] = pos[(f * c.moved.length + k) * 3 + j];
-      (upper.has(b) ? up : low).push(new THREE.VectorKeyframeTrack(bones[b].id + '.position', times, v));
-    });
-    const entry = clips[c.name] = { name: c.name, loop: c.loop, additive: c.additive, dur };
-    const clip = (part, tracks) => new THREE.AnimationClip(c.name + '.' + part, dur, tracks);
-    if (c.additive) {
-      // kept as its difference from its own first frame, to be laid over any other motion; the upper body only
-      entry.up = THREE.AnimationUtils.makeClipAdditive(clip('up', up), 0, undefined, head.fps);
-    } else if (c.loop || c.top >= 0) {
-      entry.low = clip('low', low); entry.up = clip('up', up);
-      if (c.top >= 0) entry.top = clip('top', top);
-    } else entry.whole = clip('whole', low.concat(up));
-  }
-  return clips;
 }
 
 // The hero is small on screen and coarse up close: its own facets would shade themselves. Looking up a shadow
@@ -89,11 +44,8 @@ const SHADOW_LIFT = THREE.ShaderChunk.shadowmap_vertex.replace(/(\w+LightShadows
 // Cloth and hair have no bones of their own. Each loose vertex is pushed by two springs that trail the part of
 // the body it hangs from (a quick one near the seam, a slow one at the hem), by that part's turning, and by a
 // little wind. The chest also swells with each breath.
-function bodyPatch(mat, uniforms) {
-  mat.onBeforeCompile = (s) => {
-    Object.assign(s.uniforms, uniforms);
-    s.vertexShader = 'attribute vec4 aSoft; uniform vec3 uSway[4]; uniform vec2 uTurn; uniform float uTime; uniform float uPhase; uniform float uBreath;\n' + s.vertexShader
-      .replace('#include <skinning_vertex>', `#include <skinning_vertex>
+const SOFT_DECL = 'attribute vec4 aSoft; uniform vec3 uSway[4]; uniform vec2 uTurn; uniform float uTime; uniform float uPhase; uniform float uBreath;\n';
+const SOFT_MOVE = `#include <skinning_vertex>
         {
           transformed += objectNormal * (aSoft.y * uBreath * (0.55 + 0.45 * objectNormal.z));
           float cw = aSoft.x * aSoft.x;
@@ -109,12 +61,28 @@ function bodyPatch(mat, uniforms) {
           transformed += sway;
           // swung out sideways it also lifts a little
           transformed.y += dot(sway.xz, sway.xz) * 0.9;
-        }`)
+        }`;
+// Drawn, not photographed: a lamp lights the side that faces it evenly and leaves the rest to the ambient
+// light, with a soft edge between the two - the two-tone shading of an animated film - instead of fading
+// smoothly across every bump.
+const TOON_LIGHT = THREE.ShaderChunk.lights_physical_pars_fragment.replace(
+  'float dotNL = saturate( dot( geometryNormal, directLight.direction ) );',
+  'float rawNL = dot( geometryNormal, directLight.direction );\n\tfloat dotNL = smoothstep( uToon.x, uToon.y, rawNL ) * mix( uToon.z, 1.0, saturate( rawNL ) ) * 0.7;');
+// the sculpt's fine detail, turned down on the skin of the face (its features are painted; see soften_face in dev/build_char.py)
+const DETAIL = THREE.ShaderChunk.normal_fragment_maps.replace('mapN.xy *= normalScale;', 'mapN.xy *= normalScale * ( 1.0 - 0.8 * vFace );');
+
+function bodyPatch(mat, uniforms) {
+  mat.onBeforeCompile = (s) => {
+    Object.assign(s.uniforms, uniforms);
+    s.vertexShader = SOFT_DECL + 'varying float vFace;\n' + s.vertexShader
+      .replace('#include <skinning_vertex>', SOFT_MOVE + '\n        vFace = aSoft.w;')
       .replace('#include <shadowmap_vertex>', SHADOW_LIFT);
     // A dark figure in a dark wood: it keeps a little of its own colour whatever the light, and the moon
     // catches its outline.
-    s.fragmentShader = 'uniform vec3 uRim; uniform float uFill; uniform vec4 uDye;\n' + s.fragmentShader
-      // the mantle and waist cloth are painted violet; another look dyes just that cloth, keeping its light and shade
+    s.fragmentShader = 'uniform vec3 uRim; uniform float uFill; uniform vec4 uDye; uniform vec3 uToon; varying float vFace;\n' + s.fragmentShader
+      .replace('#include <lights_physical_pars_fragment>', TOON_LIGHT)
+      .replace('#include <normal_fragment_maps>', DETAIL)
+      // the hood and waist cloth are painted indigo; another look dyes just that cloth, keeping its light and shade
       .replace('#include <map_fragment>', `#include <map_fragment>
         {
           float mx = max(diffuseColor.r, max(diffuseColor.g, diffuseColor.b)), mn = min(diffuseColor.r, min(diffuseColor.g, diffuseColor.b));
@@ -133,6 +101,23 @@ function bodyPatch(mat, uniforms) {
         #include <opaque_fragment>`);
   };
   mat.customProgramCacheKey = () => 'hero-body';
+  return mat;
+}
+
+// The ink line round the figure: the same body drawn again inside out, a little larger, in a dark colour.
+// It grows along the normals by a share of its distance from the eye, so the line keeps its width on screen
+// however far the camera stands; it is thinner round the face.
+function outlineMaterial(uniforms) {
+  const mat = new THREE.MeshBasicMaterial({ color: 0x08060d, side: THREE.BackSide });
+  mat.onBeforeCompile = (s) => {
+    Object.assign(s.uniforms, uniforms);
+    s.vertexShader = SOFT_DECL + 'uniform float uOutline;\n' + s.vertexShader
+      .replace('#include <skinning_vertex>', SOFT_MOVE)
+      .replace('#include <project_vertex>', `#include <project_vertex>
+        mvPosition.xyz += normalize(transformedNormal) * (uOutline * -mvPosition.z * (1.0 - 0.55 * aSoft.w));
+        gl_Position = projectionMatrix * mvPosition;`);
+  };
+  mat.customProgramCacheKey = () => 'hero-outline';
   return mat;
 }
 
@@ -180,16 +165,21 @@ export class HeroActor {
     H.bones.forEach((b, i) => { if (b.parent >= 0) bones[b.parent].add(bones[i]); else rig.add(bones[i]); });
     const inverses = H.bones.map((b, i) => new THREE.Matrix4().fromArray(H.ibm, i * 16));
     const skeleton = this.skeleton = new THREE.Skeleton(bones, inverses);
-    this.soft = { uSway: { value: [0, 1, 2, 3].map(() => new THREE.Vector3()) }, uTurn: { value: new THREE.Vector2() }, uTime: { value: 0 }, uPhase: { value: Math.random() * 6.28 }, uBreath: { value: 0 }, uRim: { value: new THREE.Color(0x9cc4ff).multiplyScalar(0.22) }, uFill: { value: 0.14 } };
-    // the cloth takes the colour of the look (or of the villager's trade); the painting's own violet is the 'dusk' look
+    this.soft = { uSway: { value: [0, 1, 2, 3].map(() => new THREE.Vector3()) }, uTurn: { value: new THREE.Vector2() }, uTime: { value: 0 }, uPhase: { value: Math.random() * 6.28 }, uBreath: { value: 0 }, uRim: { value: new THREE.Color(0x9cc4ff).multiplyScalar(0.22) }, uFill: { value: 0.14 },
+      uToon: { value: new THREE.Vector3(0.02, 0.3, 0.74) }, uOutline: { value: 0.0016 } };
+    // the cloth takes the colour of the look (or of the villager's trade); the painting's own indigo, with its orange lantern and blade, is the 'ember' look
     const dye = new THREE.Color(npc ? npc.robe : look.cloak).offsetHSL(0, 0.12, 0);
     dye.multiplyScalar(1 / Math.max(dye.r, dye.g, dye.b)); // the hue only: the painting keeps its own light and shade
-    this.soft.uDye = { value: new THREE.Vector4(dye.r, dye.g, dye.b, !npc && look.id === 'dusk' ? 0 : 1) };
-    const mat = bodyPatch(new THREE.MeshStandardMaterial({ map: H.map, roughness: 0.8, metalness: 0 }), this.soft);
+    this.soft.uDye = { value: new THREE.Vector4(dye.r, dye.g, dye.b, !npc && look.id === 'ember' ? 0 : 1) };
+    const mat = bodyPatch(new THREE.MeshStandardMaterial({ map: H.map, normalMap: H.normalMap || null, roughness: 0.85, metalness: 0 }), this.soft);
     const mesh = this.mesh = new THREE.SkinnedMesh(H.geo, mat);
     mesh.bind(skeleton, new THREE.Matrix4());
     mesh.frustumCulled = false; mesh.castShadow = true; mesh.receiveShadow = true;
     rig.add(mesh);
+    const line = this.line = new THREE.SkinnedMesh(H.geo, outlineMaterial(this.soft));
+    line.bind(skeleton, new THREE.Matrix4());
+    line.frustumCulled = false;
+    rig.add(line);
     const B = (key) => bones[H.named[key]];
     this.hand = B('handR');
     this.group.updateMatrixWorld(true);
@@ -204,7 +194,7 @@ export class HeroActor {
     // The sword: in the right hand while a move is played, across the back the rest of the time (the clips for
     // standing and running were made for empty hands).
     if (!npc && H.sword) {
-      const S = CHAR.hero.sword;
+      const S = H.sword_;
       const mount = (bone, at) => {
         const sw = new THREE.Mesh(H.sword.geo, swordMaterial(H.sword, look, S.glow));
         sw.castShadow = true; sw.receiveShadow = true;
@@ -243,6 +233,7 @@ export class HeroActor {
       else this.players[name] = [0, 1].map((i) => ({ low: player(i ? again(c.low) : c.low), up: player(i ? again(c.up) : c.up), top: player(i ? again(c.top) : c.top), dur: c.dur, move: null }));
     }
     this.w = { run: 0, sprint: 0 };
+    this.ready = 0; // 0 standing at ease, 1 in the fighting stance
     this.live = []; this.queue = []; this.clock = 0;
     this.breath = Math.random() * 6.28;
   }
@@ -252,7 +243,7 @@ export class HeroActor {
   // one of the game's actions: 'atk' (arg: the step of the combo), 'cast', 'dash', 'ult'
   play(name, dur = 0.4, arg = 0) {
     this.action = name; this.actionT = 0; this.actionDur = dur; this.actionArg = arg;
-    let M = this.npc ? null : CHAR.hero.moves[name];
+    let M = this.npc ? null : this.H.moves[name];
     if (!M) return;
     if (Array.isArray(M[0])) M = M[Math.min(arg, M.length - 1)];
     for (const m of this.live) if (!m.over && !this.H.clips[m.def.clip].additive) m.over = true;
@@ -261,7 +252,7 @@ export class HeroActor {
   }
 
   hit() {
-    const M = CHAR.hero.moves.hit;
+    const M = this.H.moves.hit;
     if (M && !this.dead) for (const d of M) if (this.players[d.clip]) this._begin(d);
   }
 
@@ -324,7 +315,12 @@ export class HeroActor {
     const baseUp = (1 - wUp * norm) * alive, baseLow = (1 - wLow * norm) * alive;
     const sprint = L.sprint ? this.w.sprint : 0, run = L.run ? this.w.run * (1 - sprint) : 0;
     const set = (loop, w, rate) => { if (!loop) return; loop.low.setEffectiveWeight(baseLow * w); loop.up.setEffectiveWeight(baseUp * w); loop.low.timeScale = loop.up.timeScale = rate; };
-    set(L.idle, 1 - run - sprint, 1);
+    // standing: at ease, or - while the sword is out, and for a moment after - in the fighting stance
+    const want = this.sword ? (this.armedT > 0 ? 1 : 0) : (this.action && !this.npc ? 1 : 0);
+    this.ready += (want - this.ready) * Math.min(1, dt * (want ? 9 : 2.2));
+    const ready = L.ease ? ease(clamp01(this.ready)) : 1, still = 1 - run - sprint;
+    set(L.idle, still * ready, 1);
+    set(L.ease, still * (1 - ready), 1);
     set(L.run, run, THREE.MathUtils.clamp(speed / (C.run.speed || 3), 0.75, 1.9));
     set(L.sprint, sprint, 1.5);
     const dead = this.players.dead && this.players.dead[0];
@@ -382,7 +378,7 @@ export class HeroActor {
   // world-space base and tip of the blade, for sword trails
   bladePoints(base, tip) {
     if (!this.sword) { base.set(0, 1, 0); tip.set(0, 1.2, 0); this.group.localToWorld(base); this.group.localToWorld(tip); return; }
-    const S = CHAR.hero.sword;
+    const S = this.H.sword_;
     this.sword.updateWorldMatrix(true, false);
     base.set(0, S.blade[0], 0).applyMatrix4(this.sword.matrixWorld);
     tip.set(0, S.blade[1], 0).applyMatrix4(this.sword.matrixWorld);

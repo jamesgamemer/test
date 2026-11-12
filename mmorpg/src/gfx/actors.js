@@ -99,7 +99,7 @@ export const LOOKS = [
   { id: 'moon', cloak: 0x2a3a5c, trim: 0x8fb0e6, blade: 0x79b8ff, tunic: 0x39414f, ramp: [0x1b2fd0, 0x45b4ff, 0xf2fbff] },
   { id: 'dusk', cloak: 0x4a2f5e, trim: 0xc59cf0, blade: 0xc88cff, tunic: 0x3b3346, ramp: [0x5a1fb0, 0xc07cff, 0xfff0ff] },
   { id: 'moss', cloak: 0x2f4a38, trim: 0x9fd6a0, blade: 0x7dffb0, tunic: 0x3a4238, ramp: [0x0f7a45, 0x5dffa6, 0xf4fff6] },
-  { id: 'ember', cloak: 0x5a2c26, trim: 0xf0b07a, blade: 0xffa45c, tunic: 0x45362f, ramp: null },
+  { id: 'ember', cloak: 0x333a8a, trim: 0xf0b07a, blade: 0xffa45c, tunic: 0x45362f, ramp: null }, // the hero as painted: indigo cloth, orange lantern and blade
   { id: 'frost', cloak: 0x6f7f96, trim: 0xe8f2ff, blade: 0xbfe9ff, tunic: 0x4a5566, ramp: [0x3f6fb8, 0xa6dcff, 0xffffff] },
 ];
 

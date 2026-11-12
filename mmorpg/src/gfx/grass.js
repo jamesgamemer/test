@@ -62,10 +62,11 @@ export function createGrass(count, card) {
         vec2 gOrg = uFocus.xz - vec2(PATCH * 0.5);
         vec2 gWp = gOrg + mod(aBase.xz - gOrg, PATCH);
         vec4 gWd = texture2D(uWorldTex, gWp / ${WORLD_SIZE.toFixed(1)} + 0.5);
-        float gKeep = step(aBase.y, gWd.g * 1.25);
+        float gKeep = step(aBase.y, gWd.g * 1.02);
         vec2 gFd = abs(gWp - uFocus.xz) / (PATCH * 0.5);
         float gEdge = 1.0 - smoothstep(0.78, 0.98, max(gFd.x, gFd.y));
-        float gH = aParam.y * ${sizeBoost.toFixed(3)} * (0.55 + 0.6 * gWd.g) * gKeep * gEdge;
+        // knee-high at most: grass dresses the ground, it must not hide what stands in it
+        float gH = aParam.y * ${(sizeBoost * 0.66).toFixed(3)} * (0.55 + 0.6 * gWd.g) * gKeep * gEdge;
         float gT = position.y;
         // the card's width runs across the view, turned a little differently for every tuft
         vec2 gRight = normalize(vec2(viewMatrix[0][0], viewMatrix[2][0]) + 1e-5);

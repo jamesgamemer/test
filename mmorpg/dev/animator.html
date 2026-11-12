@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nightglade Animator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="animator.css">
+</head>
+<body>
+<div id="app">
+  <header id="bar">
+    <b class="brand">Nightglade Animator</b>
+    <select id="char" title="ตัวละคร"></select>
+    <div class="seg" id="mode">
+      <button data-mode="pose" class="on">จัดท่า</button>
+      <button data-mode="game">เล่นแบบในเกม</button>
+    </div>
+    <span class="grow"></span>
+    <button id="help-btn" title="วิธีใช้">? วิธีใช้</button>
+    <button id="undo" title="ย้อนกลับ (Ctrl+Z)">↶ ย้อน</button>
+    <button id="redo" title="ทำซ้ำ (Ctrl+Y)">↷ ซ้ำ</button>
+    <button id="save" class="primary">บันทึก</button>
+    <span id="status"></span>
+  </header>
+
+  <aside id="left">
+    <h3>ท่าทั้งหมด</h3>
+    <div id="clips" class="list"></div>
+    <button id="new-clip" class="wide">＋ สร้างท่าใหม่</button>
+    <form id="new-form" hidden>
+      <label>ชื่อ (อังกฤษ)<input id="nf-name" maxlength="20" placeholder="เช่น wave2"></label>
+      <label>เริ่มจาก<select id="nf-from"><option value="hold">เฟรมที่เปิดอยู่ (ค้างไว้)</option><option value="copy">สำเนาของท่านี้</option><option value="rest">ท่าตั้งต้นของโมเดล</option></select></label>
+      <label>ยาว (วินาที)<input id="nf-dur" type="number" min="0.2" max="20" step="0.1" value="1.5"></label>
+      <label class="check"><input id="nf-loop" type="checkbox">เล่นวน</label>
+      <div class="row"><button type="submit" class="primary">สร้าง</button><button type="button" id="nf-cancel">ยกเลิก</button></div>
+    </form>
+    <div id="game-panel" hidden>
+      <h3>สั่งท่าแบบในเกม</h3>
+      <div class="grid2" id="actions"></div>
+      <label class="check"><input id="g-run" type="checkbox">กำลังวิ่ง</label>
+      <label class="check"><input id="g-circle" type="checkbox">วิ่งเป็นวง (ดูผ้า)</label>
+      <label class="check"><input id="g-slow" type="checkbox">ช้า ×0.25</label>
+    </div>
+  </aside>
+
+  <main id="stage">
+    <canvas id="view"></canvas>
+    <div id="views" class="chips">
+      <button data-view="front">หน้า</button><button data-view="side">ข้าง</button><button data-view="back">หลัง</button><button data-view="top">บน</button><button data-view="face">ใบหน้า</button><button data-view="game">มุมกล้องเกม</button>
+    </div>
+    <div id="toggles" class="chips">
+      <label><input type="checkbox" id="t-bones" checked>กระดูก</label>
+      <label><input type="checkbox" id="t-ghost">เงาท่าเดิม</label>
+      <label><input type="checkbox" id="t-sword">ดาบในมือ</label>
+      <label><input type="checkbox" id="t-ik" checked>ลากมือ/เท้าแบบ IK</label>
+    </div>
+    <div id="hint">คลิกจุดข้อต่อเพื่อเลือกกระดูก · ลากจุดเพื่อขยับ · ลากที่ว่างเพื่อหมุนกล้อง · ล้อเมาส์ซูม</div>
+    <div id="help" hidden>
+      <h3>วิธีใช้แบบสั้น</h3>
+      <ol>
+        <li><b>เลือกท่า</b>ทางซ้าย (ท่าปกติตอนยืนคือ “ยืนสบาย”) แล้วกด ▶ ดูการเคลื่อนไหว</li>
+        <li><b>ปรับเร็ว</b> ทางขวา: กดปุ่มอย่าง “แขน แนบตัว” หรือ “หัว เงย” ทีละนิด ไม่ต้องรู้เรื่องกระดูก</li>
+        <li><b>ลากเอง</b>: ติ๊ก “กระดูก” แล้วลากจุดที่มือ/เท้า (ข้อศอก/เข่างอตามเอง) หรือลากจุดอื่นเพื่อหมุนข้อนั้น</li>
+        <li><b>ละเอียด</b>: แท็บ “กระดูก” มีแถบเลื่อนหมุน 3 แกนกับบิดรอบแกน ของกระดูกที่เลือก</li>
+        <li><b>แก้ที่ไหน</b>: ทั้งคลิป · เฉพาะช่วงเวลา (กด “＋ คีย์” ที่เวลานั้นก่อน) · หรือทุกท่าพร้อมกัน (บุคลิก เช่น เงยหน้าขึ้นทุกท่า)</li>
+        <li><b>เล่นแบบในเกม</b> (ปุ่มบน) เพื่อดูท่าต่อกันจริง รวมผ้ากับดาบ</li>
+        <li>พอใจแล้วกด <b>บันทึก</b> แล้วบอก Claude ในแชตว่า “เอาท่าที่แก้ไปใส่เกม” — Claude อ่านข้อมูลที่บันทึกจากหน้านี้ได้เลย</li>
+      </ol>
+      <button id="help-close" class="primary">เข้าใจแล้ว</button>
+    </div>
+  </main>
+
+  <aside id="right">
+    <div class="tabs" id="tabs">
+      <button data-tab="quick" class="on">ปรับเร็ว</button><button data-tab="bone">กระดูก</button><button data-tab="moves">จังหวะ</button><button data-tab="sword">ดาบ</button><button data-tab="file">ไฟล์</button>
+    </div>
+    <label>แก้ที่ไหน
+      <select id="scope">
+        <option value="clip">ท่านี้ ทั้งคลิป</option>
+        <option value="key">ท่านี้ เฉพาะช่วงเวลา (คีย์เฟรม)</option>
+        <option value="all">ทุกท่า (บุคลิกของตัวละคร)</option>
+      </select>
+    </label>
+    <section id="tab-quick">
+      <p class="note">กดทีละนิดจนพอใจ ใช้ได้กับทุกท่า ย้อนได้ด้วยปุ่ม ↶</p>
+      <div id="quick"></div>
+    </section>
+    <section id="tab-bone" hidden>
+      <div id="bones" class="list tree"></div>
+      <div id="inspector">
+        <h4 id="bone-name">ยังไม่ได้เลือกกระดูก</h4>
+        <div id="sliders"></div>
+        <div class="row wrap">
+          <button id="b-reset">ล้างกระดูกนี้</button>
+          <button id="b-mirror" title="คัดลอกค่าไปกระดูกคู่อีกข้างแบบกลับด้าน">สะท้อนไปอีกข้าง</button>
+        </div>
+        <div class="row wrap">
+          <button id="p-copy">คัดลอกท่า</button><button id="p-paste">วางท่า</button><button id="p-reset">ล้างการแก้ของขอบเขตนี้</button>
+        </div>
+      </div>
+    </section>
+    <section id="tab-moves" hidden>
+      <p class="note">กำหนดว่าคำสั่งในเกมแต่ละอย่างเล่นช่วงไหนของคลิปไหน (เวลาในเกม → เวลาในคลิป)</p>
+      <label>คำสั่ง<select id="mv-action"></select></label>
+      <div id="mv-form"></div>
+      <button id="mv-play" class="wide primary">▶ เล่นคำสั่งนี้แบบในเกม</button>
+      <button id="mv-reset" class="wide">คืนค่าเดิมของคำสั่งนี้</button>
+    </section>
+    <section id="tab-sword" hidden>
+      <p class="note">ตำแหน่งและมุมของดาบในมือขวา (ติ๊ก “ดาบในมือ” ใต้ภาพเพื่อดู)</p>
+      <div id="sw-form"></div>
+      <button id="sw-reset" class="wide">คืนค่าเดิม</button>
+    </section>
+    <section id="tab-file" hidden>
+      <p class="note">การแก้ทั้งหมดเก็บเป็นข้อมูลชุดเดียว บันทึกแล้ว Claude อ่านไปใส่ในเกมได้ หรือคัดลอกข้อความไปส่งให้ก็ได้</p>
+      <button id="f-copy" class="wide">คัดลอกข้อมูลการแก้ (JSON)</button>
+      <button id="f-download" class="wide" hidden>ดาวน์โหลดเป็นไฟล์</button>
+      <textarea id="f-text" rows="7" spellcheck="false" placeholder="วางข้อมูล JSON ที่นี่แล้วกด “โหลดจากข้อความ”"></textarea>
+      <button id="f-load" class="wide">โหลดจากข้อความ</button>
+      <button id="f-clear" class="wide danger">ล้างการแก้ทั้งหมด</button>
+      <div id="f-confirm" hidden class="confirm">ล้างการแก้ทั้งหมดของตัวละครนี้? <button id="f-yes" class="danger">ล้าง</button><button id="f-no">ไม่</button></div>
+      <p class="note" id="f-info"></p>
+    </section>
+  </aside>
+
+  <footer id="timeline">
+    <div class="row">
+      <button id="tl-first" title="ไปต้นคลิป">⏮</button>
+      <button id="tl-prev" title="ถอย 1 เฟรม (←)">◀</button>
+      <button id="tl-play" class="primary" title="เล่น/หยุด (Space)">▶</button>
+      <button id="tl-next" title="เดินหน้า 1 เฟรม (→)">▶|</button>
+      <select id="tl-speed" title="ความเร็ว"><option value="1">×1</option><option value="0.5">×0.5</option><option value="0.25">×0.25</option><option value="0.1">×0.1</option></select>
+      <span id="tl-time"></span>
+      <span class="grow"></span>
+      <button id="k-prev" title="คีย์ก่อนหน้า">◆◀</button>
+      <button id="k-add" title="เพิ่มคีย์เฟรมที่เวลานี้">＋ คีย์</button>
+      <button id="k-del" title="ลบคีย์เฟรมที่เวลานี้">ลบคีย์</button>
+      <button id="k-next" title="คีย์ถัดไป">▶◆</button>
+    </div>
+    <div id="track"><div id="ticks"></div><input id="tl-scrub" type="range" min="0" max="1" step="0.001" value="0"></div>
+  </footer>
+</div>
+<script type="module" src="../src/tools/animator.js"></script>
+</body>
+</html>

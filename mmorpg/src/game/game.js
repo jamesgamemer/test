@@ -32,7 +32,7 @@ export class Game {
     this.ents = new Map();
     this.npcs = [];
     this.me = { id: null, x: SPAWN.x, z: SPAWN.z, y: 0, rot: 1.2, hp: 1, mp: 1, xp: 0, dead: false, moving: false, speed: 0, faceLock: 0, aimRot: 0, dash: null, full: null };
-    this.cam = { yaw: 0.2, pitch: 0.7, dist: 24, tYaw: 0.2, tPitch: 0.7, tDist: 24, target: new THREE.Vector3(SPAWN.x, 1, SPAWN.z) };
+    this.cam = { yaw: 0.2, pitch: 0.8, dist: 24, tYaw: 0.2, tPitch: 0.8, tDist: 24, target: new THREE.Vector3(SPAWN.x, 1, SPAWN.z) };
     this.input = { keys: new Set(), mx: 0, my: 0, attack: false, joy: { x: 0, y: 0 }, hasMouse: false, drag: null };
     this.aim = { x: 0, z: 0, dx: 0, dz: 1 };
     this.cd = {}; this.castAt = {};

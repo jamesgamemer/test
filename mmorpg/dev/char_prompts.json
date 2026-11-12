@@ -1,6 +1,6 @@
 {
-  "about": "How the hero was made. Nothing is modelled, textured or animated by hand or in code: the design is generated artwork, the model is lifted from that artwork, and every move is a clip from a motion library played on the model. dev/build_char.py packs the downloads for the game.",
-  "service": "Higgsfield (images: GPT Image 2.6; model: Meshy multi-image-to-3D; clips: Meshy 3D rigging with a clip from its animation library)",
+  "about": "How the hero was made. Nothing is modelled, textured or animated by hand or in code: the design is generated artwork, a sculpt is lifted from that artwork, dev/make_lowpoly.py turns the sculpt into the game-resolution model (simplify, unwrap, bake colour and detail), a rigging service gives it a skeleton and plays clips from its motion library on it, and dev/build_char.py packs the downloads for the game. Posture and single poses are then corrected in dev/animator.html (src/gfx/char-edits.js).",
+  "service": "Higgsfield (images: GPT Image 2.6; sculpt: Tripo H3.1 image-to-3D; skeleton and clips: Meshy 3D rigging with a clip from its animation library)",
   "design": [
     {
       "file": "hero_keyart.png",
@@ -10,12 +10,14 @@
       "prompt": "Original game character key art: a chibi-proportioned young warden of a night forest, about two and a half heads tall, standing in a confident three-quarter pose and looking at the viewer with a calm, determined expression. Messy ash-grey hair with one ember-orange streak, large amber eyes, a deep midnight-blue hood pushed back onto the shoulders, a short asymmetric mantle of layered dark raven feathers over the left shoulder, fitted charcoal leather and blackened steel armor with fine brass filigree and small crescent-moon charms on thin chains, a wide belt with pouches and a small glowing brass lantern, tattered deep-blue waist cloth with pale stitched runes, armored gloves, sturdy buckled boots with brass toe caps. The right hand rests on the grip of a large curved single-edged greatsword planted point-down in front, its dark blade etched with glowing ember-orange runes and a thin line of living flame along the cutting edge. Setting: a torch-lit forest outpost at night, softly out of focus: a wooden palisade of sharpened stakes, barrels, a burning brazier, wet mud ground with a small puddle reflecting the fire, cool blue moonlit trees behind. Lighting: warm orange firelight from one side, cool blue rim light from the other. Style: highly detailed stylized 3D anime game render, chibi proportions, crisp materials, soft depth of field, rich colour. Full body visible from head to boots. No text, no logo, no watermark."
     },
     {
-      "file": "sheet.png (cut into front.png, side.png, back.png)",
+      "file": "front.png",
       "model": "gpt_image_2_6",
-      "size": "1248x832",
+      "resolution": "2k",
+      "aspect_ratio": "2:3",
       "quality": "high",
       "reference": "hero_keyart.png",
-      "prompt": "Character turnaround model sheet of the SAME character as in the reference image, for 3D modelling. Three full-body views of the character standing side by side in one row with clear empty space between them: FRONT view on the left, SIDE view facing right in the middle, BACK view on the right. Same chibi proportions (about two and a half heads tall), same messy ash-grey hair with one ember-orange streak, amber eyes, midnight-blue hood pushed back, layered dark raven-feather mantle over the left shoulder, charcoal leather and blackened steel armor with brass filigree, wide belt with pouches and a small brass lantern, tattered deep-blue waist cloth with pale stitched runes, armored gloves, buckled boots with brass toe caps. Pose in every view: standing perfectly straight and symmetrical in a neutral A-pose, arms straight and held about 40 degrees away from the body, fingers relaxed and open, legs straight and slightly apart, feet flat, neutral calm face, mouth closed. Hands are EMPTY: no sword, no weapon. No loose dangling chains: charms sit flat on the armor. Plain flat light-grey studio background, soft even neutral lighting from all sides, no cast shadows, no ground, no text, no labels. Same highly detailed stylized 3D anime game render style as the reference."
+      "note": "A clean model-sheet view made for sculpting: chunky shapes, even light, A-pose, closed fists. The first hero was lifted from a small three-view sheet and came out with a flat, mask-like face; one large front view gives the generator enough to sculpt the face and the outfit properly.",
+      "prompt": "Game character model sheet, FRONT VIEW ONLY, of the SAME character as in the reference image, redesigned as a clean production 3D game character model in the style of a high-end anime action RPG. One single full-body figure, perfectly centred, facing the camera straight on, orthographic view, filling most of the frame from the top of the hair to the soles of the boots. Proportions: chibi, about 2.6 heads tall, large head, short sturdy limbs. Pose: neutral A-pose for rigging: standing upright and perfectly symmetrical, arms straight and held about 35 degrees away from the body, both hands closed in relaxed fists with thumbs pointing forward, legs straight, feet shoulder-width apart and pointing forward. Face: large clear amber anime eyes with clean dark lashes and bright highlights, thin eyebrows, small nose, small closed mouth, calm confident expression, smooth skin, ears visible. Hair: messy ash-grey hair made of large chunky smooth locks (no thin stray strands), with one ember-orange lock in the fringe on the viewer's left side. Outfit (keep the reference design but simplify fine detail into bold clean shapes): midnight-blue hood lying back on the shoulders with a pale stitched edge; a short mantle of a few large thick layered dark raven feathers over his left shoulder; fitted charcoal leather tunic with brass trim lines and one round brass clasp at the collar; wide brown belt with a big brass buckle, one chunky pouch on his right hip and a small brass lantern hanging close against his left hip; a deep-blue waist cloth hanging to the knees with a pale stitched rune pattern and a slightly ragged hem; dark trousers; brass-trimmed bracers on the forearms; sturdy dark boots with brass toe caps and two buckles. Hands are EMPTY: no sword, no weapon. No dangling chains, no floating pieces, nothing thin or wispy. Rendering: smooth clean surfaces, flat even colours with only soft simple shading, crisp clean colour boundaries, no dirt, no scratches, no noise, no painted cast shadows, no outline strokes. Soft even neutral studio lighting from the front, no shadow on the ground, plain flat light-grey background. No text, no labels, no other views."
     },
     {
       "file": "relief/sword.png",
@@ -28,27 +30,23 @@
     }
   ],
   "model": {
-    "model": "multi_image_to_3d",
-    "images": [
-      "front.png",
-      "side.png",
-      "back.png"
-    ],
-    "should_texture": true,
-    "enable_pbr": true,
-    "enable_rigging": true,
-    "pose_mode": "a-pose",
-    "target_polycount": 20000,
-    "topology": "triangle",
-    "symmetry_mode": "off",
-    "rigging_height_meters": 1.6,
-    "note": "Only the mesh and its colour texture are used from this file. Its normal map lights the face as flat facets, so it is dropped; its skeleton differs by 3-5 cm from the one every clip below comes with, so the game takes its skeleton from a clip file instead."
+    "model": "tripo_h3_1_image_to_3d",
+    "image": "front.png",
+    "geometry_quality": "detailed",
+    "texture_quality": "detailed",
+    "texture_alignment": "original_image",
+    "pbr": false,
+    "face_limit": 300000,
+    "result": "a sculpt of about 297,000 triangles with a 4096 texture; it faces +x",
+    "lowpoly": "python3 dev/make_lowpoly.py sculpt.glb <dir>/hero --yaw -90 --head 1.8 --tris 45000  ->  lowpoly.glb (kept as dev/rig/hero.glb), albedo.png, normal.png",
+    "note": "Compared with Hunyuan3D v3 (one view, and front + back) on the same image: Tripo kept the sheet's own face and colours and a clean back; Hunyuan repainted the eyes and hair. The rigging service needs the model to face +z: sent facing +x it put the skeleton in sideways."
   },
   "clips": {
-    "how": "3d_rigging with model_url = the model above, height_meters 1.6, enable_animation true and the animation_action_id below; each result is saved as hero/<name>.glb",
+    "how": "3d_rigging with model_url = a public URL of dev/rig/hero.glb, height_meters 1.6, enable_animation true and the animation_action_id below; each result is saved as hero/<name>.glb beside albedo.png and normal.png",
     "idle": {
       "id": 11,
-      "name": "Idle_02"
+      "name": "Idle_02",
+      "use": "the fighting stance, while the sword is out; the at-ease stance ('ease') is this clip re-posed in the animator"
     },
     "run": {
       "id": 14,
@@ -98,6 +96,11 @@
     "dead": {
       "id": 8,
       "name": "Dead"
+    },
+    "stand": {
+      "id": 0,
+      "name": "Idle",
+      "use": "not played by the game yet: it looks about too widely for a stance, but is there to make clips from"
     }
   }
 }

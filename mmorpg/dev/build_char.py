@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 """Pack a generated, rigged character for the game.
 
-The hero is not modelled or animated in code: the design is a generated turnaround sheet, lifted to a 3D
-model with Higgsfield (Meshy multi-image-to-3D), and every move is a clip from the same service's motion
-library, which rigs the model and plays the clip on it. The prompts and clip ids are in dev/char_prompts.json.
+The hero is not modelled or animated in code: the design is a generated model sheet, lifted to a sculpt with
+Higgsfield (Tripo image-to-3D), brought down to game resolution by dev/make_lowpoly.py (which also bakes the
+sculpt's colour and detail into maps), and every move is a clip from a motion library: the rigging service
+gives the model a skeleton and plays the clip on it. The prompts and clip ids are in dev/char_prompts.json.
 
     python3 dev/build_char.py <dir>
 
-<dir>/hero/<clip>.glb is the character with one clip, for each clip in CLIPS. The service rigs the model
-afresh for every clip, a little differently each time, so one file (RIG) provides the mesh and skeleton and
-the other clips are carried over onto it; the script prints how far each joint ends up from where its own
-file has it. Writes assets/env/hero.skin (mesh + skeleton), hero.anim (all clips, resampled to a fixed rate),
-hero_c.webp, and src/gfx/char-manifest.js.
+<dir>/hero/<clip>.glb is the character with one clip, for each clip in CLIPS; <dir>/hero/albedo.png and
+normal.png are the maps make_lowpoly.py wrote (without them the model in the clip files is unwrapped afresh
+here and keeps only its colour). The service rigs the model anew for every clip, a little differently each
+time, so one file (RIG) provides the mesh and skeleton and the other clips are carried over onto it; the
+script prints how far each joint ends up from where its own file has it. Writes assets/env/hero.skin (mesh +
+skeleton), hero.anim (all clips, resampled to a fixed rate), hero_c.webp, hero_n.webp, and
+src/gfx/char-manifest.js.
 
-Needs Pillow, numpy and xatlas (pip install xatlas; without it the model keeps its original unwrapping).
+Needs Pillow, numpy and scipy (and xatlas when the maps are not given).
 """
 import json
 import os
@@ -31,14 +34,16 @@ FPS = 30
 RIG = 'run'     # the clip file whose mesh, skeleton and skin weights the game uses
 HEIGHT = 1.8   # metres, head to heel, as the game scales the hero
 TEX = 2048      # the colour map's size
-LIFT = dict(neck=6.0, head=8.0)  # degrees: the library carries the head lower than this big-headed hero can afford (the fringe hides the eyes)
+NORMAL_TEX = 2048  # the detail (normal) map's size
+LIFT = {}       # degrees by which a bone is raised in every clip, e.g. dict(neck=6, head=8). Posture is corrected in the edit layer now (src/gfx/char-edits.js), where it can be seen and changed
 CREASE = 180   # degrees: edges sharper than this stay sharp when the normals are smoothed (180: none do)
 
 # Clips: file stem -> options. loop: the clip repeats. root: keep the hips' travel (default: taken out, the
 # game moves the character itself). additive: played on top of whatever else the body is doing, as the
 # difference from the clip's own first frame.
 CLIPS = {
-    'idle': dict(loop=True),        # Idle_02
+    'idle': dict(loop=True),        # Idle_02: weight on both feet, ready
+    'stand': dict(loop=True),       # Idle: at ease
     'run': dict(loop=True),         # Run_02
     'sprint': dict(loop=True),      # Lean_Forward_Sprint: the dash
     'slash': {},                    # Left_Slash: a level cut from the right across to the left
@@ -76,7 +81,7 @@ MOVES = {
 # (for sword trails); glow: the part of the texture (measured down from the pommel) below which it may glow.
 # The clips for standing and running were made for empty hands, so the sword is in the hand only while a
 # move is played and otherwise hangs across the back: lean is how far it tips from upright there, in degrees.
-SWORD = dict(length=1.28, hold=0.879, tilt=22, palm=0.022, blade=[0.72, 0.02], glow=0.27, lean=32)
+SWORD = dict(length=1.08, hold=0.879, tilt=22, palm=0.022, blade=[0.72, 0.02], glow=0.27, lean=38, tuck=9)
 
 
 def trs_of(node):
@@ -513,40 +518,84 @@ def reatlas(rig, size, pad=6):
                colour=Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGB'))
 
 
-def soften_head(rig, world, named):
-    """Light the head the way drawn characters are lit: as if the face were part of a ball.
+def soften_face(rig, world, named):
+    """Light the face the way drawn characters are lit: as if it were part of a ball.
 
-    The generated face is a few flat planes; its painted features are fine, but any light across those planes
-    shows them. So the face and fringe take the normals of a sphere set a little behind the middle of the head
-    (the usual trick for anime-style faces), and the rest of the hair leans the same way a little."""
-    bones, P, N = rig['bones'], rig['P'], rig['N']
-    head = named['head']
-    tip = find(bones, 'head', 'end')
-    front = find(bones, 'head', 'front')
+    A sculpted face has eye sockets, a nose and a mouth, and a light from the side throws small hard shadows
+    into each of them: right for a statue, wrong for a drawn face, whose features are painted. So the skin of
+    the face (not the hair in front of it) leans its normals toward a ball fitted through it - the usual trick
+    for anime-style faces - and the detail map is turned down there (the weight is returned for that).
+
+    The face is found by colour and shape together: the skin-coloured part of the head's front gives a smooth
+    surface, and whatever lies on that surface (eyes, brows and mouth are painted on it) is face; the fringe
+    stands in front of it and is not."""
+    from scipy.spatial import Delaunay
+    bones, P, N, T = rig['bones'], rig['P'], rig['N'], rig['T']
+    head, front = named['head'], find(bones, 'head', 'front')
     hb = world[head][:3, 3]
     up = np.array([0.0, 1.0, 0.0])
-    size = float((world[tip][:3, 3] - hb) @ up) if tip is not None else 0.19 * (P[:, 1].max() - P[:, 1].min())
     fwd = world[front][:3, 3] - hb if front is not None else np.array([0.0, 0.0, 1.0])
     fwd = fwd - up * (fwd @ up)
     fwd /= np.linalg.norm(fwd)
+    right = np.cross(up, fwd)
     names = [b['name'].lower() for b in bones]
     heads = [k for k, n in enumerate(names) if 'head' in n]
     share = np.zeros(len(P))  # how much of each vertex follows the head
     for k in range(4):
         share += rig['W'][:, k] * np.isin(rig['J'][:, k], heads)
+    img = np.asarray(rig['colour'].convert('RGB')).astype(np.float32)
+    ih, iw = img.shape[:2]
+    c = img[np.clip((T[:, 1] * ih).astype(int), 0, ih - 1), np.clip((T[:, 0] * iw).astype(int), 0, iw - 1)]
+    r, g, bl = c.T
     rel = P - hb
-    z, y = rel @ fwd / size, rel @ up / size
+    x, y, z = rel @ right, rel @ up, rel @ fwd
+    skin = (r > 165) & (g > 115) & (bl > 90) & (r >= g) & (g >= bl * 0.97) & (r - bl > 16) & (r - bl < 115) & (N @ fwd > 0.3) & (share > 0.6) & (y > 0)
+    if skin.sum() < 200:
+        return N, np.zeros(len(P))
+    u = float(P[:, 1].max() - P[:, 1].min()) / 1.6  # the lengths below are for a figure 1.6 tall
 
-    def step(a, b, x):
-        t = np.clip((x - a) / (b - a), 0, 1)
+    def basis(x, y):
+        return np.stack([np.ones_like(x), x, y, x * x, x * y, y * y, x ** 3, x * x * y, x * y * y, y ** 3, x ** 4, x * x * y * y, y ** 4], axis=1)
+    keep = skin.copy()
+    for _ in range(4):  # a smooth surface through the skin; points off it (a lock's edge, an ear) are dropped and it is fitted again
+        coef = np.linalg.lstsq(basis(x[keep], y[keep]), z[keep], rcond=None)[0]
+        res = z - basis(x, y) @ coef
+        keep = skin & (np.abs(res) < max(0.004 * u, 2.2 * res[keep].std()))
+    pts = np.stack([x[keep], y[keep]], axis=1)
+    inside = Delaunay(pts[::max(1, len(pts) // 3000)]).find_simplex(np.stack([x, y], axis=1)) >= 0
+
+    def step(a, b, v):
+        t = np.clip((v - a) / (b - a), 0, 1)
         return t * t * (3 - 2 * t)
-    face = step(-0.10, 0.20, z) * (1 - step(0.55, 0.78, y))
-    w = np.maximum(face, 0.3) * step(0.5, 1.0, share)
-    centre = hb + up * (0.32 * size) - fwd * (0.13 * size)
+    w = inside * (share > 0.5) * (1 - step(0.005 * u, 0.012 * u, res)) * step(-0.035 * u, -0.018 * u, res)
+    # soften the edge of the patch: a few rounds of averaging each point with its neighbours
+    key = np.round(P / 1e-5).astype(np.int64)
+    _, inv = np.unique(key, axis=0, return_inverse=True)
+    inv = inv.reshape(-1)
+    I = inv[rig['I']]
+    n = inv.max() + 1
+    ww = np.zeros(n)
+    np.maximum.at(ww, inv, w)
+    for _ in range(3):
+        acc, cnt = ww.copy(), np.ones(n)
+        for a_, b_ in ((0, 1), (1, 2), (2, 0)):
+            np.add.at(acc, I[:, a_], ww[I[:, b_]]); np.add.at(cnt, I[:, a_], 1)
+            np.add.at(acc, I[:, b_], ww[I[:, a_]]); np.add.at(cnt, I[:, b_], 1)
+        ww = acc / cnt
+    w = ww[inv]
+    # the ball: fitted through the face's skin
+    F = P[keep]
+    A = np.c_[2 * F, np.ones(len(F))]
+    sol = np.linalg.lstsq(A, (F * F).sum(axis=1), rcond=None)[0]
+    centre = sol[:3]
+    radius = float(np.sqrt(max(sol[3] + centre @ centre, 1e-12)))
+    centre = centre - fwd * 0.25 * radius  # a little further back: a rounder, softer turn of the light across the cheeks
     ball = P - centre
     ball /= np.maximum(np.linalg.norm(ball, axis=1, keepdims=True), 1e-9)
-    out = N * (1 - w[:, None]) + ball * w[:, None]
-    return out / np.maximum(np.linalg.norm(out, axis=1, keepdims=True), 1e-9)
+    k = (w * 0.85)[:, None]
+    out = N * (1 - k) + ball * k
+    print(f'face: {int(keep.sum())} skin points, {int((w > 0.5).sum())} vertices lit as a ball of radius {radius:.3f}')
+    return out / np.maximum(np.linalg.norm(out, axis=1, keepdims=True), 1e-9), w
 
 
 def sword_mount(rig, rest, world, named):
@@ -587,10 +636,11 @@ def sword_mount(rig, rest, world, named):
     shoulder = world[find(bones, 'right', 'arm', avoid=('fore',))][:3, 3]
     near = (np.abs(rest[:, 0]) < 0.12) & (np.abs(rest[:, 1] - shoulder[1]) < 0.12)
     back = np.percentile(rest[near][:, 2], 2) - 0.03
-    a = np.radians(SWORD['lean'])
+    a, t = np.radians(SWORD['lean']), np.radians(SWORD.get('tuck', 0))
     X, Y = np.array([np.cos(a), np.sin(a), 0.0]), np.array([-np.sin(a), np.cos(a), 0.0])
+    Y = Y * np.cos(t) + np.array([0.0, 0.0, -1.0]) * np.sin(t)  # the point tucked in toward the legs: the hood stands out further than the back below it
     R = np.stack([X, Y, np.cross(X, Y)], axis=1)
-    at = np.array([shoulder[0] - 0.02, shoulder[1] + 0.03, back])
+    at = np.array([shoulder[0] - 0.02, shoulder[1] + 0.05, back])
     out['back'] = dict(grip=[round(float(v), 4) for v in (np.linalg.inv(cw) @ np.append(at, 1.0))[:3]],
                        quat=[round(float(v), 5) for v in quat_from_matrix((cw[:3, :3] / np.linalg.norm(cw[:3, :3], axis=0)).T @ R)])
     return out
@@ -600,7 +650,14 @@ def main(src):
     os.makedirs(OUT, exist_ok=True)
     d = os.path.join(src, 'hero')
     rig = load_rig(os.path.join(d, RIG + '.glb'))
-    reatlas(rig, TEX)
+    if os.path.exists(os.path.join(d, 'albedo.png')):
+        # the model was made by dev/make_lowpoly.py: it is unwrapped already, and its colour and its detail map
+        # were baked from the sculpt into that layout (the rigging service gives the mesh back as it got it)
+        rig['colour'] = Image.open(os.path.join(d, 'albedo.png')).convert('RGB')
+        rig['normal'] = Image.open(os.path.join(d, 'normal.png')).convert('RGB') if os.path.exists(os.path.join(d, 'normal.png')) else None
+    else:
+        reatlas(rig, TEX)
+        rig['normal'] = None
     bones = rig['bones']
     world = world_matrices(bones)
     rest = skinned(rig, world)
@@ -623,7 +680,7 @@ def main(src):
     breath = np.clip(breath + 0.3 * share(('shoulder',)), 0, 1)
     # loose cloth hangs from the chest and shoulders (the mantle, the hair) or from the hips (the waist cloth)
     upper = np.clip(share(('spine', 'neck', 'head', 'shoulder', 'arm', 'hand')) - (rig['W'] * (rig['J'] == named['spine'])).sum(axis=1), 0, 1)
-    rig['N'] = soften_head(rig, world, named)
+    rig['N'], face = soften_face(rig, world, named)
     print('cloth: %.1f%% of vertices hang free (weight > 0.3)' % (100 * (cloth > 0.3).mean()), {r: int((region == r).sum()) for r in set(region)})
 
     # ---- skin
@@ -639,7 +696,7 @@ def main(src):
     wide = len(P) > 65535
     blocks, body = {}, b''
     for key, arr in (('pos', np.round((P - plo) / psize * 65535).astype('<u2')), ('nrm', q_nrm), ('uv', np.round((T - tlo) / tsize * 65535).astype('<u2')),
-                     ('joints', rig['J'].astype('u1')), ('weights', wq.astype('u1')), ('soft', np.round(np.stack([cloth, breath, upper, np.zeros(len(cloth))], axis=1) * 255).astype('u1')),
+                     ('joints', rig['J'].astype('u1')), ('weights', wq.astype('u1')), ('soft', np.round(np.stack([cloth, breath, upper, face], axis=1) * 255).astype('u1')),
                      ('idx', rig['I'].astype('<u4' if wide else '<u2')), ('ibm', rig['ibm'].transpose(0, 2, 1).astype('<f4'))):
         raw = arr.tobytes()
         blocks[key] = [len(body), len(raw)]
@@ -651,7 +708,9 @@ def main(src):
     with open(os.path.join(OUT, 'hero.skin'), 'wb') as f:
         f.write(b'NGS1' + struct.pack('<I', len(hj)) + hj + body)
     if rig['colour'] is not None:
-        rig['colour'].convert('RGB').resize((TEX, TEX), Image.LANCZOS).save(os.path.join(OUT, 'hero_c.webp'), 'WEBP', quality=88, method=6)
+        rig['colour'].convert('RGB').resize((TEX, TEX), Image.LANCZOS).save(os.path.join(OUT, 'hero_c.webp'), 'WEBP', quality=90, method=6)
+    if rig['normal'] is not None:
+        rig['normal'].resize((NORMAL_TEX, NORMAL_TEX), Image.LANCZOS).save(os.path.join(OUT, 'hero_n.webp'), 'WEBP', quality=90, method=6)
 
     # ---- clips
     hips = named['hips']
@@ -713,7 +772,7 @@ def main(src):
     hj = json.dumps(dict(fps=FPS, clips=clips)).encode(); hj += b' ' * (-len(hj) % 4)
     with open(os.path.join(OUT, 'hero.anim'), 'wb') as f:
         f.write(b'NGA1' + struct.pack('<I', len(hj)) + hj + data)
-    man = dict(skin='hero.skin', anim='hero.anim', map='hero_c.webp', clips=meta, moves=MOVES, sword=dict(SWORD, **sword_mount(rig, rest, world, named)))
+    man = dict(skin='hero.skin', anim='hero.anim', map='hero_c.webp', normal='hero_n.webp' if rig['normal'] is not None else None, clips=meta, moves=MOVES, sword=dict(SWORD, **sword_mount(rig, rest, world, named)))
     with open(os.path.join(ROOT, 'src', 'gfx', 'char-manifest.js'), 'w') as f:
         f.write('// Generated by dev/build_char.py — the rigged hero in assets/env/.\n')
         f.write('// moves: for each of the game\'s actions, which part of which clip plays when (see MOVES in the build script).\n')
@@ -725,7 +784,7 @@ def main(src):
             else:
                 f.write(f'  {key}: {json.dumps(val)},\n')
         f.write('} };\n')
-    kb = sum(os.path.getsize(os.path.join(OUT, f)) for f in ('hero.skin', 'hero.anim', 'hero_c.webp') if os.path.exists(os.path.join(OUT, f))) // 1024
+    kb = sum(os.path.getsize(os.path.join(OUT, f)) for f in ('hero.skin', 'hero.anim', 'hero_c.webp', 'hero_n.webp') if os.path.exists(os.path.join(OUT, f))) // 1024
     print(f'hero: {kb} KB')
     return rig, rest, cloth
 

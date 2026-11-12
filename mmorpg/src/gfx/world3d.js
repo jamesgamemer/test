@@ -160,6 +160,12 @@ export class World3D {
     this._v2.applyMatrix4(cam.projectionMatrix);
     U.uFadeCenter.value.set(this._v2.x, this._v2.y);
     this.focusDist = U.uFadeDepth.value;
+    // trees between the camera and the ground around the hero thin out (see common.js): the steeper the camera
+    // looks down, the shorter the strip of ground a tree hides behind itself
+    cam.getWorldDirection(this._v2);
+    const steep = -this._v2.y / Math.max(0.2, Math.hypot(this._v2.x, this._v2.z));
+    U.uHero.value.copy(hero);
+    U.uGhost.value.set(this._v.x, this._v.z, Math.min(16, 7 / Math.max(0.35, steep)) + 3, 8);
 
     // shadow frustum follows the hero, snapped to shadow texels to keep edges stable
     const t = this._texel;
@@ -183,7 +189,7 @@ export class World3D {
       const t = this.time, base = this.torchNow && this.torchNow.post ? 85 : 150;
       spot.intensity = this.torchNow ? base * this.torchFade * (1 + 0.1 * Math.sin(t * 9.1) + 0.06 * Math.sin(t * 23.7)) : 0;
     }
-    this.heroLight.position.set(hero.x, hero.y + 2.5, hero.z);
+    this.heroLight.position.set(hero.x, hero.y + 3.3, hero.z);
     this.terrain.update(this.time);
   }
 

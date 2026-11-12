@@ -10,6 +10,8 @@ export const U = {
   uFadeCenter: { value: new THREE.Vector2(0, 0) },
   uFadeDepth: { value: 1e6 },
   uFadeY: { value: 0 },
+  uHero: { value: new THREE.Vector3() },
+  uGhost: { value: new THREE.Vector4(0, 1, 12, 9) }, // which way the camera looks along the ground (x, z), how far behind itself a tree hides the ground, how far to the side that matters
   uResolution: { value: new THREE.Vector2(1, 1) },
   uPush: { value: Array.from({ length: 8 }, () => new THREE.Vector4(0, 0, 1, 0)) },
 };
@@ -37,15 +39,20 @@ uniform float uFadeDepth;
 uniform float uFadeY;
 uniform vec2 uResolution;
 varying float vWY;
+varying float vGhost;
 `;
 // 1) a hole around the hero for anything standing between hero and camera
 // 2) tall things dissolve into the dark canopy above the hero so the camera can look through
-const fadeBody = (h0, h1) => `
+// 3) a tree that stands between the camera and the ground around the hero thins out to a ghost of itself above
+//    knee height (vGhost, worked out once for the whole tree): the fight behind it stays readable, its foot
+//    still shows where it stands
+const fadeBody = (h0, h1, ghost) => `
 {
   vec2 fNdc = gl_FragCoord.xy / uResolution * 2.0 - 1.0;
   vec2 fDd = (fNdc - uFadeCenter) * vec2(uResolution.x / uResolution.y, 1.0);
   float fAmt = smoothstep(0.11, 0.2, length(fDd)) + step(uFadeDepth - 1.4, vViewPosition.z);
   fAmt = min(fAmt, 1.0 - smoothstep(${h0.toFixed(1)}, ${h1.toFixed(1)}, vWY - uFadeY));
+  fAmt = min(fAmt, 1.0 - vGhost * ${ghost.toFixed(2)} * smoothstep(0.7, 2.3, vWY - uFadeY));
   if (fAmt < 1.0) {
     float ign = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))));
     if (ign >= fAmt) discard;
@@ -55,7 +62,7 @@ const fadeBody = (h0, h1) => `
 
 // Adds wind sway (weight expression in GLSL, e.g. "uv.y") and/or the see-through fade
 // that keeps the hero visible behind trunks and foliage. fade: [startHeight, endHeight] in metres.
-export function foliage(mat, { wind = null, strength = 1, fade = null, noFlip = false } = {}) {
+export function foliage(mat, { wind = null, strength = 1, fade = null, ghost = 0.86, noFlip = false } = {}) {
   return patch(mat, (s) => {
     if (wind) {
       s.vertexShader = VERT_DECL + s.vertexShader.replace('#include <begin_vertex>', `
@@ -73,15 +80,20 @@ export function foliage(mat, { wind = null, strength = 1, fade = null, noFlip = 
         }`);
     }
     if (fade) {
-      s.vertexShader = 'varying float vWY;\n' + s.vertexShader.replace('#include <project_vertex>', `
+      s.vertexShader = 'varying float vWY;\nvarying float vGhost;\nuniform vec3 uHero;\nuniform vec4 uGhost;\n' + s.vertexShader.replace('#include <project_vertex>', `
         #include <project_vertex>
         #ifdef USE_INSTANCING
           vWY = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).y;
+          vec2 gAt_ = uHero.xz - (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xz;
         #else
           vWY = (modelMatrix * vec4(transformed, 1.0)).y;
-        #endif`);
+          vec2 gAt_ = uHero.xz - (modelMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xz;
+        #endif
+        // how far the hero is beyond this tree as the camera looks, and how far off to the side
+        float gAlong_ = dot(gAt_, uGhost.xy), gSide_ = abs(gAt_.x * uGhost.y - gAt_.y * uGhost.x);
+        vGhost = smoothstep(-4.5, -1.5, gAlong_) * (1.0 - smoothstep(uGhost.z, uGhost.z + 5.0, gAlong_)) * (1.0 - smoothstep(uGhost.w, uGhost.w + 4.0, gSide_));`);
       s.fragmentShader = FADE_DECL + s.fragmentShader
-        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>' + fadeBody(fade[0], fade[1]));
+        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>' + fadeBody(fade[0], fade[1], ghost));
     }
     if (noFlip) {
       // foliage cards are lit as one soft volume: do not flip the normal on back faces

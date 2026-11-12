@@ -237,7 +237,7 @@ export function createVegetation(layout, maps, T, quality, A) {
     return { ...d, geo, h: d.rootTop + (d.model.size[1] - d.rootTop) * d.stretch, mat: foliage(propMaterial(d.model), { fade: [6.5, 8.8] }) };
   });
   // the painted leaf clumps are dense, so they dissolve lower than the trunks do: the canopy must not hide the fight
-  const leafMat = foliage(new THREE.MeshLambertMaterial({ map: T.leaf, alphaTest: 0.42, side: THREE.DoubleSide }), { wind: '0.22', fade: [4.4, 7.0], noFlip: true });
+  const leafMat = foliage(new THREE.MeshLambertMaterial({ map: T.leaf, alphaTest: 0.42, side: THREE.DoubleSide }), { wind: '0.22', fade: [4.4, 7.0], ghost: 1, noFlip: true });
   const canopyMat = new THREE.MeshBasicMaterial({ map: T.leaf, alphaTest: 0.42, side: THREE.DoubleSide, colorWrite: false, depthWrite: false });
   const leafGeo = [buildLeafCluster(rnd), buildLeafCluster(rnd, 13)];
   const leafItems = [[], []], canopyItems = [[], []];

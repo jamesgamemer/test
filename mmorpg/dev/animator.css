@@ -1,0 +1,89 @@
+/* Nightglade Animator: one dark working surface, the same family as the game's HUD */
+:root {
+  color-scheme: dark;
+  --bg: #0a0e17; --panel: #101623; --panel2: #161e2f; --line: #26324b; --line2: #34435f;
+  --ink: #dbe4f3; --dim: #8b98b3; --gold: #e6c888; --blue: #7fb2ff; --accent: #5b8def; --warn: #ff8d7d; --ok: #7be08f;
+  --body: 'Sarabun', 'Noto Sans Thai', 'Leelawadee UI', 'Thonburi', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 14px/1.45 var(--body); }
+button, select, input, textarea { font: inherit; color: inherit; }
+button, select, input[type=number], input:not([type]), textarea { background: var(--panel2); border: 1px solid var(--line); border-radius: 7px; padding: 5px 9px; }
+button { cursor: pointer; white-space: nowrap; }
+button:hover { border-color: var(--blue); }
+button:disabled { opacity: 0.4; cursor: default; }
+button.primary { background: #27458a; border-color: #4a73cf; color: #fff; font-weight: 600; }
+button.danger { border-color: #8a3d36; color: var(--warn); }
+button.wide { width: 100%; margin-top: 6px; }
+button.on { background: #27458a; border-color: #4a73cf; color: #fff; }
+h3, h4 { margin: 0 0 6px; font-size: 13px; font-weight: 700; letter-spacing: 0.03em; color: var(--gold); }
+label { display: grid; gap: 3px; margin: 0 0 8px; color: var(--dim); font-size: 12.5px; }
+label.check, .chips label { display: flex; align-items: center; gap: 6px; color: var(--ink); margin: 4px 0; cursor: pointer; }
+.note { color: var(--dim); font-size: 12.5px; margin: 0 0 8px; }
+.grow { flex: 1; }
+.row { display: flex; gap: 6px; align-items: center; }
+.row.wrap { flex-wrap: wrap; margin-top: 6px; }
+
+#app { display: grid; height: 100%; grid-template: "bar bar bar" auto "left stage right" 1fr "time time time" auto / 236px minmax(0, 1fr) 300px; }
+#bar { grid-area: bar; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); background: var(--panel); border-bottom: 1px solid var(--line); }
+.brand { color: var(--gold); letter-spacing: 0.04em; }
+#status { color: var(--dim); font-size: 12.5px; min-width: 9em; }
+#status.ok { color: var(--ok); } #status.bad { color: var(--warn); }
+.seg { display: flex; }
+.seg button { border-radius: 0; margin-left: -1px; }
+.seg button:first-child { border-radius: 7px 0 0 7px; margin: 0; } .seg button:last-child { border-radius: 0 7px 7px 0; }
+
+#left, #right { background: var(--panel); padding: 12px; overflow: auto; min-height: 0; }
+#left { grid-area: left; border-right: 1px solid var(--line); }
+#right { grid-area: right; border-left: 1px solid var(--line); }
+.list { display: grid; gap: 3px; }
+.list button { text-align: left; display: flex; justify-content: space-between; gap: 6px; align-items: baseline; min-width: 0; white-space: normal; }
+.list button span { min-width: 0; }
+.list button small { white-space: nowrap; }
+.list button small { color: var(--dim); font-size: 11.5px; }
+.list button.edited::after { content: '●'; color: var(--gold); font-size: 9px; }
+.tree { max-height: 30vh; overflow: auto; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 8px; padding: 4px; }
+.tree button { border: 0; background: none; padding: 2px 6px; border-radius: 5px; }
+.tree button.on { background: #27458a; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 8px; }
+form#new-form { margin-top: 8px; padding: 8px; border: 1px solid var(--line); border-radius: 8px; }
+
+#stage { grid-area: stage; position: relative; min-height: 0; min-width: 0; background: #0b111c; }
+#view { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.chips { position: absolute; left: 10px; display: flex; flex-wrap: wrap; gap: 6px; max-width: calc(100% - 20px); }
+#views { top: 10px; } #toggles { bottom: 34px; }
+.chips button, .chips label { background: rgba(16, 22, 35, 0.86); border: 1px solid var(--line); border-radius: 16px; padding: 3px 11px; font-size: 12.5px; margin: 0; }
+#hint { position: absolute; left: 10px; right: 10px; bottom: 8px; color: var(--dim); font-size: 12px; pointer-events: none; text-shadow: 0 1px 2px #000; }
+
+.tabs { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
+.tabs button { flex: 1; padding: 5px 4px; font-size: 12.5px; }
+#sliders .sl, #sw-form .sl, #mv-form .sl { display: grid; grid-template-columns: 5.6em 1fr 4.6em; gap: 6px; align-items: center; margin-bottom: 5px; font-size: 12.5px; color: var(--dim); }
+.sl input[type=range] { width: 100%; accent-color: var(--accent); padding: 0; }
+.sl input[type=number] { width: 100%; padding: 3px 5px; text-align: right; }
+#mv-form label input, #mv-form label select { width: 100%; }
+textarea { width: 100%; font: 11.5px/1.35 ui-monospace, Menlo, Consolas, monospace; margin-top: 6px; resize: vertical; }
+.confirm { margin-top: 8px; padding: 8px; border: 1px solid #8a3d36; border-radius: 8px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+#timeline { grid-area: time; background: var(--panel); border-top: 1px solid var(--line); padding: 8px max(16px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+#timeline .row { flex-wrap: wrap; }
+#tl-time { color: var(--dim); font-variant-numeric: tabular-nums; margin-left: 4px; }
+#track { position: relative; margin-top: 6px; height: 26px; }
+#tl-scrub { position: absolute; inset: 0; width: 100%; margin: 0; accent-color: var(--gold); padding: 0; background: none; border: 0; }
+#ticks { position: absolute; left: 8px; right: 8px; top: 0; height: 100%; pointer-events: none; }
+#ticks i { position: absolute; top: 2px; width: 9px; height: 9px; margin-left: -4.5px; background: var(--gold); transform: rotate(45deg); border-radius: 1px; box-shadow: 0 0 0 1px #000; }
+
+/* narrow screens: the stage on top, the panels under it */
+@media (max-width: 860px) {
+  #app { grid-template: "bar" auto "stage" 46dvh "time" auto "right" auto "left" auto / minmax(0, 1fr); height: auto; min-height: 100%; }
+  #left, #right { border: 0; border-top: 1px solid var(--line); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .tree { max-height: 24vh; }
+  #hint { display: none; }
+  #toggles { bottom: 8px; }
+}
+
+#quick .qrow { display: grid; grid-template-columns: 5.2em 1fr 1fr; gap: 6px; align-items: center; margin-bottom: 6px; color: var(--dim); font-size: 12.5px; }
+#quick .qrow button { padding: 6px 4px; }
+#help { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; background: rgba(16, 22, 35, 0.97); border: 1px solid var(--line2); border-radius: 12px; padding: 16px 18px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
+#help ol { margin: 0 0 12px; padding-left: 1.3em; display: grid; gap: 7px; }
+#help b { color: var(--gold); font-weight: 600; }

@@ -5,9 +5,11 @@ export const CHAR = { hero: {
   skin: "hero.skin",
   anim: "hero.anim",
   map: "hero_c.webp",
+  normal: "hero_n.webp",
   clips: {
     idle: {},
-    run: {"speed": 2.39},
+    stand: {},
+    run: {"speed": 2.33},
     sprint: {},
     slash: {},
     charged: {},
@@ -25,5 +27,5 @@ export const CHAR = { hero: {
     gather: [{"clip": "collect", "keys": [[0, 0.7], [0.4, 1.2], [0.8, 1.6], [0.9, 3.4]], "rate": 1.0, "end": 4.4, "fade": 0.15, "out": 0.35, "sword": false}],
     hit: [{"clip": "flinch", "keys": [[0, 0.06], [0.3, 0.42]], "rate": 1.0, "end": 0.9, "fade": 0.05, "out": 0.3, "gain": 0.42}],
   },
-  sword: {"length": 1.28, "hold": 0.879, "tilt": 22, "palm": 0.022, "blade": [0.72, 0.02], "glow": 0.27, "lean": 32, "grip": [-1.7729, 7.6989, -1.0528], "quat": [0.40982, -0.09621, 0.8934, -0.15691], "back": {"grip": [-15.3726, 6.2211, -21.6416], "quat": [0.02355, -0.01374, 0.26907, 0.96273]}},
+  sword: {"length": 1.08, "hold": 0.879, "tilt": 22, "palm": 0.022, "blade": [0.72, 0.02], "glow": 0.27, "lean": 38, "tuck": 9, "grip": [-1.1041, 6.4156, -2.7057], "quat": [0.14708, -0.17589, 0.97288, -0.03062], "back": {"grip": [-17.7903, 7.2349, -19.7408], "quat": [-0.04176, -0.02876, 0.33172, 0.94201]}},
 } };

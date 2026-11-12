@@ -3,7 +3,9 @@
 import { THREE } from './common.js';
 import { ENV } from './env-manifest.js';
 import { CHAR } from './char-manifest.js';
-import { parseSkin, parseAnim } from './hero.js';
+import { parseSkin } from './hero.js';
+import { parseAnim, buildClips } from './motion.js';
+import { EDITS } from './char-edits.js';
 
 const BASE = (() => { try { return new URL('../../assets/env/', import.meta.url).href; } catch { return 'assets/env/'; } })();
 const embedded = () => (typeof window !== 'undefined' && window.NG_ASSETS) || {};
@@ -60,6 +62,40 @@ function parseMesh(buf) {
   return g;
 }
 
+async function loadModel(name) {
+  const d = ENV.models[name];
+  const [buf, map, normalMap] = await Promise.all([
+    bytes(d.mesh),
+    d.map ? texture(d.map, { flipY: false, aniso: 8 }) : null,
+    d.normalMap ? texture(d.normalMap, { srgb: false, flipY: false }) : null,
+  ]);
+  return { geo: parseMesh(buf), map, normalMap, size: d.size, roughness: d.roughness ?? 0.9, alpha: !!d.alpha };
+}
+
+// A rigged character: skinned mesh, skeleton, motion clips (packed by dev/build_char.py), the animator's
+// edits worked into the clips (char-edits.js), and the sword it carries. The game and dev/animator.html
+// both load it through here.
+export async function loadChar(name, edits = EDITS[name] || {}) {
+  const d = CHAR[name];
+  if (!d) return null;
+  const [skin, anim, map, normalMap, sword] = await Promise.all([bytes(d.skin), bytes(d.anim), texture(d.map, { flipY: false, aniso: 8 }),
+    d.normal ? texture(d.normal, { srgb: false, flipY: false, aniso: 4 }) : null, d.sword && ENV.models.sword ? loadModel('sword') : null]);
+  const H = { id: name, ...parseSkin(skin), raw: parseAnim(anim), map, normalMap, sword, meta: d };
+  applyEdits(H, edits);
+  return H;
+}
+// (re)build what depends on the edits: the clips, the table of moves, how the sword is held
+export function applyEdits(H, edits) {
+  const d = H.meta;
+  H.edits = edits;
+  H.clips = buildClips(H, edits);
+  for (const name in H.clips) Object.assign(H.clips[name], d.clips[name] || {});
+  H.moves = { ...d.moves, ...(edits.moves || {}) };
+  H.sword_ = d.sword ? { ...d.sword, ...(edits.sword || {}) } : null;
+  H.params = { ...(d.params || {}), ...(edits.params || {}) };
+  return H;
+}
+
 // Every model stands on y = 0, centred on x/z, with its longest side one unit long; `size` is its extent in
 // those units. The game scales props to metres when it places them.
 export async function loadEnv(progress = () => {}) {
@@ -69,16 +105,7 @@ export async function loadEnv(progress = () => {}) {
   let done = 0;
   const step = () => progress(++done / total);
   for (const name in ENV.models) {
-    const d = ENV.models[name];
-    jobs.push((async () => {
-      const [buf, map, normalMap] = await Promise.all([
-        bytes(d.mesh),
-        d.map ? texture(d.map, { flipY: false, aniso: 8 }) : null,
-        d.normalMap ? texture(d.normalMap, { srgb: false, flipY: false }) : null,
-      ]);
-      out.models[name] = { geo: parseMesh(buf), map, normalMap, size: d.size, roughness: d.roughness ?? 0.9, alpha: !!d.alpha };
-      step();
-    })());
+    jobs.push(loadModel(name).then((m) => { out.models[name] = m; step(); }));
   }
   for (const name in ENV.ground) {
     const d = ENV.ground[name];
@@ -92,16 +119,8 @@ export async function loadEnv(progress = () => {}) {
     const d = ENV.cards[name];
     jobs.push((async () => { out.cards[name] = { ...d, map: await texture(d.map, { aniso: 4 }) }; step(); })());
   }
-  // the rigged hero: skinned mesh, skeleton, motion clips (see dev/build_char.py)
-  if (CHAR.hero) jobs.push((async () => {
-    const d = CHAR.hero;
-    const [skin, anim, map] = await Promise.all([bytes(d.skin), bytes(d.anim), texture(d.map, { flipY: false, aniso: 8 })]);
-    const S = parseSkin(skin), clips = parseAnim(anim, S.bones, S.named);
-    for (const name in clips) Object.assign(clips[name], d.clips[name] || {});
-    out.hero = { ...S, clips, map, sword: null };
-  })());
+  jobs.push(loadChar('hero').then((H) => { out.hero = H; }));
   await Promise.all(jobs);
-  if (out.hero && out.models.sword) out.hero.sword = out.models.sword;
   return out;
 }
 
