@@ -626,8 +626,9 @@ function act(path) {
 const movePath = () => $('#mv-action').value.split('.');
 function moveDef(create) {
   const [name, k] = movePath(), H = A.H;
-  if (create) { if (!A.E.moves) A.E.moves = {}; if (!A.E.moves[name]) A.E.moves[name] = JSON.parse(JSON.stringify(H.meta.moves[name])); A.dirty = true; }
+  if (create && H.meta.moves[name]) { if (!A.E.moves) A.E.moves = {}; if (!A.E.moves[name]) A.E.moves[name] = JSON.parse(JSON.stringify(H.meta.moves[name])); A.dirty = true; }
   const M = (A.E.moves && A.E.moves[name]) || H.meta.moves[name];
+  if (!M) return null; // a character the game does not play has no moves
   return k !== undefined ? M[+k][0] : M[0];
 }
 function buildMoves() {
@@ -922,7 +923,7 @@ window.animator = {
   try { assets = window.claude ? await Promise.race([window.claude.use('assets'), new Promise((r) => setTimeout(() => r(null), 2500))]) : null; } catch { assets = null; }
   showInbox();
   $('#f-download').hidden = !downloads;
-  const sel = $('#char'); for (const id of Object.keys(CHAR)) sel.append(el('option', { value: id, textContent: id }));
+  const sel = $('#char'); for (const id of Object.keys(CHAR)) sel.append(el('option', { value: id, textContent: CHAR[id].label || id }));
   await open(new URLSearchParams(location.search).get('char') || Object.keys(CHAR)[0]);
   try { if (!localStorage.getItem('ng-animator:seen')) $('#help').hidden = false; } catch { /* no storage here */ }
   window.animatorReady = true;

@@ -6,8 +6,10 @@ Higgsfield (Tripo image-to-3D), brought down to game resolution by dev/make_lowp
 sculpt's colour and detail into maps), and every move is a clip from a motion library: the rigging service
 gives the model a skeleton and plays the clip on it. The prompts and clip ids are in dev/char_prompts.json.
 
-    python3 dev/build_char.py <dir>
+    python3 dev/build_char.py <dir> [name]
 
+<dir>/<name>/ holds the character's files (name: 'hero' unless given; see CHARS). A figure rigged by
+dev/auto_rig.py brings rig.glb and has no clips: it is posed and animated in dev/animator.html.
 <dir>/hero/<clip>.glb is the character with one clip, for each clip in CLIPS; <dir>/hero/albedo.png and
 normal.png are the maps make_lowpoly.py wrote (without them the model in the clip files is unwrapped afresh
 here and keeps only its colour). The service rigs the model anew for every clip, a little differently each
@@ -20,6 +22,7 @@ Needs Pillow, numpy and scipy (and xatlas when the maps are not given).
 """
 import json
 import os
+import re
 import struct
 import sys
 
@@ -646,15 +649,31 @@ def sword_mount(rig, rest, world, named):
     return out
 
 
-def main(src):
+# What is particular to a character. label: its name in the animator. clips: its clip files. moves and sword:
+# what the game plays and holds (none for a figure that is only posed). face: light the skin of the face as a
+# ball (for painted faces). cloth: find loose cloth and hair by shape (a bare figure has none).
+# A character that is not listed here gets `BARE`.
+BARE = dict(label=None, height=1.6, clips={}, moves={}, sword=None, face=False, cloth=False)
+CHARS = {
+    'hero': dict(label='ฮีโร่ Nightglade', height=HEIGHT, clips=CLIPS, moves=MOVES, sword=SWORD, face=True, cloth=True),
+    'softbase': dict(BARE, label='ตัวฐานจิบิผิวนุ่ม'),
+}
+
+
+def main(src, name='hero'):
     os.makedirs(OUT, exist_ok=True)
-    d = os.path.join(src, 'hero')
-    rig = load_rig(os.path.join(d, RIG + '.glb'))
+    C = dict(BARE, **CHARS.get(name, {}))
+    d = os.path.join(src, name)
+    # the skeleton and skin: dev/auto_rig.py's rig.glb if it is there, else the clip file named by RIG
+    own = os.path.join(d, 'rig.glb')
+    rig = load_rig(own if os.path.exists(own) else os.path.join(d, RIG + '.glb'))
     if os.path.exists(os.path.join(d, 'albedo.png')):
         # the model was made by dev/make_lowpoly.py: it is unwrapped already, and its colour and its detail map
         # were baked from the sculpt into that layout (the rigging service gives the mesh back as it got it)
         rig['colour'] = Image.open(os.path.join(d, 'albedo.png')).convert('RGB')
         rig['normal'] = Image.open(os.path.join(d, 'normal.png')).convert('RGB') if os.path.exists(os.path.join(d, 'normal.png')) else None
+    elif os.path.exists(own):
+        rig['normal'] = None        # rigged here from the model as it came: its own layout and colour stand
     else:
         reatlas(rig, TEX)
         rig['normal'] = None
@@ -665,11 +684,11 @@ def main(src):
     # the rig's own up axis and size, so the game can stand the hero on y = 0 at HEIGHT metres
     lo, hi = rest.min(axis=0), rest.max(axis=0)
     up = np.array([0.0, 1.0, 0.0])
-    scale = HEIGHT / (hi[1] - lo[1])
+    scale = C['height'] / (hi[1] - lo[1])
     print(f'{len(bones)} bones, {len(rest)} verts, {len(rig["I"])} tris; stands {hi[1] - lo[1]:.3f} tall from y {lo[1]:.3f}; x {lo[0]:.3f}..{hi[0]:.3f} z {lo[2]:.3f}..{hi[2]:.3f}')
     print('bones:', ' '.join(f'{k}:{b["name"]}' for k, b in enumerate(bones)))
     print('named:', {k: (bones[v]['name'] if v is not None else None) for k, v in named.items()})
-    cloth, region = cloth_weights(rig, rest, world, named, up, hi[1] - lo[1])
+    cloth, region = cloth_weights(rig, rest, world, named, up, hi[1] - lo[1]) if C['cloth'] else (np.zeros(len(rest)), np.array(['body'] * len(rest)))
     names = [b['name'].lower() for b in bones]
     share = lambda keys: sum(rig['W'][:, k] * np.isin(rig['J'][:, k], [i for i, n in enumerate(names) if any(key in n for key in keys)]) for k in range(4))
     # the chest rises with each breath (the ribs most, the belly and shoulders a little)
@@ -680,7 +699,7 @@ def main(src):
     breath = np.clip(breath + 0.3 * share(('shoulder',)), 0, 1)
     # loose cloth hangs from the chest and shoulders (the mantle, the hair) or from the hips (the waist cloth)
     upper = np.clip(share(('spine', 'neck', 'head', 'shoulder', 'arm', 'hand')) - (rig['W'] * (rig['J'] == named['spine'])).sum(axis=1), 0, 1)
-    rig['N'], face = soften_face(rig, world, named)
+    rig['N'], face = soften_face(rig, world, named) if C['face'] else (rig['N'], np.zeros(len(rest)))
     print('cloth: %.1f%% of vertices hang free (weight > 0.3)' % (100 * (cloth > 0.3).mean()), {r: int((region == r).sum()) for r in set(region)})
 
     # ---- skin
@@ -703,14 +722,14 @@ def main(src):
         body += raw + b'\0' * (-len(raw) % 4)
     head = dict(verts=len(P), tris=len(rig['I']), min=[float(v) for v in plo], size=[float(v) for v in psize], uvMin=[float(v) for v in tlo], uvSize=[float(v) for v in tsize], wide=wide,
                 bones=[dict(id=f'b{k}', name=b['name'], parent=b['parent'], t=[float(v) for v in b['t']], r=[float(v) for v in b['r']], s=[float(v) for v in b['s']]) for k, b in enumerate(bones)],
-                named=named, scale=float(scale), lift=float(-lo[1] * scale), height=HEIGHT, blocks=blocks)
+                named=named, scale=float(scale), lift=float(-lo[1] * scale), height=C['height'], blocks=blocks)
     hj = json.dumps(head).encode(); hj += b' ' * (-len(hj) % 4)
-    with open(os.path.join(OUT, 'hero.skin'), 'wb') as f:
+    with open(os.path.join(OUT, name + '.skin'), 'wb') as f:
         f.write(b'NGS1' + struct.pack('<I', len(hj)) + hj + body)
     if rig['colour'] is not None:
-        rig['colour'].convert('RGB').resize((TEX, TEX), Image.LANCZOS).save(os.path.join(OUT, 'hero_c.webp'), 'WEBP', quality=90, method=6)
+        rig['colour'].convert('RGB').resize((TEX, TEX), Image.LANCZOS).save(os.path.join(OUT, name + '_c.webp'), 'WEBP', quality=90, method=6)
     if rig['normal'] is not None:
-        rig['normal'].resize((NORMAL_TEX, NORMAL_TEX), Image.LANCZOS).save(os.path.join(OUT, 'hero_n.webp'), 'WEBP', quality=90, method=6)
+        rig['normal'].resize((NORMAL_TEX, NORMAL_TEX), Image.LANCZOS).save(os.path.join(OUT, name + '_n.webp'), 'WEBP', quality=90, method=6)
 
     # ---- clips
     hips = named['hips']
@@ -722,10 +741,10 @@ def main(src):
     spine = named['spine']
     assert bones[spine]['parent'] == hips, 'the lowest spine bone is expected to hang from the hips'
     clips, data, meta = [], b'', {}
-    for name, spec in CLIPS.items():
-        path = os.path.join(d, name + '.glb')
+    for clip, spec in C['clips'].items():
+        path = os.path.join(d, clip + '.glb')
         if not os.path.exists(path):
-            print('missing clip', name); continue
+            print('missing clip', clip); continue
         c = load_clip(path, rig, spec)
         if c is None:
             print('no animation in', path); continue
@@ -747,7 +766,7 @@ def main(src):
         moved = [k for k in range(len(bones)) if c['moved'][k] and np.abs(c['pos'][:, k] - bones[k]['t']).max() > 1e-5]
         rot = np.round(c['rot'][:, used] * 32767).astype('<i2').tobytes()
         pos = c['pos'][:, moved].astype('<f4').tobytes()
-        entry = dict(name=name, frames=c['n'], loop=bool(spec.get('loop')), additive=bool(spec.get('additive')), bones=used, moved=moved, rot=len(data), top=-1)
+        entry = dict(name=clip, frames=c['n'], loop=bool(spec.get('loop')), additive=bool(spec.get('additive')), bones=used, moved=moved, rot=len(data), top=-1)
         data += rot + b'\0' * (-len(rot) % 4)
         entry['pos'] = len(data)
         data += pos + b'\0' * (-len(pos) % 4)
@@ -764,30 +783,39 @@ def main(src):
             entry['top'] = len(data)
             data += np.round(top * 32767).astype('<i2').tobytes()
         clips.append(entry)
-        meta[name] = {}
-        if name == 'run':  # how fast the ground has to pass under the feet for them not to slide
-            meta[name]['speed'] = round(stride_speed(rig, c, named, scale), 2)
-            speed = meta[name]['speed']
-        print(f'{name:7s} {c["n"]:4d} frames {c["dur"]:.2f}s  {len(used)} bones turn, {len(moved)} move  travel {speed:.2f} m/s  joints off by {c["off"][0] * 100:.1f} cm on average, {c["off"][1] * 100:.1f} cm at worst')
+        meta[clip] = {}
+        if clip == 'run':  # how fast the ground has to pass under the feet for them not to slide
+            meta[clip]['speed'] = round(stride_speed(rig, c, named, scale), 2)
+            speed = meta[clip]['speed']
+        print(f'{clip:7s} {c["n"]:4d} frames {c["dur"]:.2f}s  {len(used)} bones turn, {len(moved)} move  travel {speed:.2f} m/s  joints off by {c["off"][0] * 100:.1f} cm on average, {c["off"][1] * 100:.1f} cm at worst')
     hj = json.dumps(dict(fps=FPS, clips=clips)).encode(); hj += b' ' * (-len(hj) % 4)
-    with open(os.path.join(OUT, 'hero.anim'), 'wb') as f:
+    with open(os.path.join(OUT, name + '.anim'), 'wb') as f:
         f.write(b'NGA1' + struct.pack('<I', len(hj)) + hj + data)
-    man = dict(skin='hero.skin', anim='hero.anim', map='hero_c.webp', normal='hero_n.webp' if rig['normal'] is not None else None, clips=meta, moves=MOVES, sword=dict(SWORD, **sword_mount(rig, rest, world, named)))
-    with open(os.path.join(ROOT, 'src', 'gfx', 'char-manifest.js'), 'w') as f:
-        f.write('// Generated by dev/build_char.py — the rigged hero in assets/env/.\n')
+    man = dict(label=C['label'] or name, skin=name + '.skin', anim=name + '.anim', map=name + '_c.webp', normal=name + '_n.webp' if rig['normal'] is not None else None, clips=meta, moves=C['moves'],
+               sword=dict(C['sword'], **sword_mount(rig, rest, world, named)) if C['sword'] else None)
+    block = f'CHAR.{name} = {{\n'
+    for key, val in man.items():
+        if key in ('clips', 'moves'):
+            block += f'  {key}: {{\n' + ''.join(f'    {k}: {json.dumps(v)},\n' for k, v in val.items()) + '  },\n'
+        else:
+            block += f'  {key}: {json.dumps(val, ensure_ascii=False)},\n'
+    block += '};\n'
+    # the manifest lists every character: this one's entry is replaced, the others are kept as they are
+    path = os.path.join(ROOT, 'src', 'gfx', 'char-manifest.js')
+    old = open(path, encoding='utf-8').read() if os.path.exists(path) else ''
+    entries = {m.group(1): m.group(0) for m in re.finditer(r'^CHAR\.(\w+) = \{\n.*?^\};\n', old, re.M | re.S)}
+    entries[name] = block
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write('// Generated by dev/build_char.py - the rigged characters in assets/env/, one entry each.\n')
         f.write('// moves: for each of the game\'s actions, which part of which clip plays when (see MOVES in the build script).\n')
         f.write('// sword: how the sword model sits in the right-hand bone.\n')
-        f.write('export const CHAR = { hero: {\n')
-        for key, val in man.items():
-            if key in ('clips', 'moves'):
-                f.write(f'  {key}: {{\n' + ''.join(f'    {k}: {json.dumps(v)},\n' for k, v in val.items()) + '  },\n')
-            else:
-                f.write(f'  {key}: {json.dumps(val)},\n')
-        f.write('} };\n')
-    kb = sum(os.path.getsize(os.path.join(OUT, f)) for f in ('hero.skin', 'hero.anim', 'hero_c.webp', 'hero_n.webp') if os.path.exists(os.path.join(OUT, f))) // 1024
-    print(f'hero: {kb} KB')
+        f.write('export const CHAR = {};\n')
+        for key in sorted(entries, key=lambda k: (k != 'hero', k)):
+            f.write(entries[key])
+    kb = sum(os.path.getsize(os.path.join(OUT, name + e)) for e in ('.skin', '.anim', '_c.webp', '_n.webp') if os.path.exists(os.path.join(OUT, name + e))) // 1024
+    print(f'{name}: {kb} KB')
     return rig, rest, cloth
 
 
 if __name__ == '__main__':
-    main(sys.argv[1] if len(sys.argv) > 1 else '.')
+    main(sys.argv[1] if len(sys.argv) > 1 else '.', sys.argv[2] if len(sys.argv) > 2 else 'hero')
