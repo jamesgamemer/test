@@ -70,8 +70,10 @@ textarea { width: 100%; font: 11.5px/1.35 ui-monospace, Menlo, Consolas, monospa
 #tl-time { color: var(--dim); font-variant-numeric: tabular-nums; margin-left: 4px; }
 #track { position: relative; margin-top: 6px; height: 26px; }
 #tl-scrub { position: absolute; inset: 0; width: 100%; margin: 0; accent-color: var(--gold); padding: 0; background: none; border: 0; }
-#ticks { position: absolute; left: 8px; right: 8px; top: 0; height: 100%; pointer-events: none; }
-#ticks i { position: absolute; top: 2px; width: 9px; height: 9px; margin-left: -4.5px; background: var(--gold); transform: rotate(45deg); border-radius: 1px; box-shadow: 0 0 0 1px #000; }
+#ticks { position: absolute; left: 8px; right: 8px; top: 0; height: 100%; pointer-events: none; z-index: 2; }
+#ticks i { position: absolute; top: 0; width: 12px; height: 12px; margin-left: -6px; background: var(--gold); transform: rotate(45deg); border-radius: 2px; box-shadow: 0 0 0 1px #000; pointer-events: auto; cursor: ew-resize; touch-action: none; }
+#ticks i.now { background: #fff; box-shadow: 0 0 0 2px var(--accent); }
+#track { margin-top: 10px; }
 
 /* narrow screens: the stage on top, the panels under it */
 @media (max-width: 860px) {
@@ -87,3 +89,5 @@ textarea { width: 100%; font: 11.5px/1.35 ui-monospace, Menlo, Consolas, monospa
 #help { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; background: rgba(16, 22, 35, 0.97); border: 1px solid var(--line2); border-radius: 12px; padding: 16px 18px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); }
 #help ol { margin: 0 0 12px; padding-left: 1.3em; display: grid; gap: 7px; }
 #help b { color: var(--gold); font-weight: 600; }
+#tab-keys .sl { display: grid; grid-template-columns: 7em 1fr 5.4em; gap: 6px; align-items: center; margin-bottom: 6px; font-size: 12.5px; color: var(--dim); }
+#tab-keys .sl input { width: 100%; padding: 3px 5px; text-align: right; }

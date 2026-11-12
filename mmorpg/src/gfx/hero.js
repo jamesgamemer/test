@@ -195,19 +195,19 @@ export class HeroActor {
     // standing and running were made for empty hands).
     if (!npc && H.sword) {
       const S = H.sword_;
-      const mount = (bone, at) => {
+      // each sword hangs from a bone of its own (assets.js, addPieces), which the clips and the animator can move
+      const mount = (bone) => {
         const sw = new THREE.Mesh(H.sword.geo, swordMaterial(H.sword, look, S.glow));
         sw.castShadow = true; sw.receiveShadow = true;
         const pivot = new THREE.Group();
         // bones live in the rig's own units: undo their scale so the sword keeps its length in metres
         pivot.scale.setScalar(S.length / bone.getWorldScale(_v).x);
-        pivot.position.fromArray(at.grip); pivot.quaternion.fromArray(at.quat);
         sw.position.y = -S.hold; // the model stands point down with its pommel at y = 1: hang it from the grip
         pivot.add(sw); bone.add(pivot);
         return sw;
       };
-      this.sword = mount(this.hand, S);
-      this.sheathed = mount(B('chest'), S.back);
+      this.sword = mount(bones[H.named.sword]);
+      this.sheathed = mount(bones[H.named.swordBack]);
       this.armed = 0; this.armedT = 0;
     }
 
@@ -321,7 +321,7 @@ export class HeroActor {
     const ready = L.ease ? ease(clamp01(this.ready)) : 1, still = 1 - run - sprint;
     set(L.idle, still * ready, 1);
     set(L.ease, still * (1 - ready), 1);
-    set(L.run, run, THREE.MathUtils.clamp(speed / (C.run.speed || 3), 0.75, 1.9));
+    set(L.run, run, THREE.MathUtils.clamp(speed / ((C.run && C.run.speed) || 3), 0.75, 1.9));
     set(L.sprint, sprint, 1.5);
     const dead = this.players.dead && this.players.dead[0];
     if (dead) { dead.whole.setEffectiveWeight(this.wDead); dead.whole.time = Math.min(dead.dur - 1e-3, this.deadT); }

@@ -15,7 +15,8 @@
     <b class="brand">Nightglade Animator</b>
     <select id="char" title="ตัวละคร"></select>
     <div class="seg" id="mode">
-      <button data-mode="pose" class="on">จัดท่า</button>
+      <button data-mode="pose" class="on" title="ปรับทับท่าที่มีอยู่: ท่าเดิมยังอยู่ครบ">ห้องปรับท่า</button>
+      <button data-mode="keys" title="แก้คีย์ของท่าโดยตรง หรือสร้างท่าใหม่เองตั้งแต่ศูนย์">ห้องคีย์เฟรม</button>
       <button data-mode="game">เล่นแบบในเกม</button>
     </div>
     <span class="grow"></span>
@@ -65,7 +66,9 @@
         <li><b>ปรับเร็ว</b> ทางขวา: กดปุ่มอย่าง “แขน แนบตัว” หรือ “หัว เงย” ทีละนิด ไม่ต้องรู้เรื่องกระดูก</li>
         <li><b>ลากเอง</b>: ติ๊ก “กระดูก” แล้วลากจุดที่มือ/เท้า (ข้อศอก/เข่างอตามเอง) หรือลากจุดอื่นเพื่อหมุนข้อนั้น</li>
         <li><b>ละเอียด</b>: แท็บ “กระดูก” มีแถบเลื่อนหมุน 3 แกนกับบิดรอบแกน ของกระดูกที่เลือก</li>
-        <li><b>แก้ที่ไหน</b>: ทั้งคลิป · เฉพาะช่วงเวลา (กด “＋ คีย์” ที่เวลานั้นก่อน) · หรือทุกท่าพร้อมกัน (บุคลิก เช่น เงยหน้าขึ้นทุกท่า)</li>
+        <li><b>ห้องปรับท่า</b> วางการแก้ทับท่าเดิม: ทั้งคลิป · เฉพาะช่วงเวลา · หรือทุกท่าพร้อมกัน (บุคลิก เช่น เงยหน้าขึ้นทุกท่า)</li>
+        <li><b>ห้องคีย์เฟรม</b> แก้ท่าจริงทีละคีย์ หรือสร้างท่าใหม่เองทั้งหมด: ◆ บนเส้นเวลาคือคีย์ คลิกเพื่อเลือก ลากเพื่อย้าย ขยับตัวละครที่เวลาไหนก็เกิดคีย์ที่นั่น ท่าจากคลังต้องแปลงเป็นคีย์ก่อน (กดปุ่มเดียว)</li>
+        <li><b>อุปกรณ์</b> เช่น ดาบ มีกระดูกของตัวเอง ลากย้าย หมุน ใส่คีย์ได้เหมือนส่วนอื่น</li>
         <li><b>เล่นแบบในเกม</b> (ปุ่มบน) เพื่อดูท่าต่อกันจริง รวมผ้ากับดาบ</li>
         <li>พอใจแล้วกด <b>บันทึก</b> แล้วบอก Claude ในแชตว่า “เอาท่าที่แก้ไปใส่เกม” — Claude อ่านข้อมูลที่บันทึกจากหน้านี้ได้เลย</li>
       </ol>
@@ -75,15 +78,38 @@
 
   <aside id="right">
     <div class="tabs" id="tabs">
-      <button data-tab="quick" class="on">ปรับเร็ว</button><button data-tab="bone">กระดูก</button><button data-tab="moves">จังหวะ</button><button data-tab="sword">ดาบ</button><button data-tab="file">ไฟล์</button>
+      <button data-tab="keys" hidden>คีย์เฟรม</button><button data-tab="quick" class="on">ปรับเร็ว</button><button data-tab="bone">กระดูก</button><button data-tab="moves">จังหวะ</button><button data-tab="sword">ดาบ</button><button data-tab="file">ไฟล์</button>
     </div>
-    <label>แก้ที่ไหน
+    <div id="scope-row"><label>แก้ที่ไหน
       <select id="scope">
         <option value="clip">ท่านี้ ทั้งคลิป</option>
         <option value="key">ท่านี้ เฉพาะช่วงเวลา (คีย์เฟรม)</option>
         <option value="all">ทุกท่า (บุคลิกของตัวละคร)</option>
       </select>
-    </label>
+    </label></div>
+    <p class="note" id="keys-note" hidden>ห้องนี้แก้ “ท่าจริง” ของคลิป: ขยับอะไรที่เวลาไหน ท่านั้นจะถูกเก็บเป็นคีย์ที่เวลานั้น ◆ บนเส้นเวลาคือคีย์ คลิกเพื่อไปที่คีย์ ลากเพื่อย้ายเวลา</p>
+    <section id="tab-keys" hidden>
+      <div id="kf-none">
+        <p class="note">ท่านี้มาจากคลังท่า เก็บเป็นท่าทาง 30 ภาพต่อวินาที จึงยังไม่มีคีย์ให้จับ แปลงเป็นคีย์ก่อน (ระบบเลือกเฉพาะจังหวะสำคัญของท่าให้) แล้วจะแก้ ลาก ลบ คีย์เดิมได้ทุกอัน — หรือขยับตัวละครได้เลย ระบบจะแปลงให้เอง</p>
+        <label>ความละเอียดตอนแปลง
+          <select id="kf-level"><option value="mid">กลาง — แนะนำ</option><option value="fine">ละเอียด — คีย์เยอะ เหมือนต้นฉบับมาก</option><option value="rough">หยาบ — คีย์น้อย แก้ง่าย</option></select>
+        </label>
+        <button id="kf-convert" class="wide primary">แปลงท่านี้เป็นคีย์ที่แก้ได้</button>
+      </div>
+      <div id="kf-have" hidden>
+        <p class="note" id="kf-info"></p>
+        <div class="sl"><span>ยาว (วินาที)</span><span></span><input id="kf-dur" type="number" min="0.1" max="30" step="0.05"></div>
+        <label class="check"><input id="kf-stretch" type="checkbox" checked>เปลี่ยนความยาวแล้วยืด/หดคีย์ตาม</label>
+        <label class="check"><input id="kf-loop" type="checkbox">เล่นวน (ท้ายต่อกลับต้น)</label>
+        <label>คีย์นี้มาถึงท่าแบบ
+          <select id="kf-ease"><option value="smooth">นุ่ม (โค้งต่อเนื่อง)</option><option value="linear">สม่ำเสมอ (เส้นตรง)</option><option value="hold">ค้างท่าก่อนหน้าไว้ แล้วเปลี่ยนทันที</option></select>
+        </label>
+        <div class="row wrap"><button id="kf-dup" title="ทำท่าของเวลานี้ซ้ำอีกคีย์ ถัดไป 0.25 วินาที">ทำคีย์ซ้ำถัดไป</button></div>
+        <p class="note">คัดลอก/วางท่าทั้งตัวระหว่างเวลา ใช้ปุ่ม “คัดลอกท่า / วางท่า” ในแท็บกระดูก</p>
+        <button id="kf-revert" class="wide danger">คืนเป็นท่าเดิมจากคลัง (ทิ้งคีย์)</button>
+        <div id="kf-confirm" hidden class="confirm">ทิ้งคีย์ของท่านี้? <button id="kf-yes" class="danger">ทิ้ง</button><button id="kf-no">ไม่</button></div>
+      </div>
+    </section>
     <section id="tab-quick">
       <p class="note">กดทีละนิดจนพอใจ ใช้ได้กับทุกท่า ย้อนได้ด้วยปุ่ม ↶</p>
       <div id="quick"></div>
@@ -110,7 +136,7 @@
       <button id="mv-reset" class="wide">คืนค่าเดิมของคำสั่งนี้</button>
     </section>
     <section id="tab-sword" hidden>
-      <p class="note">ตำแหน่งและมุมของดาบในมือขวา (ติ๊ก “ดาบในมือ” ใต้ภาพเพื่อดู)</p>
+      <p class="note">ดาบเป็น “ชิ้นอุปกรณ์” ที่มีกระดูกของตัวเอง: ติ๊ก “ดาบในมือ” ใต้ภาพ แล้วลากจุดที่ด้ามเพื่อย้าย ลากจุดที่ปลายเพื่อหมุน หรือเลือก “ดาบ” ในแท็บกระดูกเพื่อใช้แถบเลื่อน — ใส่คีย์ได้เหมือนกระดูกอื่น ตรงนี้ตั้งได้แค่ความยาว</p>
       <div id="sw-form"></div>
       <button id="sw-reset" class="wide">คืนค่าเดิม</button>
     </section>

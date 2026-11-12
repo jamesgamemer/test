@@ -81,8 +81,28 @@ export async function loadChar(name, edits = EDITS[name] || {}) {
   const [skin, anim, map, normalMap, sword] = await Promise.all([bytes(d.skin), bytes(d.anim), texture(d.map, { flipY: false, aniso: 8 }),
     d.normal ? texture(d.normal, { srgb: false, flipY: false, aniso: 4 }) : null, d.sword && ENV.models.sword ? loadModel('sword') : null]);
   const H = { id: name, ...parseSkin(skin), raw: parseAnim(anim), map, normalMap, sword, meta: d };
+  addPieces(H, d);
   applyEdits(H, edits);
   return H;
+}
+// Equipment is carried on bones of its own, so that a piece can be turned, moved and keyed like any other
+// part of the body (in the animator, and by the clips): the sword in the hand, and the same sword across
+// the back. A piece's bone hangs from the body bone that carries it and starts where the build mounted it.
+function addPieces(H, d) {
+  H.pieces = [];
+  if (!d.sword || !H.sword) return;
+  const S = d.sword;
+  const add = (name, parent, at, tip) => {
+    H.bones.push({ id: 'b' + H.bones.length, name, parent, t: at.grip.slice(), r: at.quat.slice(), s: [1, 1, 1], piece: true, tip });
+    return H.bones.length - 1;
+  };
+  H.named.sword = add('Sword', H.named.handR, S, [0, -0.55, 0]);          // tip: the way the piece points, in units of its length
+  H.named.swordBack = add('SwordBack', H.named.chest, S.back, [0, -0.55, 0]);
+  H.pieces.push({ id: 'sword', bone: H.named.sword, when: 'drawn' }, { id: 'swordBack', bone: H.named.swordBack, when: 'sheathed' });
+  const ibm = new Float32Array(H.bones.length * 16);
+  ibm.set(H.ibm);
+  for (const p of H.pieces) ibm.set([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], p.bone * 16); // nothing is skinned to a piece's bone
+  H.ibm = ibm;
 }
 // (re)build what depends on the edits: the clips, the table of moves, how the sword is held
 export function applyEdits(H, edits) {
