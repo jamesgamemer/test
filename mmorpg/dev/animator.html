@@ -146,6 +146,14 @@
       <button id="sw-reset" class="wide">คืนค่าเดิม</button>
     </section>
     <section id="tab-file" hidden>
+      <h4>ส่งโมเดลใหม่เข้าเครื่องมือ</h4>
+      <p class="note">เลือกไฟล์โมเดลจากเครื่องของคุณ (.glb ดีที่สุด) ไฟล์จะเก็บกับหน้านี้แบบส่วนตัว จากนั้นบอก Claude ในแชตว่า “ส่งโมเดลแล้ว” Claude จะใส่กระดูกและเพิ่มเป็นตัวละครให้เลือกที่มุมซ้ายบน</p>
+      <input id="imp-file" type="file" accept=".glb,.gltf,.fbx,.obj,.zip,.png,.jpg,.jpeg,.webp">
+      <input id="imp-note" placeholder="หมายเหตุถึง Claude (ไม่ใส่ก็ได้)" maxlength="300">
+      <button id="imp-send" class="wide primary">ส่งไฟล์นี้</button>
+      <p class="note" id="imp-info"></p>
+      <div id="imp-list" class="list"></div>
+      <h4 style="margin-top:14px">ข้อมูลการแก้ท่า</h4>
       <p class="note">การแก้ทั้งหมดเก็บเป็นข้อมูลชุดเดียว บันทึกแล้ว Claude อ่านไปใส่ในเกมได้ หรือคัดลอกข้อความไปส่งให้ก็ได้</p>
       <button id="f-copy" class="wide">คัดลอกข้อมูลการแก้ (JSON)</button>
       <button id="f-download" class="wide" hidden>ดาวน์โหลดเป็นไฟล์</button>

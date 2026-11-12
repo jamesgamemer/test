@@ -42,7 +42,7 @@ const VIEWS = { front: [0, 0.06, 4.8], side: [Math.PI / 2, 0.06, 4.8], back: [Ma
 
 // ---------------------------------------------------------------- state
 const A = { id: null, H: null, E: {}, clip: 'ease', t: 0, playing: false, speed: 1, scope: 'clip', sel: -1, mode: 'pose', ik: true, showSword: false, manual: false, dirty: false, rings: true, local: true, snap: false };
-let actor = null, ghost = null, game = null, rest = null, handles = [], undo = [], redo = [], clipboard = null, db = null, downloads = null;
+let actor = null, ghost = null, game = null, rest = null, handles = [], undo = [], redo = [], clipboard = null, db = null, downloads = null, assets = null;
 const Q = new Float32Array(96 * 4), P = [0, 0, 0], PP = new Float32Array(96 * 3);
 const r4 = (v) => Math.round(v * 1e4) / 1e4;
 const fps = () => A.H.raw.fps;
@@ -691,6 +691,50 @@ async function save() {
 }
 function loadEdits(obj) { remember(); A.E = JSON.parse(JSON.stringify(obj || {})); A.H.edits = A.E; A.dirty = true; applyEdits(A.H, A.E); if (!clipInfo()) A.clip = clipNames()[0]; buildClipList(); buildMoves(); buildSword(); syncKeysTab(); if (A.mode === 'game') rebuildGame(); refresh(); }
 
+
+// ---------------------------------------------------------------- sending a new model in
+// A model file picked from the owner's computer is kept with this page (its asset store takes text, so the
+// file goes in as base64, in pieces small enough for one asset each) and a row in `inbox` says what it is.
+// Claude reads the row and the pieces, rigs the model and adds it to the characters this tool opens.
+const PIECE = 12 * 1024 * 1024; // bytes of the file in one piece (16 MiB once written as base64)
+function base64Of(bytes) {
+  let out = '';
+  for (let i = 0; i < bytes.length; i += 0x8000 * 3) out += btoa(String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000 * 3))); // whole groups of three bytes: the pieces join up
+  return out;
+}
+const WHY = { too_large: 'ไฟล์ใหญ่เกินไป', quota_or_state: 'ที่เก็บของหน้านี้เต็ม', rate_limited: 'ส่งถี่เกินไป รอสักครู่แล้วลองใหม่', not_granted: 'หน้านี้ยังไม่ได้รับอนุญาตให้เก็บไฟล์', upstream_auth: 'ต้องโหลดหน้าใหม่หรือเข้าสู่ระบบอีกครั้ง', store_unavailable: 'ที่เก็บไฟล์ติดขัดชั่วคราว ลองใหม่อีกครั้ง' };
+async function showInbox() {
+  const box = $('#imp-list'); if (!db) return;
+  try {
+    const snap = await db.collection('inbox').get(), rows = snap.docs.map((d) => d.data()).filter(Boolean).sort((a, b) => b.sentAt - a.sentAt);
+    box.textContent = '';
+    for (const r of rows) box.append(el('div', {}, el('b', { textContent: r.name }), el('span', { textContent: (r.bytes / 1048576).toFixed(1) + ' MB · ' + (r.state === 'added' ? 'เพิ่มเป็นตัวละครแล้ว' : 'ส่งแล้ว รอ Claude') })));
+  } catch { /* the list is a convenience */ }
+}
+async function sendModel() {
+  const info = (t, bad) => { const e = $('#imp-info'); e.textContent = t; e.style.color = bad ? 'var(--warn)' : ''; };
+  const f = $('#imp-file').files[0];
+  if (!f) { info('เลือกไฟล์ก่อน', true); return; }
+  if (!assets || !db) { info('ส่งจากที่นี่ไม่ได้: ต้องเปิดหน้านี้จากลิงก์ของคุณเอง (เจ้าของหน้า) ขณะเข้าสู่ระบบ', true); return; }
+  if (f.size > 120 * 1048576) { info('ไฟล์ใหญ่เกิน 120 MB', true); return; }
+  $('#imp-send').disabled = true;
+  try {
+    const bytes = new Uint8Array(await f.arrayBuffer()), parts = [], total = Math.ceil(bytes.length / PIECE);
+    for (let o = 0; o < bytes.length; o += PIECE) {
+      info('กำลังส่ง… ' + (parts.length + 1) + ' / ' + total);
+      const text = base64Of(bytes.subarray(o, o + PIECE));
+      let r;
+      try { r = await assets.upload(new Blob([text], { type: 'text/plain' }), { type: 'text/plain' }); }
+      catch (e) { if (e && e.code === 'store_unavailable') { await new Promise((ok) => setTimeout(ok, 1500)); r = await assets.upload(new Blob([text], { type: 'text/plain' }), { type: 'text/plain' }); } else throw e; }
+      parts.push(r.id);
+    }
+    await db.doc('inbox/m' + Date.now().toString(36)).set({ name: f.name, bytes: bytes.length, parts, encoding: 'base64', note: $('#imp-note').value.trim(), sentAt: Date.now(), state: 'sent' });
+    info('ส่ง “' + f.name + '” แล้ว บอก Claude ในแชตว่า “ส่งโมเดลแล้ว” ได้เลย');
+    $('#imp-file').value = ''; showInbox();
+  } catch (e) { info('ส่งไม่สำเร็จ: ' + (WHY[e && e.code] || (e && e.code) || 'ผิดพลาด'), true); }
+  $('#imp-send').disabled = false;
+}
+
 // ---------------------------------------------------------------- wiring
 $('#mode').onclick = (e) => { if (e.target.dataset.mode) setMode(e.target.dataset.mode); };
 $('#undo').onclick = doUndo; $('#redo').onclick = doRedo; $('#save').onclick = save;
@@ -807,6 +851,7 @@ $('#f-no').onclick = () => { $('#f-confirm').hidden = true; };
 $('#f-yes').onclick = () => { $('#f-confirm').hidden = true; loadEdits({}); status('ล้างการแก้ทั้งหมดแล้ว (ยังไม่ได้บันทึก)'); };
 $('#f-download').onclick = async () => { try { await downloads.save({ filename: A.id + '.edits.json', data: JSON.stringify(A.E, null, 1) }); } catch { status('ไม่ได้บันทึกไฟล์'); } };
 $('#char').onchange = (e) => open(e.target.value);
+$('#imp-send').onclick = sendModel;
 $('#help-btn').onclick = () => { $('#help').hidden = !$('#help').hidden; };
 $('#help-close').onclick = () => { $('#help').hidden = true; try { localStorage.setItem('ng-animator:seen', '1'); } catch { /* no storage here */ } };
 addEventListener('keydown', (e) => {
@@ -874,6 +919,8 @@ window.animator = {
 (async () => {
   try { db = await Promise.race([window.claude ? window.claude.use('db') : null, new Promise((r) => setTimeout(() => r(null), 4000))]); } catch { db = null; }
   try { downloads = window.claude ? await Promise.race([window.claude.use('downloads'), new Promise((r) => setTimeout(() => r(null), 1500))]) : null; } catch { downloads = null; }
+  try { assets = window.claude ? await Promise.race([window.claude.use('assets'), new Promise((r) => setTimeout(() => r(null), 2500))]) : null; } catch { assets = null; }
+  showInbox();
   $('#f-download').hidden = !downloads;
   const sel = $('#char'); for (const id of Object.keys(CHAR)) sel.append(el('option', { value: id, textContent: id }));
   await open(new URLSearchParams(location.search).get('char') || Object.keys(CHAR)[0]);
